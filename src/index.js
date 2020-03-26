@@ -6,7 +6,15 @@ const context = {
   renderer: undefined,
   camera: undefined,
 
-  objects: {}
+  objects: {
+    hands: []
+  }
+}
+
+const DEG2RAD = Math.PI / 180
+
+function range (n) {
+  return [...Array(n).keys()]
 }
 
 function loadGLTF (url, onProgress) {
@@ -43,14 +51,22 @@ function resize (width, height) {
 
   camera.aspect = width / height
   camera.updateProjectionMatrix()
+
+  alignHands()
 }
 
 async function setupScene () {
   const { scene, camera } = context
 
-  const hand = await loadGLTF('/assets/hand.gltf')
-  scene.add(hand.scene)
-  context.objects.cube = hand.scene
+  const handModel = await loadGLTF('/assets/hand.glb')
+  const handCount = 12
+
+  const hands = range(handCount)
+    .map(() => handModel.scene.clone())
+
+  hands.forEach(hand => scene.add(hand))
+  context.objects.hands = hands
+  const handDistance = alignHands()
 
   const light = new three.HemisphereLight('white', 'black', 1)
 
@@ -60,14 +76,50 @@ async function setupScene () {
 
   scene.add(light)
 
-  camera.position.z = 5
+  camera.position.z = (2 * handDistance) / (2 * Math.tan(camera.fov / 2 * DEG2RAD))
+  console.log({
+    scale: handDistance,
+    z: camera.position.z,
+    fov: camera.fov / 2,
+    tan: Math.tan(camera.fov / 2 * DEG2RAD)
+  })
+}
+
+function alignHands () {
+  const hands = context.objects.hands
+  const handCount = hands.length
+  const handWidth = 1.5
+
+  const aspect = context.camera.aspect
+
+  console.log(`Realigning with ${handCount} hands`)
+
+  const distanceScale = Math.max(
+    (handWidth * handCount) / (2 + aspect),
+    2
+  )
+
+  hands.forEach((hand, i) => {
+    const angle = (i + Math.random() / 2) / hands.length * 2 * Math.PI
+
+    const dirVec = [-Math.cos(angle), -Math.sin(angle)]
+    const maxComponent = dirVec
+      .map(a => Math.abs(a))
+      .reduce((a, b) => Math.max(a, b))
+    const position = dirVec
+      .map(a => a / maxComponent)
+      .map(a => a * distanceScale)
+    position[0] *= aspect
+
+    hand.rotation.z = angle - Math.PI / 2
+    hand.position.x = position[0]
+    hand.position.y = position[1]
+  })
+
+  return distanceScale
 }
 
 function update () {
-  const cube = context.objects.cube
-
-  cube.rotation.x += 0.01
-  cube.rotation.y += 0.01
 }
 
 function loop () {

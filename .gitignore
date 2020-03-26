@@ -146,3 +146,6 @@ tags
 
 # End of https://www.gitignore.io/api/vim,node,visualstudiocode
 
+tags.lock
+tags.tmp
+tags.temp
