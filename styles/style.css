@@ -1,0 +1,20 @@
+.content {
+    background: radial-gradient(circle, rgb(255, 207, 0) 0%, rgb(208, 147, 0) 100%);
+
+    min-width: 100vw;
+    min-height: 100vh;
+
+    position: fixed;
+    left: 0;
+    top: 0;
+}
+
+.hand {
+    position: fixed;
+    top: 0;
+    left: 0;
+}
+
+.hand__image {
+    width: 50vmin;
+}
