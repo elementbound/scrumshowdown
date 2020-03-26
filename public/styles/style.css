@@ -1,3 +1,9 @@
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 1.5em;
+    color: white;
+}
+
 .content {
     background: radial-gradient(circle, rgb(255, 207, 0) 0%, rgb(208, 147, 0) 100%);
 
@@ -15,6 +21,16 @@
     left: 0;
 }
 
-.hand__image {
-    width: 50vmin;
+.hand__name {
+    position: fixed;
+    text-align: center;
+}
+
+.toolbar {
+    position: fixed;
+    bottom: 0;
+
+    padding: 4px;
+    text-align: center;
+    width: 100%;
 }
