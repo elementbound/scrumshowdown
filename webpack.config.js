@@ -1,11 +1,11 @@
 const path = require('path')
 
-const distDir = path.resolve(__dirname, 'dist')
+const distDir = path.resolve(__dirname, 'public/bundles')
 const publicDir = path.resolve(__dirname, 'public')
 
 module.exports = {
   entry: {
-    main: './src/index.js'
+    main: './src/client/index.js'
   },
 
   devtool: 'source-map',
