@@ -1,21 +1,29 @@
 {
   "name": "scrumshowdown",
-  "version": "0.0.0",
+  "version": "0.6.0",
   "description": "",
-  "main": "src/index.js",
+  "main": "app.js",
   "scripts": {
-    "start": "webpack-dev-server --open",
+    "start": "node ./bin/www",
+    "start:dev": "concurrently \"webpack -w\" \"npm start\"",
     "build": "webpack",
     "jsdoc": "jsdoc src -r -p -P package.json -d doc/",
+    "lint": "eslint bin/www client/**.js routes/**.js app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "elementbound",
   "license": "ISC",
   "dependencies": {
-    "three": "^0.115.0",
-    "three-gltf2-loader": "^1.2.0"
+    "cookie-parser": "~1.4.3",
+    "debug": "~2.6.9",
+    "express": "~4.16.0",
+    "hbs": "^4.1.0",
+    "http-errors": "~1.6.2",
+    "morgan": "~1.9.0",
+    "three": "^0.115.0"
   },
   "devDependencies": {
+    "concurrently": "^5.1.0",
     "eslint": "^6.8.0",
     "eslint-config-standard": "^14.1.1",
     "eslint-plugin-import": "^2.20.1",
