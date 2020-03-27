@@ -20,3 +20,8 @@ export function loadGLTF (url, onProgress) {
       err => reject(err))
   })
 }
+
+export function sample (...values) {
+  const index = Math.floor(values.length * Math.random())
+  return values[index]
+}

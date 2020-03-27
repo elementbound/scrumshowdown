@@ -149,3 +149,7 @@ tags
 tags.lock
 tags.tmp
 tags.temp
+
+*.blend1
+*.blend2
+*.blend3

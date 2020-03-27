@@ -8,7 +8,12 @@ export const context = {
   camera: undefined,
 
   models: {
-    hand: undefined
+    hand: {
+      idle: undefined,
+      ready: undefined,
+      thumbsUp: undefined,
+      thumbsDown: undefined
+    }
   },
 
   objects: {
@@ -26,7 +31,10 @@ function init () {
   const content = document.querySelector('.content')
   const scene = new three.Scene()
   const camera = new three.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000)
-  const renderer = new three.WebGLRenderer({ alpha: true })
+  const renderer = new three.WebGLRenderer({
+    alpha: true,
+    antialias: true
+  })
   renderer.setSize(window.innerWidth, window.innerHeight)
 
   context.scene = scene
@@ -36,6 +44,15 @@ function init () {
   content.appendChild(renderer.domElement)
 
   scene.color = new three.Color(0xffffff00)
+}
+
+async function loadModels () {
+  context.models.hand = {
+    idle: await loadGLTF('/assets/hand-idle.glb'),
+    ready: await loadGLTF('/assets/hand-ready.glb'),
+    thumbsUp: await loadGLTF('/assets/hand-thumbsup.glb'),
+    thumbsDown: await loadGLTF('/assets/hand-thumbsdown.glb')
+  }
 }
 
 function resize (width, height) {
@@ -52,9 +69,6 @@ function resize (width, height) {
 
 async function setupScene () {
   const { scene, camera } = context
-
-  const handModel = await loadGLTF('/assets/hand.glb')
-  context.models.hand = handModel.scene
 
   const light = new three.HemisphereLight('white', 'black', 1)
   context.objects.light = light
@@ -114,22 +128,26 @@ function loop (time) {
  *
  * @param {object} hand Hand data
  * @param {string} hand.name Username
+ * @returns {Hand} Resulting Hand
  */
 export function addHand (hand) {
   const hands = context.objects.hands
 
   const newHand = new Hand(Object.assign({}, hand, {
-    model: context.models.hand,
     camera: context.camera,
-    scene: context.scene
+    scene: context.scene,
+    models: context.models.hand
   }))
 
   hands.push(newHand)
   updateHands()
+
+  return newHand
 }
 
 export async function render () {
   init()
+  await loadModels()
 
   window.onresize = () =>
     resize(window.innerWidth, window.innerHeight)

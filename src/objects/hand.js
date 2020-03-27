@@ -1,4 +1,5 @@
-import { DEG2RAD } from '../utils'
+import * as three from 'three'
+import { DEG2RAD, sample } from '../utils'
 import AlignedElement from './aligned.element'
 
 /**
@@ -9,7 +10,7 @@ class Hand {
    * Create a new Hand.
    * @param {object} options options
    * @param {string} options.name Hand name
-   * @param {THREE.Object3D} options.model Hand model
+   * @param {Map<string, THREE.Object3D>} options.models Idle hand model
    * @param {THREE.Scene} options.scene Scene
    * @param {THREE.PerspectiveCamera} options.camera Scene
    * @param {string} [options.htmlClass=hand__name] HTML class for nameplate
@@ -18,9 +19,9 @@ class Hand {
     this._name = options.name || 'Anonymous'
     this._offset = Math.random()
     this._camera = options.camera
+    this._scene = options.scene
 
-    const object = options.model.clone()
-    options.scene.add(object)
+    const object = new three.Object3D()
     this._object = object
 
     const html = document.createElement('div')
@@ -32,6 +33,17 @@ class Hand {
     this._rotationX = 0
 
     this._alignedElement = new AlignedElement(html, object.position, options.camera)
+
+    this._state = ''
+    this._models = options.models
+
+    this._align = {
+      index: 0,
+      count: 1,
+      scale: 2
+    }
+
+    this.state = 'idle'
   }
 
   get name () {
@@ -43,16 +55,40 @@ class Hand {
     this._html.innerText = this._name
   }
 
+  get state () {
+    return this._state
+  }
+
+  set state (val) {
+    if (val === this._state) {
+      return
+    }
+
+    this._scene.remove(this._object)
+
+    this._state = val
+    this._object = this._models[this._state].scene.clone()
+
+    this._realign()
+
+    this._scene.add(this._object)
+  }
+
   get object () {
     return this._object
   }
 
   update (time) {
-    const rotation = Math.sin(time.current / 2000 * Math.PI + this._offset * 2000) * 10 * DEG2RAD
-    this._object.rotateX(rotation - this._rotationX)
+    const rotation = Math.sin(time.current / 2000 * Math.PI + this._offset * 2000) * 5 * DEG2RAD
+    this._object.rotateY(rotation - this._rotationX)
     this._rotationX = rotation
 
+    this._alignedElement.position = this._object.position
     this._alignedElement.update(time)
+
+    if (Math.random() < 0.01) {
+      this.state = sample(...Object.keys(this._models))
+    }
   }
 
   /**
@@ -61,6 +97,12 @@ class Hand {
    * @param {number} count count of all hands
    */
   align (index, count, scale) {
+    this._align = {
+      index,
+      count,
+      scale
+    }
+
     const aspect = this._camera.aspect
     const angle = (index + this._offset / 2) / count * 2 * Math.PI
 
@@ -74,7 +116,12 @@ class Hand {
     this._object.position.x = position[0]
     this._object.position.y = position[1]
 
-    this._object.rotation.z = angle - Math.PI / 2
+    this._object.rotation.z = angle + Math.PI
+  }
+
+  _realign () {
+    const { index, count, scale } = this._align
+    this.align(index, count, scale)
   }
 
   static calculateScale (count, camera) {
