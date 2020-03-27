@@ -1,5 +1,6 @@
 import * as three from 'three'
-import { DEG2RAD, loadGLTF, clamp } from './utils'
+import { DEG2RAD, loadGLTF } from './utils'
+import Hand from './objects/hand'
 
 export const context = {
   scene: undefined,
@@ -19,25 +20,6 @@ export const context = {
     current: 0,
     elapsed: 0
   }
-}
-
-/**
- * Aligns an HTML element to a point in space
- * @param {HTMLElement} node HTML element to align
- * @param {three.Vector3} position point in space
- * @param {three.Camera} camera camera
- */
-function alignNode (node, position, camera) {
-  const projected = new three.Vector3(position.x, position.y, position.z)
-  projected.project(camera)
-
-  const horizontalMargin = node.offsetWidth / window.innerWidth
-  const verticalMargin = node.offsetHeight / window.innerHeight
-  const x = clamp((1 + projected.x) / 2, horizontalMargin, 1 - horizontalMargin)
-  const y = clamp((1 - projected.y) / 2, verticalMargin, 1 - verticalMargin)
-
-  node.style.left = `${x * 100}vw`
-  node.style.top = `${y * 100}vh`
 }
 
 function init () {
@@ -83,60 +65,37 @@ async function setupScene () {
 
   scene.add(light)
 
-  // camera.position.z = (2 * handDistance) / (2 * Math.tan(camera.fov / 2 * DEG2RAD))
   camera.position.z = 2
 }
 
 /**
  * Align hands around the screen.
  *
- * @param {three.Object3D[]} hands Hand objects
+ * @param {Hand[]} hands Hand objects
  */
 function alignHands (hands) {
   const handCount = hands.length
-  const handWidth = 1.5
-
-  const aspect = context.camera.aspect
 
   console.log(`Realigning with ${handCount} hands`)
 
-  const distanceScale = Math.max(
-    (handWidth * handCount) / (2 + aspect),
-    2
-  )
+  const scale = Hand.calculateScale(handCount, context.camera)
+  hands.forEach((hand, i) => hand.align(i, handCount, scale))
 
-  hands.forEach((hand, i) => {
-    const angle = (i + Math.random() / 2) / hands.length * 2 * Math.PI
+  return scale
+}
 
-    const dirVec = [-Math.cos(angle), -Math.sin(angle)]
-    const maxComponent = dirVec
-      .map(a => Math.abs(a))
-      .reduce((a, b) => Math.max(a, b))
-    const position = dirVec
-      .map(a => a / maxComponent)
-      .map(a => a * distanceScale)
-    position[0] *= aspect
+/**
+ * Update all hands.
+ */
+export function updateHands () {
+  const handDistance = alignHands(context.objects.hands)
 
-    hand.rotation.z = angle - Math.PI / 2
-    hand.position.x = position[0]
-    hand.position.y = position[1]
-  })
-
-  return distanceScale
+  const { camera } = context
+  camera.position.z = (2 * handDistance) / (2 * Math.tan(camera.fov / 2 * DEG2RAD))
 }
 
 function update (time) {
-  const { camera } = context
-
-  context.objects.hands.forEach(hand => {
-    const object = hand.object
-    const position = object.position
-    const node = hand.html
-
-    object.rotateX(Math.cos(time.current / 2000 * Math.PI + hand.offset * 2000) * 10 * DEG2RAD * time.elapsed / 1000)
-
-    alignNode(node, position, camera)
-  })
+  context.objects.hands.forEach(hand => hand.update(time))
 }
 
 function loop (time) {
@@ -157,36 +116,16 @@ function loop (time) {
  * @param {string} hand.name Username
  */
 export function addHand (hand) {
-  const { scene } = context
   const hands = context.objects.hands
-  const model = context.models.hand
 
-  const result = {
-    data: hand,
-    object: model.clone(),
-    html: document.createElement('div'),
+  const newHand = new Hand(Object.assign({}, hand, {
+    model: context.models.hand,
+    camera: context.camera,
+    scene: context.scene
+  }))
 
-    offset: Math.random()
-  }
-
-  result.html.innerText = hand.name
-  result.html.classList.add('hand__name')
-
-  document.body.appendChild(result.html)
-  scene.add(result.object)
-
-  hands.push(result)
+  hands.push(newHand)
   updateHands()
-}
-
-export function updateHands () {
-  const handObjects = context.objects.hands
-    .map(hand => hand.object)
-
-  const handDistance = alignHands(handObjects)
-
-  const { camera } = context
-  camera.position.z = (2 * handDistance) / (2 * Math.tan(camera.fov / 2 * DEG2RAD))
 }
 
 export async function render () {

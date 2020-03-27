@@ -17,17 +17,7 @@ const usernames = [
   'abcpetri'
 ]
 
-function sample (...values) {
-  const index = Math.floor(Math.random() * values.length)
-  return values[index]
-}
-
 render()
-
-document.querySelector('.action.add-hand')
-  .onclick = () => addHand({
-    name: sample(...usernames)
-  })
 
 setTimeout(function addNewHand () {
   addHand({ name: usernames[0] })

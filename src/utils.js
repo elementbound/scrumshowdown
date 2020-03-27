@@ -1,6 +1,7 @@
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
 
 export const DEG2RAD = Math.PI / 180
+export const RAD2DEG = 180 / Math.PI
 
 export function range (n) {
   return [...Array(n).keys()]

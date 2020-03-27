@@ -25,12 +25,3 @@ body {
     position: fixed;
     text-align: center;
 }
-
-.toolbar {
-    position: fixed;
-    bottom: 0;
-
-    padding: 4px;
-    text-align: center;
-    width: 100%;
-}
