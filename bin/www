@@ -7,6 +7,8 @@
 const app = require('../app')
 const debug = require('debug')('scrumshowdown:server')
 const http = require('http')
+const ws = require('ws')
+const wsrouter = require('../services/wsrouter')
 
 /**
  * Get port from environment and store in Express.
@@ -20,6 +22,12 @@ app.set('port', port)
  */
 
 const server = http.createServer(app)
+
+/**
+ * Create WS server.
+ */
+const webSocketServer = new ws.Server({ server })
+app.locals.ws = webSocketServer
 
 /**
  * Listen on provided port, on all network interfaces.
@@ -86,3 +94,17 @@ function onListening () {
     : 'port ' + addr.port
   debug('Listening on ' + bind)
 }
+
+/**
+ * Listen for websocket connections
+ */
+console.log('WebSocket Server listening...')
+webSocketServer.on('connection', ws => {
+  wsrouter.callConnect(ws)
+
+  ws.on('open', () => wsrouter.callOpen(ws))
+  ws.on('close', (code, reason) => wsrouter.callClose(ws, code, reason))
+  ws.on('message', data => wsrouter.callMessage(ws, data))
+})
+
+wsrouter.server(webSocketServer)

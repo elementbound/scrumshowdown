@@ -9,6 +9,9 @@
     "data",
     "routes",
     "services",
+    "lib",
+    "handlers",
+    "bin/www",
     "app.js"
   ],
   "env": {
