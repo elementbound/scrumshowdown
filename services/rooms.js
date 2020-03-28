@@ -1,4 +1,5 @@
 const Room = require('../data/room')
+const User = require('../data/user')
 
 const rooms = {}
 
@@ -6,8 +7,7 @@ function hasRoom (roomId) {
   return !!rooms[roomId]
 }
 
-function generateRoomId () {
-  const length = 8
+function generateId (length) {
   const charset =
     'ABCDEFGHIJKLMNOPQRSTUVWXYZ' +
     '0123456789'
@@ -18,9 +18,13 @@ function generateRoomId () {
     .join('')
 }
 
+/**
+ * Create a new Room.
+ * @returns {Room} Resulting room
+ */
 function createRoom () {
   let roomId
-  for (; !roomId || hasRoom(roomId); roomId = generateRoomId()) {}
+  for (; !roomId || hasRoom(roomId); roomId = generateId(8)) {}
 
   const room = new Room(roomId)
 
@@ -28,17 +32,43 @@ function createRoom () {
   return room
 }
 
+/**
+ * Find a room by id.
+ * @param {string} id Room id
+ * @returns {Room} Found room, or undefined
+ */
 function getRoom (id) {
   return rooms[id] || undefined
 }
 
+/**
+ * Remove room.
+ * @param {string} id Room id
+ */
 function deleteRoom (id) {
   rooms[id] = undefined
+}
+
+/**
+ * Join Room.
+ * @param {Room} room Room
+ * @param {string} username Username
+ * @returns {User} Joining user
+ */
+function joinRoom (room, username) {
+  let userId
+  for (; !userId || room.hasUser(userId); userId = generateId(8)) {}
+
+  const user = new User(userId, username)
+  room.users.push(user)
+
+  return user
 }
 
 module.exports = {
   hasRoom,
   createRoom,
   getRoom,
-  deleteRoom
+  deleteRoom,
+  joinRoom
 }

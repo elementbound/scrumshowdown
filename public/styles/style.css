@@ -47,3 +47,7 @@ input, button {
 
     padding: 1em;
 }
+
+data {
+    display: none;
+}

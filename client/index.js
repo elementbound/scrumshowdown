@@ -17,13 +17,22 @@ const usernames = [
   'abcpetri'
 ]
 
-render()
+async function main () {
+  await render()
 
-setTimeout(function addNewHand () {
-  addHand({ name: usernames[0] })
-  usernames.shift()
+  const userId = document.querySelector('.data.user-id').innerHTML
+  const userName = document.querySelector('.data.user-name').innerHTML
+  const roomId = document.querySelector('.data.room-id').innerHTML
 
-  if (usernames.length) {
-    setTimeout(addNewHand, 200)
-  }
-}, 300)
+  console.log({
+    userId,
+    userName,
+    roomId
+  })
+
+  usernames.forEach(username => {
+    addHand({ name: username })
+  })
+}
+
+main()
