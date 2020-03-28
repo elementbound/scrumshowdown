@@ -1,2 +1,28 @@
-<h1>{{title}}</h1>
-<p>Welcome to {{title}}</p>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="styles/style.css">
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scrum Showdown</title>
+</head>
+<body>
+    <div class="content">
+      <div class="modal">
+        <div class="modal__title">
+          <h1>Scrum Showdown</h1>
+        </div>
+
+        <div class="modal__body">
+          <form method="POST">
+            <input type="text" name="roomId" placeholder="Room" /> <br/>
+            <input type="text" name="name" placeholder="Name" /> <br/>
+            <input type="submit" value="Join" name="join">
+            <input type="submit" value="Create" name="create">
+          </form>
+        </div>
+      </div>
+    </div>
+</body>
+</html>

@@ -20,7 +20,7 @@ function generateRoomId () {
 
 function createRoom () {
   let roomId
-  for (; roomId && hasRoom(roomId); roomId = generateRoomId()) {}
+  for (; !roomId || hasRoom(roomId); roomId = generateRoomId()) {}
 
   const room = new Room(roomId)
 

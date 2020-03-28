@@ -4,6 +4,12 @@ body {
     color: white;
 }
 
+input, button {
+    font-family: inherit;
+    font-size: inherit;
+    margin: 0.25em;
+}
+
 .content {
     background: radial-gradient(circle, rgb(255, 207, 0) 0%, rgb(208, 147, 0) 100%);
 
@@ -24,4 +30,20 @@ body {
 .hand__name {
     position: fixed;
     text-align: center;
+}
+
+.modal {
+    position: fixed;
+    top: 50vh;
+    left: 50vw;
+
+    transform: translate(-50%, -50%);
+
+    border: 1px solid black;
+    border-radius: 1em;
+    background-color: rgb(208, 147, 0);
+
+    text-align: center;
+
+    padding: 1em;
 }
