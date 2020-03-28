@@ -12,6 +12,8 @@ module.exports = {
       'data',
       'routes',
       'services',
+      'lib',
+      'handlers',
       'app.js'
     ]
   },

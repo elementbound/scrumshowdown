@@ -7,7 +7,7 @@ import { clamp } from '../utils'
 class AlignedElement {
   /**
    * Create an AlignedElement.
-   * @param {HTMLElement} node HTML element to align
+   * @param {HTMLElement} element HTML element to align
    * @param {three.Vector3} position point in space
    * @param {three.Camera} camera camera
    */
@@ -31,6 +31,9 @@ class AlignedElement {
 
     element.style.left = `${x * 100}vw`
     element.style.top = `${y * 100}vh`
+  }
+
+  dispose () {
   }
 }
 

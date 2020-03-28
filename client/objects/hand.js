@@ -91,6 +91,12 @@ class Hand {
     }
   }
 
+  dispose () {
+    this._scene.remove(this._object)
+    this._html.remove()
+    this._alignedElement.dispose()
+  }
+
   /**
    * Aligns the hand on the edge of the screen
    * @param {number} index hand index

@@ -1,6 +1,5 @@
 import * as three from 'three'
-import { DEG2RAD, loadGLTF } from './utils'
-import Hand from './objects/hand'
+import { loadGLTF } from './utils'
 
 export const context = {
   scene: undefined,
@@ -16,10 +15,7 @@ export const context = {
     }
   },
 
-  objects: {
-    hands: [],
-    light: undefined
-  },
+  objects: [],
 
   time: {
     current: 0,
@@ -58,20 +54,16 @@ async function loadModels () {
 function resize (width, height) {
   const { renderer, camera } = context
 
-  console.log('Resizing to', { width, height })
   renderer.setSize(width, height)
 
   camera.aspect = width / height
   camera.updateProjectionMatrix()
-
-  updateHands()
 }
 
 async function setupScene () {
   const { scene, camera } = context
 
   const light = new three.HemisphereLight('white', 'black', 1)
-  context.objects.light = light
 
   light.position.x = 0
   light.position.y = 0
@@ -82,34 +74,8 @@ async function setupScene () {
   camera.position.z = 2
 }
 
-/**
- * Align hands around the screen.
- *
- * @param {Hand[]} hands Hand objects
- */
-function alignHands (hands) {
-  const handCount = hands.length
-
-  console.log(`Realigning with ${handCount} hands`)
-
-  const scale = Hand.calculateScale(handCount, context.camera)
-  hands.forEach((hand, i) => hand.align(i, handCount, scale))
-
-  return scale
-}
-
-/**
- * Update all hands.
- */
-export function updateHands () {
-  const handDistance = alignHands(context.objects.hands)
-
-  const { camera } = context
-  camera.position.z = (2 * handDistance) / (2 * Math.tan(camera.fov / 2 * DEG2RAD))
-}
-
 function update (time) {
-  context.objects.hands.forEach(hand => hand.update(time))
+  context.objects.forEach(object => object.update(time))
 }
 
 function loop (time) {
@@ -123,29 +89,7 @@ function loop (time) {
   requestAnimationFrame(loop)
 }
 
-/**
- * Add a hand to the scene.
- *
- * @param {object} hand Hand data
- * @param {string} hand.name Username
- * @returns {Hand} Resulting Hand
- */
-export function addHand (hand) {
-  const hands = context.objects.hands
-
-  const newHand = new Hand(Object.assign({}, hand, {
-    camera: context.camera,
-    scene: context.scene,
-    models: context.models.hand
-  }))
-
-  hands.push(newHand)
-  updateHands()
-
-  return newHand
-}
-
-export async function render () {
+export async function startLoop () {
   init()
   await loadModels()
 
