@@ -26,6 +26,7 @@ const RESULTS_TEMPLATE = `
 const context = {
   room: new Room(undefined),
   user: new User(undefined, undefined),
+  topic: '',
 
   emoteTimeout: undefined
 }
@@ -36,7 +37,8 @@ const messageHandlers = {
   'Remove-Participant': removeParticipantHandler,
   'State-Change': stateChangeHandler,
   'Estimate-Request': estimateRequestHandler,
-  'Estimate-Result': estimateResultHandler
+  'Estimate-Result': estimateResultHandler,
+  'Update-Topic': updateTopicHandler
 }
 
 function createHand (user) {
@@ -206,6 +208,24 @@ function confirmJoinHandler ({ user }) {
     console.log('Requesting estimates')
     user.websocket.send(messages.estimateRequest())
   }
+
+  const topic = document.querySelector('#topic')
+  topic.isBeingEdited = false
+
+  topic.onfocus = () => { topic.isBeingEdited = true }
+  topic.onblur = () => {
+    topic.isBeingEdited = false
+    updateTopic()
+  }
+
+  topic.onkeypress = event => {
+    if (event.keyCode === 13) {
+      console.log(topic.innerText)
+      context.user.websocket.send(messages.updateTopic(topic.innerText))
+
+      topic.blur()
+    }
+  }
 }
 
 /**
@@ -272,6 +292,24 @@ function estimateRequestHandler () {
 
 function estimateResultHandler ({ estimates }) {
   document.querySelector('.results').innerHTML = renderEstimationResults(estimates)
+}
+
+function updateTopicHandler ({ topic }) {
+  context.room.topic = topic
+  updateTopic()
+}
+
+function updateTopic () {
+  const topic = context.room.topic
+  const topicElement = document.querySelector('#topic')
+  if (!topicElement.isBeingEdited) {
+    // topicElement.innerText = topic
+    if (topic) {
+      topicElement.innerText = topic
+    } else {
+      topicElement.innerHTML = '<i>Topic</i>'
+    }
+  }
 }
 
 function renderEstimationResults (estimates) {

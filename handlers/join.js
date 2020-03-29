@@ -33,6 +33,9 @@ function joinHandler () {
         u.websocket.send(messages.addParticipant(user))
       })
 
+    // Let the joinee know the current topic
+    ws.send(messages.updateTopic(room.topic))
+
     console.log(room)
   })
 }

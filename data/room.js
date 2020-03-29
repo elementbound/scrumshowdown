@@ -18,6 +18,11 @@ class Room {
      * @member {User[]} Participating users
      */
     this.users = []
+
+    /**
+     * @member {string} topic Room topic
+     */
+    this.topic = ''
   }
 
   /**

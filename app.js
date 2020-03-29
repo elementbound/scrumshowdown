@@ -26,6 +26,7 @@ app.use('/room', roomRouter)
 require('./handlers/join')()
 require('./handlers/state')()
 require('./handlers/estimate')()
+require('./handlers/topic')()
 require('./handlers/leave')()
 
 // catch 404 and forward to error handler

@@ -94,6 +94,15 @@ function estimateResult (estimates) {
   }
 }
 
+function updateTopic (topic) {
+  return {
+    type: 'Update-Topic',
+    data: {
+      topic
+    }
+  }
+}
+
 module.exports = {
   join,
   confirmJoin,
@@ -107,5 +116,7 @@ module.exports = {
   estimateRequest,
   estimateResponse,
   estimateDecline,
-  estimateResult
+  estimateResult,
+
+  updateTopic
 }
