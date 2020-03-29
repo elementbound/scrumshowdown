@@ -1,4 +1,5 @@
 const User = require('../data/user')
+const Estimation = require('../data/estimation')
 const wsRouter = require('../services/wsrouter')
 const messages = require('../services/participant.messages')
 
@@ -42,13 +43,16 @@ function estimateHandler () {
     const resultPromises = room.users.map(user => waitForEstimate(user))
     const results = await Promise.all(resultPromises)
 
-    const responseData = {}
+    const votesData = {}
     results.forEach(({ user, data }) => {
-      responseData[user.id] = data.estimate
+      votesData[user.id] = data.estimate
     })
 
-    console.log('Broadcasting results', responseData)
-    room.users.forEach(user => user.websocket.send(messages.estimateResult(responseData)))
+    const estimation = new Estimation(room.topic, votesData)
+    room.estimations.push(estimation)
+
+    console.log('Broadcasting results', votesData)
+    room.users.forEach(user => user.websocket.send(messages.estimateResult(estimation)))
   })
 }
 

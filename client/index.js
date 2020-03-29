@@ -9,6 +9,8 @@ import * as messages from '../services/participant.messages'
 const EMOTE_DURATION = 1000
 
 const RESULTS_TEMPLATE = `
+  <h2>{{topic}}</h2>
+
   {{#summary}}
     <div class="row summary">
       {{estimate}} <progress value="{{percentage}}">{{count}}</progress>
@@ -28,7 +30,8 @@ const context = {
   user: new User(undefined, undefined),
   topic: '',
 
-  emoteTimeout: undefined
+  emoteTimeout: undefined,
+  estimations: []
 }
 
 const messageHandlers = {
@@ -209,6 +212,16 @@ function confirmJoinHandler ({ user }) {
     user.websocket.send(messages.estimateRequest())
   }
 
+  document.querySelector('.action.toggle-logs').onclick = () => {
+    const logs = document.querySelector('#logs')
+
+    if (logs.classList.contains('hidden')) {
+      logs.classList.remove('hidden')
+    } else {
+      logs.classList.add('hidden')
+    }
+  }
+
   const topic = document.querySelector('#topic')
   topic.isBeingEdited = false
 
@@ -290,8 +303,18 @@ function estimateRequestHandler () {
   user.websocket.send(messages.estimateResponse(estimate))
 }
 
-function estimateResultHandler ({ estimates }) {
-  document.querySelector('.results').innerHTML = renderEstimationResults(estimates)
+function estimateResultHandler ({ estimation }) {
+  console.log('Received estimation', estimation)
+  context.estimations.push(estimation)
+
+  const resultHtml = renderEstimationResults(estimation.topic, estimation.estimates)
+
+  const logItem = document.createElement('div')
+  const logs = document.querySelector('#logs')
+  logItem.innerHTML = resultHtml
+  logs.prepend(logItem)
+
+  logs.classList.remove('hidden')
 }
 
 function updateTopicHandler ({ topic }) {
@@ -303,7 +326,6 @@ function updateTopic () {
   const topic = context.room.topic
   const topicElement = document.querySelector('#topic')
   if (!topicElement.isBeingEdited) {
-    // topicElement.innerText = topic
     if (topic) {
       topicElement.innerText = topic
     } else {
@@ -312,10 +334,10 @@ function updateTopic () {
   }
 }
 
-function renderEstimationResults (estimates) {
+function renderEstimationResults (topic, estimates) {
   const votes = Object.entries(estimates)
     .map(([id, estimate]) => ({
-      user: context.room.users.find(u => u.id === id),
+      user: context.room.users.find(u => u.id === id) || new User(id, `{${id}}`),
       estimate
     }))
     .sort((a, b) => {
@@ -335,7 +357,7 @@ function renderEstimationResults (estimates) {
     .sort((a, b) => b.percentage - a.percentage)
 
   return Mustache.render(RESULTS_TEMPLATE, {
-    votes, summary
+    topic, votes, summary
   })
 }
 

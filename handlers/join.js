@@ -36,6 +36,9 @@ function joinHandler () {
     // Let the joinee know the current topic
     ws.send(messages.updateTopic(room.topic))
 
+    // Stream past estimations to the joinee
+    room.estimations.forEach(estimation => ws.send(messages.estimateResult(estimation)))
+
     console.log(room)
   })
 }

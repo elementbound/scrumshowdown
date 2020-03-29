@@ -83,13 +83,13 @@ function estimateResponse (estimate) {
 
 /**
  * Create an Estimate Result message.
- * @param {Map<string, string>} estimates A <user id; estimate> mapping
+ * @param {Estimation} estimation
  */
-function estimateResult (estimates) {
+function estimateResult (estimation) {
   return {
     type: 'Estimate-Result',
     data: {
-      estimates
+      estimation
     }
   }
 }

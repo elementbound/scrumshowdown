@@ -23,6 +23,11 @@ class Room {
      * @member {string} topic Room topic
      */
     this.topic = ''
+
+    /**
+     * @member {Estimation[]} estimations Previous estimations with results
+     */
+    this.estimations = []
   }
 
   /**
