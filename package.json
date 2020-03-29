@@ -1,6 +1,6 @@
 {
   "name": "scrumshowdown",
-  "version": "0.17.0",
+  "version": "0.17.1",
   "description": "",
   "main": "app.js",
   "scripts": {
@@ -9,7 +9,9 @@
     "build": "webpack",
     "jsdoc": "jsdoc -c .jsdoc.js",
     "lint": "eslint bin/www client/**.js handlers/**.js routes/**.js services/**.js app.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+
+    "heroku-postbuild": "webpack -p"
   },
   "author": "elementbound",
   "license": "ISC",
