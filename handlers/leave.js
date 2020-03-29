@@ -1,4 +1,5 @@
 const wsRouter = require('../services/wsrouter')
+const roomService = require('../services/rooms')
 const messages = require('../services/participant.messages')
 
 const PING_INTERVAL = 3000
@@ -35,6 +36,11 @@ function leaveHandler () {
       .forEach(u => u.websocket.send(messages.removeParticipant(user)))
 
     room.removeUser(user.id)
+
+    if (!room.users.length) {
+      console.log('Removing empty room', room.id)
+      roomService.deleteRoom(room.id)
+    }
   })
 }
 
