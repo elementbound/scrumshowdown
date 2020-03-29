@@ -19,6 +19,9 @@ function joinHandler () {
     const user = roomService.joinRoom(room, username)
     user.websocket = ws
 
+    ws.room = room
+    ws.user = user
+
     ws.send(messages.confirmJoin(user))
     room.users
       .filter(u => u !== user)

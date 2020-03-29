@@ -9,13 +9,27 @@ class User {
    * @param {string} id User id
    * @param {string} name User name
    */
-  constructor (id, name, websocket) {
+  constructor (id, name) {
     this.id = id
     this.name = name
-    this.websocket = websocket
 
     /** @member {any} */
     this.websocket = undefined
+
+    /** @member {any} */
+    this.hand = undefined
+  }
+
+  /**
+   * Strip application-specific user data
+   * @param {User} user Sanitized User
+   */
+  static sanitize (user) {
+    if (!user) {
+      return {}
+    } else {
+      return new User(user.id, user.name)
+    }
   }
 }
 

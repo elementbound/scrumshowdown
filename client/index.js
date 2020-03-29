@@ -5,12 +5,6 @@ import * as render from './render'
 import { DEG2RAD } from './utils'
 import * as messages from '../services/participant.messages'
 
-/** @type {Map<string, User>} */
-const users = {}
-
-/** @type {Map<string, Hand>} */
-const hands = {}
-
 const context = {
   room: new Room(undefined),
   user: new User(undefined, undefined)
@@ -19,7 +13,8 @@ const context = {
 const messageHandlers = {
   'Confirm-Join': confirmJoinHandler,
   'Add-Participant': addParticipantHandler,
-  'Remove-Participant': removeParticipantHandler
+  'Remove-Participant': removeParticipantHandler,
+  'State-Change': stateChangeHandler
 }
 
 function createHand (user) {
@@ -56,7 +51,8 @@ function alignHands (hands) {
  * Update all hands.
  */
 export function updateHands () {
-  const handDistance = alignHands(Object.values(hands))
+  const hands = context.room.users.map(user => user.hand)
+  const handDistance = alignHands(hands)
 
   const { camera } = render.context
   camera.position.z = (2 * handDistance) / (2 * Math.tan(camera.fov / 2 * DEG2RAD))
@@ -80,7 +76,11 @@ async function main () {
   webSocket.onopen = () => {
     console.log('Socket open!')
 
-    webSocket.send(JSON.stringify(messages.join(user.name, room.id)))
+    context.user.websocket = webSocket
+
+    const rawSend = webSocket.send
+    webSocket.send = data => rawSend.apply(webSocket, [JSON.stringify(data)])
+    webSocket.send(messages.join(user.name, room.id))
   }
 
   webSocket.onmessage = event => {
@@ -92,6 +92,13 @@ async function main () {
   }
 }
 
+function sendStateChange (state) {
+  return function () {
+    console.log('Sending state', state)
+    context.user.websocket.send(messages.stateChangeRequest(state))
+  }
+}
+
 /**
  * Handle a Confirm Join message.
  * @param {any} param0 Event data
@@ -99,10 +106,17 @@ async function main () {
  */
 function confirmJoinHandler ({ user }) {
   console.log('Join confirmed with user data', user)
-  context.user = user
+  context.user = Object.assign({}, context.user, user)
+  context.room.users.push(context.user)
 
   const hand = createHand(user)
   context.user.hand = hand
+
+  console.log(document.querySelector('.action.idle'))
+  document.querySelector('.action.idle').onclick = sendStateChange('idle')
+  document.querySelector('.action.ready').onclick = sendStateChange('ready')
+  document.querySelector('.action.thumbsup').onclick = sendStateChange('thumbsUp')
+  document.querySelector('.action.thumbsdown').onclick = sendStateChange('thumbsDown')
 }
 
 /**
@@ -135,6 +149,17 @@ function removeParticipantHandler ({ id }) {
   hand.dispose()
 
   updateHands()
+}
+
+/**
+ * Handle a State Change message.
+ * @param {any} param0 Event data
+ * @param {string} param0.id User id
+ * @param {string} param0.state New state
+ */
+function stateChangeHandler ({ id, state }) {
+  const user = context.room.users.find(u => u.id === id)
+  user.hand.state = state
 }
 
 main()

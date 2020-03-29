@@ -85,10 +85,6 @@ class Hand {
 
     this._alignedElement.position = this._object.position
     this._alignedElement.update(time)
-
-    if (Math.random() < 0.01) {
-      this.state = sample(...Object.keys(this._models))
-    }
   }
 
   dispose () {

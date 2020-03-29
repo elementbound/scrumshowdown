@@ -1,4 +1,3 @@
-const roomService = require('../services/rooms')
 const wsRouter = require('../services/wsrouter')
 const messages = require('../services/participant.messages')
 
@@ -21,13 +20,13 @@ function leaveHandler () {
   })
 
   wsRouter.onClose(ws => {
-    const room = roomService.listRooms()
-      .find(room => room.users
-        .some(user => user.websocket === ws)
-      )
+    const room = ws.room
+    const user = ws.user
 
-    const user = room.users
-      .find(user => user.websocket === ws)
+    if (!user) {
+      console.warn('Closed connection with no user associated')
+      return
+    }
 
     console.log('User left room', room, { id: user.id, name: user.name })
 

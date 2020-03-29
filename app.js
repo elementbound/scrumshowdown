@@ -24,6 +24,7 @@ app.use('/room', roomRouter)
 
 // WS Handlers
 require('./handlers/join')()
+require('./handlers/state')()
 require('./handlers/leave')()
 
 // catch 404 and forward to error handler

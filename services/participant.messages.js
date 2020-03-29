@@ -40,10 +40,32 @@ function removeParticipant (user) {
   }
 }
 
+function stateChangeRequest (state) {
+  return {
+    type: 'State-Change-Request',
+    data: {
+      state
+    }
+  }
+}
+
+function stateChange (user, state) {
+  return {
+    type: 'State-Change',
+    data: {
+      id: user.id,
+      state
+    }
+  }
+}
+
 module.exports = {
   join,
   confirmJoin,
 
   addParticipant,
-  removeParticipant
+  removeParticipant,
+
+  stateChangeRequest,
+  stateChange
 }
