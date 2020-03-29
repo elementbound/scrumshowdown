@@ -213,6 +213,17 @@ function confirmJoinHandler ({ user }) {
       topic.blur()
     }
   }
+
+  const roomIdBox = document.querySelector('#roomIdBox')
+  roomIdBox.onfocus = async () => {
+    const text = `Room: ${context.room.id}`
+    roomIdBox.innerText = text
+
+    await navigator.clipboard.writeText(context.room.id)
+
+    roomIdBox.innerText = 'Copied to clipboard!'
+    setTimeout(() => { roomIdBox.innerText = text }, 1000)
+  }
 }
 
 /**
