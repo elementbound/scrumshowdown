@@ -8,7 +8,7 @@
     "start:dev": "concurrently \"webpack -w\" \"nodemon bin/www\"",
     "build": "webpack",
     "jsdoc": "jsdoc -c .jsdoc.js",
-    "lint": "eslint bin/www client/**.js routes/**.js app.js",
+    "lint": "eslint bin/www client/**.js handlers/**.js routes/**.js services/**.js app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "elementbound",
