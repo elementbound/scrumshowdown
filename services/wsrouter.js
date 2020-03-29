@@ -10,7 +10,7 @@ let wsServer
 function _withJSONSend (ws) {
   const rawSend = ws.send
   ws.send = function send (data) {
-    rawSend.apply(ws, [JSON.stringify(data)])
+    return rawSend.apply(ws, [JSON.stringify(data)])
   }
   return ws
 }

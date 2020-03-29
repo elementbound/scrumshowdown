@@ -1,3 +1,4 @@
+import Mustache from 'mustache'
 import User from '../data/user'
 import Room from '../data/room'
 import Hand from './objects/hand'
@@ -6,6 +7,21 @@ import { DEG2RAD } from './utils'
 import * as messages from '../services/participant.messages'
 
 const EMOTE_DURATION = 1000
+
+const RESULTS_TEMPLATE = `
+  {{#summary}}
+    <div class="row summary">
+      {{estimate}} <progress value="{{percentage}}">{{count}}</progress>
+    </div>
+  {{/summary}}
+
+  {{#votes}}
+    <div class="row vote">
+      <div>{{user.name}}</div>
+      <div>{{estimate}}</div>
+    </div>
+  {{/votes}}
+`
 
 const context = {
   room: new Room(undefined),
@@ -18,7 +34,9 @@ const messageHandlers = {
   'Confirm-Join': confirmJoinHandler,
   'Add-Participant': addParticipantHandler,
   'Remove-Participant': removeParticipantHandler,
-  'State-Change': stateChangeHandler
+  'State-Change': stateChangeHandler,
+  'Estimate-Request': estimateRequestHandler,
+  'Estimate-Result': estimateResultHandler
 }
 
 function createHand (user) {
@@ -181,6 +199,13 @@ function confirmJoinHandler ({ user }) {
 
   document.querySelector('.action.thumbsup').onclick = sendEmote('thumbsUp')
   document.querySelector('.action.thumbsdown').onclick = sendEmote('thumbsDown')
+
+  document.querySelector('.action.request-estimate').onclick = () => {
+    const { user } = context
+
+    console.log('Requesting estimates')
+    user.websocket.send(messages.estimateRequest())
+  }
 }
 
 /**
@@ -235,6 +260,45 @@ function stateChangeHandler ({ id, isReady, emote }) {
 
     readyToggle.innerHTML = user.isReady ? labelOn : labelOff
   }
+}
+
+function estimateRequestHandler () {
+  const estimate = document.querySelector('[name=estimate]').value
+
+  const { user } = context
+  console.log('Responding with estimate', estimate)
+  user.websocket.send(messages.estimateResponse(estimate))
+}
+
+function estimateResultHandler ({ estimates }) {
+  document.querySelector('.results').innerHTML = renderEstimationResults(estimates)
+}
+
+function renderEstimationResults (estimates) {
+  const votes = Object.entries(estimates)
+    .map(([id, estimate]) => ({
+      user: context.room.users.find(u => u.id === id),
+      estimate
+    }))
+    .sort((a, b) => {
+      const estimateCompare = b.estimate.toString().localeCompare(a.estimate)
+      const nameCompare = a.user.name.localeCompare(b.user.name)
+
+      return estimateCompare !== 0
+        ? estimateCompare
+        : nameCompare
+    })
+
+  const summary = Object.entries(votes
+    .reduce((collector, { user, estimate }) => Object.assign({}, collector, {
+      [estimate]: (collector[estimate] || 0) + 1 / votes.length
+    }), {}))
+    .map(([estimate, percentage]) => ({ estimate, percentage, count: percentage * votes.length }))
+    .sort((a, b) => b.percentage - a.percentage)
+
+  return Mustache.render(RESULTS_TEMPLATE, {
+    votes, summary
+  })
 }
 
 main()

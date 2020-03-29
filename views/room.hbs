@@ -15,12 +15,12 @@
         <div class="modal__body modal--flex">
             <div class="row">
                 <button class="action toggle-ready" 
-                    data-toggle-on="❌"
-                    data-toggle-off="✔️">
-                    ✔️
+                    data-toggle-on="✔️"
+                    data-toggle-off="❌">
+                    ❌
                 </button>
 
-                <select>
+                <select name="estimate">
                     <option>1</option>
                     <option>2</option>
                     <option>3</option>
@@ -46,7 +46,10 @@
                 <button class="action topic" disabled>Set</button>
             </div>
             <div class="row tool hidden">
-                <button class="action request-estimate" disabled>Request Estimate</button>
+                <button class="action request-estimate">Request Estimate</button>
+            </div>
+
+            <div class="results">
             </div>
         </div>
     </div>

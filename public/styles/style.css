@@ -65,6 +65,9 @@ select {
 .modal--slim {
     max-width: 20vmax;
     min-width: 12em;
+
+    max-height: 20vmax;
+    overflow-y: auto;
 }
 
 .modal--flex {

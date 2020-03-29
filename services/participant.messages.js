@@ -60,6 +60,40 @@ function stateChange (user, isReady, emote) {
   }
 }
 
+function estimateRequest () {
+  return {
+    type: 'Estimate-Request'
+  }
+}
+
+function estimateDecline () {
+  return {
+    type: 'Estimate-Decline'
+  }
+}
+
+function estimateResponse (estimate) {
+  return {
+    type: 'Estimate-Response',
+    data: {
+      estimate
+    }
+  }
+}
+
+/**
+ * Create an Estimate Result message.
+ * @param {Map<string, string>} estimates A <user id; estimate> mapping
+ */
+function estimateResult (estimates) {
+  return {
+    type: 'Estimate-Result',
+    data: {
+      estimates
+    }
+  }
+}
+
 module.exports = {
   join,
   confirmJoin,
@@ -68,5 +102,10 @@ module.exports = {
   removeParticipant,
 
   stateChangeRequest,
-  stateChange
+  stateChange,
+
+  estimateRequest,
+  estimateResponse,
+  estimateDecline,
+  estimateResult
 }
