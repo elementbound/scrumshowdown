@@ -5,9 +5,13 @@ import * as render from './render'
 import { DEG2RAD } from './utils'
 import * as messages from '../services/participant.messages'
 
+const EMOTE_DURATION = 1000
+
 const context = {
   room: new Room(undefined),
-  user: new User(undefined, undefined)
+  user: new User(undefined, undefined),
+
+  emoteTimeout: undefined
 }
 
 const messageHandlers = {
@@ -29,6 +33,24 @@ function createHand (user) {
   render.context.objects.push(hand)
 
   return hand
+}
+
+/**
+ * Determine which hand state to display for user.
+ * @param {User} user User
+ */
+function getHandState (user) {
+  return user.emote
+    ? user.emote
+    : (user.isReady ? 'ready' : 'idle')
+}
+
+/**
+ * Send state change to host.
+ * @param {User} user User
+ */
+function sendStateChange (user) {
+  user.websocket.send(messages.stateChangeRequest(user.isReady, user.emote))
 }
 
 /**
@@ -90,12 +112,49 @@ async function main () {
     const handler = messageHandlers[message.type]
     handler && handler(message.data)
   }
+
+  const toolsToggle = document.querySelector('.action.toggle-tools')
+  toolsToggle.onclick = () => {
+    console.log('Toggling tools')
+    const tools = [...document.querySelectorAll('.tool')]
+    const visible = tools.every(tool => !tool.classList.contains('hidden'))
+
+    const labelOff = toolsToggle.getAttribute('data-toggle-off')
+    const labelOn = toolsToggle.getAttribute('data-toggle-on')
+
+    if (visible) {
+      console.log('Hiding tools')
+      tools
+        .filter(tool => !tool.classList.contains('hidden'))
+        .forEach(tool => tool.classList.add('hidden'))
+
+      toolsToggle.innerHTML = labelOff
+    } else {
+      console.log('Showing tools')
+      tools
+        .filter(tool => tool.classList.contains('hidden'))
+        .forEach(tool => tool.classList.remove('hidden'))
+
+      toolsToggle.innerHTML = labelOn
+    }
+  }
 }
 
-function sendStateChange (state) {
+function sendEmote (emote) {
   return function () {
-    console.log('Sending state', state)
-    context.user.websocket.send(messages.stateChangeRequest(state))
+    console.log('Sending emote', emote)
+
+    const { user } = context
+    const { websocket } = user
+
+    user.emote = emote
+    websocket.send(messages.stateChangeRequest(user.isReady, user.emote))
+
+    context.emoteTimeout && clearTimeout(context.emoteTimeout)
+    context.emoteTimeout = setTimeout(() => {
+      user.emote = ''
+      sendStateChange(user)
+    }, EMOTE_DURATION)
   }
 }
 
@@ -113,10 +172,15 @@ function confirmJoinHandler ({ user }) {
   context.user.hand = hand
 
   console.log(document.querySelector('.action.idle'))
-  document.querySelector('.action.idle').onclick = sendStateChange('idle')
-  document.querySelector('.action.ready').onclick = sendStateChange('ready')
-  document.querySelector('.action.thumbsup').onclick = sendStateChange('thumbsUp')
-  document.querySelector('.action.thumbsdown').onclick = sendStateChange('thumbsDown')
+  document.querySelector('.action.toggle-ready').onclick = () => {
+    const { user } = context
+
+    user.isReady = !user.isReady
+    sendStateChange(user)
+  }
+
+  document.querySelector('.action.thumbsup').onclick = sendEmote('thumbsUp')
+  document.querySelector('.action.thumbsdown').onclick = sendEmote('thumbsDown')
 }
 
 /**
@@ -130,6 +194,7 @@ function addParticipantHandler ({ user }) {
   console.log(`Adding user ${user.id}`)
 
   const hand = createHand(user)
+  hand.state = getHandState(user)
   user.hand = hand
 
   updateHands()
@@ -157,9 +222,19 @@ function removeParticipantHandler ({ id }) {
  * @param {string} param0.id User id
  * @param {string} param0.state New state
  */
-function stateChangeHandler ({ id, state }) {
+function stateChangeHandler ({ id, isReady, emote }) {
   const user = context.room.users.find(u => u.id === id)
-  user.hand.state = state
+  user.isReady = isReady
+  user.emote = emote
+  user.hand.state = getHandState(user)
+
+  if (user === context.user) {
+    const readyToggle = document.querySelector('.action.toggle-ready')
+    const labelOff = readyToggle.getAttribute('data-toggle-off')
+    const labelOn = readyToggle.getAttribute('data-toggle-on')
+
+    readyToggle.innerHTML = user.isReady ? labelOn : labelOff
+  }
 }
 
 main()

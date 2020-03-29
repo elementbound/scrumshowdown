@@ -13,6 +13,12 @@ class User {
     this.id = id
     this.name = name
 
+    /** @member {boolean} */
+    this.isReady = false
+
+    /** @member {string} */
+    this.emote = ''
+
     /** @member {any} */
     this.websocket = undefined
 
@@ -21,14 +27,20 @@ class User {
   }
 
   /**
-   * Strip application-specific user data
+   * Strip application-specific user data.
+   *
+   * This version of the object is safe for printing or transmitting.
    * @param {User} user Sanitized User
    */
   static sanitize (user) {
     if (!user) {
       return {}
     } else {
-      return new User(user.id, user.name)
+      const result = new User(user.id, user.name)
+      result.isReady = user.isReady
+      result.emote = user.emote
+
+      return result
     }
   }
 }

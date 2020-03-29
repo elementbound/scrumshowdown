@@ -4,10 +4,23 @@ body {
     color: white;
 }
 
-input, button {
+input, button, select {
     font-family: inherit;
     font-size: inherit;
     margin: 0.25em;
+    padding: 0;
+    border: none;
+    
+    min-width: 1.5em;
+    min-height: 1.5em;
+}
+
+select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+
+    text-align: center;
 }
 
 .content {
@@ -44,10 +57,28 @@ input, button {
     background-color: rgb(208, 147, 0);
 
     text-align: center;
+    vertical-align: baseline;
 
     padding: 1em;
 }
 
-data {
+.modal--slim {
+    max-width: 20vmax;
+    min-width: 12em;
+}
+
+.modal--flex {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.row {
+    display: inline-flex;
+    vertical-align: center;
+    width: 100%;
+    justify-content: space-around;
+}
+
+.data, .hidden {
     display: none;
 }

@@ -10,12 +10,15 @@ function stateHandler () {
 
     const room = ws.room
     const user = ws.user
-    const state = message.data.state
+    const { isReady, emote } = message.data
 
-    console.log('User requesting to change state', { user: User.sanitize(user), state })
+    console.log('User requesting to change state', { user: User.sanitize(user), isReady, emote })
+
+    user.isReady = isReady
+    user.emote = emote
 
     room.users
-      .forEach(u => u.websocket.send(messages.stateChange(user, state)))
+      .forEach(u => u.websocket.send(messages.stateChange(user, isReady, emote)))
   })
 }
 

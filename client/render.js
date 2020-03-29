@@ -26,7 +26,7 @@ export const context = {
 function init () {
   const content = document.querySelector('.content')
   const scene = new three.Scene()
-  const camera = new three.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000)
+  const camera = new three.PerspectiveCamera(30, window.innerWidth / window.innerHeight, 0.1, 1000)
   const renderer = new three.WebGLRenderer({
     alpha: true,
     antialias: true

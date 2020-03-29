@@ -11,17 +11,47 @@
     <div class="content">
     </div>
 
-    <div class="modal">
-        <div class="modal__body">
-            <button class="action idle">Idle</button>
-            <button class="action ready">Ready</button>
-            <button class="action thumbsup">👍</button>
-            <button class="action thumbsdown">👎</button>
+    <div class="modal modal--slim">
+        <div class="modal__body modal--flex">
+            <div class="row">
+                <button class="action toggle-ready" 
+                    data-toggle-on="❌"
+                    data-toggle-off="✔️">
+                    ✔️
+                </button>
+
+                <select>
+                    <option>1</option>
+                    <option>2</option>
+                    <option>3</option>
+                    <option>5</option>
+                    <option>8</option>
+                    <option>13</option>
+                    <option>☕</option>
+                    <option>❓</option>
+                    <option>❌</option>
+                </select>
+
+                <button class="action thumbsup">👍</button>
+                <button class="action thumbsdown">👎</button>
+                <button class="action toggle-tools" 
+                    data-toggle-on="▲"
+                    data-toggle-off="▼">
+                    ▼
+                </button>
+            </div>
+
+            <div class="row tool hidden">
+                <input type="text" class="action topic value" placeholder="Topic" />
+                <button class="action topic" disabled>Set</button>
+            </div>
+            <div class="row tool hidden">
+                <button class="action request-estimate" disabled>Request Estimate</button>
+            </div>
         </div>
     </div>
 
     <div class="data">
-        <div class="data user-id">{{userId}}</div>
         <div class="data user-name">{{userName}}</div>
         <div class="data room-id">{{roomId}}</div>
     </div>

@@ -1,6 +1,13 @@
 import * as three from 'three'
-import { DEG2RAD, sample } from '../utils'
+import { DEG2RAD } from '../utils'
 import AlignedElement from './aligned.element'
+
+const STATE_EMOJIS = {
+  idle: '',
+  ready: '✔️',
+  thumbsUp: '👍',
+  thumbsDown: '👎'
+}
 
 /**
  * Represents a hand.
@@ -52,7 +59,7 @@ class Hand {
 
   set name (val) {
     this._name = val
-    this._html.innerText = this._name
+    this._updateHTML()
   }
 
   get state () {
@@ -70,12 +77,17 @@ class Hand {
     this._object = this._models[this._state].scene.clone()
 
     this._realign()
+    this._updateHTML()
 
     this._scene.add(this._object)
   }
 
   get object () {
     return this._object
+  }
+
+  _updateHTML () {
+    this._html.innerText = `${this._name}${STATE_EMOJIS[this._state]}`
   }
 
   update (time) {

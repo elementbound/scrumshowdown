@@ -17,7 +17,7 @@ function confirmJoin (user) {
   return {
     type: 'Confirm-Join',
     data: {
-      user: new User(user.id, user.name)
+      user: User.sanitize(user)
     }
   }
 }
@@ -26,7 +26,7 @@ function addParticipant (user) {
   return {
     type: 'Add-Participant',
     data: {
-      user: new User(user.id, user.name)
+      user: User.sanitize(user)
     }
   }
 }
@@ -40,21 +40,22 @@ function removeParticipant (user) {
   }
 }
 
-function stateChangeRequest (state) {
+function stateChangeRequest (isReady, emote) {
   return {
     type: 'State-Change-Request',
     data: {
-      state
+      isReady, emote
     }
   }
 }
 
-function stateChange (user, state) {
+function stateChange (user, isReady, emote) {
   return {
     type: 'State-Change',
     data: {
       id: user.id,
-      state
+      isReady,
+      emote
     }
   }
 }
