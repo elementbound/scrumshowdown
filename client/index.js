@@ -46,11 +46,11 @@ const messageHandlers = {
 
 function createHand (user) {
   const { camera, scene } = render.context
-  const models = render.context.models.hand
+  const model = render.context.models.hand
   const hand = new Hand({
     name: user.name,
     camera,
-    models,
+    model,
     scene
   })
   render.context.objects.push(hand)

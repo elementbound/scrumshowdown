@@ -1,4 +1,5 @@
 import * as three from 'three'
+import { SkeletonUtils } from 'three/examples/jsm/utils/SkeletonUtils'
 import { DEG2RAD } from '../utils'
 import AlignedElement from './aligned.element'
 
@@ -17,9 +18,9 @@ class Hand {
    * Create a new Hand.
    * @param {object} options options
    * @param {string} options.name Hand name
-   * @param {Map<string, THREE.Object3D>} options.models Idle hand model
+   * @param {THREE.Scene} options.model Hand model
    * @param {THREE.Scene} options.scene Scene
-   * @param {THREE.PerspectiveCamera} options.camera Scene
+   * @param {THREE.PerspectiveCamera} options.camera Scene camera
    * @param {string} [options.htmlClass=hand__name] HTML class for nameplate
    */
   constructor (options) {
@@ -27,9 +28,20 @@ class Hand {
     this._offset = Math.random()
     this._camera = options.camera
     this._scene = options.scene
+    this._model = options.model
 
-    const object = new three.Object3D()
+    const object = SkeletonUtils.clone(this._model.scene)
     this._object = object
+    this._scene.add(this._object)
+
+    this._mixer = new three.AnimationMixer(object)
+
+    this._actions = {}
+    this._model.animations.forEach(animation => {
+      this._actions[animation.name] = this._mixer.clipAction(animation)
+    })
+
+    console.log('Actions', this._actions)
 
     const html = document.createElement('div')
     html.classList.add(options.htmlClass || 'hand__name')
@@ -42,7 +54,6 @@ class Hand {
     this._alignedElement = new AlignedElement(html, object.position, options.camera)
 
     this._state = ''
-    this._models = options.models
 
     this._align = {
       index: 0,
@@ -71,15 +82,15 @@ class Hand {
       return
     }
 
-    this._scene.remove(this._object)
+    Object.values(this._actions)
+      .forEach(action => { action.stop() })
 
     this._state = val
-    this._object = this._models[this._state].scene.clone()
+
+    this._actions[val] && this._actions[val].play()
 
     this._realign()
     this._updateHTML()
-
-    this._scene.add(this._object)
   }
 
   get object () {
@@ -97,6 +108,8 @@ class Hand {
 
     this._alignedElement.position = this._object.position
     this._alignedElement.update(time)
+
+    this._mixer.update(time.elapsed)
   }
 
   dispose () {

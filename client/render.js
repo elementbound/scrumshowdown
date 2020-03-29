@@ -7,12 +7,7 @@ export const context = {
   camera: undefined,
 
   models: {
-    hand: {
-      idle: undefined,
-      ready: undefined,
-      thumbsUp: undefined,
-      thumbsDown: undefined
-    }
+    hand: undefined
   },
 
   objects: [],
@@ -43,12 +38,9 @@ function init () {
 }
 
 async function loadModels () {
-  context.models.hand = {
-    idle: await loadGLTF('/assets/hand-idle.glb'),
-    ready: await loadGLTF('/assets/hand-ready.glb'),
-    thumbsUp: await loadGLTF('/assets/hand-thumbsup.glb'),
-    thumbsDown: await loadGLTF('/assets/hand-thumbsdown.glb')
-  }
+  context.models.hand = await loadGLTF('/assets/hand.glb')
+
+  console.log('Animations', context.models.hand.animations)
 }
 
 function resize (width, height) {
