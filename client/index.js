@@ -117,7 +117,8 @@ async function main () {
   room.id = document.querySelector('.data.room-id').innerHTML
 
   console.log('Connecting to WS...')
-  const webSocket = new WebSocket(`ws://localhost:3000/rooms/${room.id}`)
+  const protocol = location.protocol.startsWith('https') ? 'wss' : 'ws'
+  const webSocket = new WebSocket(`${protocol}://${window.location.host}/rooms/${room.id}`)
   webSocket.onopen = () => {
     console.log('Socket open!')
 
