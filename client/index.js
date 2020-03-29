@@ -135,32 +135,6 @@ async function main () {
     const handler = messageHandlers[message.type]
     handler && handler(message.data)
   }
-
-  const toolsToggle = document.querySelector('.action.toggle-tools')
-  toolsToggle.onclick = () => {
-    console.log('Toggling tools')
-    const tools = [...document.querySelectorAll('.tool')]
-    const visible = tools.every(tool => !tool.classList.contains('hidden'))
-
-    const labelOff = toolsToggle.getAttribute('data-toggle-off')
-    const labelOn = toolsToggle.getAttribute('data-toggle-on')
-
-    if (visible) {
-      console.log('Hiding tools')
-      tools
-        .filter(tool => !tool.classList.contains('hidden'))
-        .forEach(tool => tool.classList.add('hidden'))
-
-      toolsToggle.innerHTML = labelOff
-    } else {
-      console.log('Showing tools')
-      tools
-        .filter(tool => tool.classList.contains('hidden'))
-        .forEach(tool => tool.classList.remove('hidden'))
-
-      toolsToggle.innerHTML = labelOn
-    }
-  }
 }
 
 function sendEmote (emote) {
