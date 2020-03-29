@@ -42,6 +42,14 @@ function getRoom (id) {
 }
 
 /**
+ * Return all rooms
+ * @returns {Room[]} All rooms
+ */
+function listRooms () {
+  return Object.values(rooms)
+}
+
+/**
  * Remove room.
  * @param {string} id Room id
  */
@@ -69,6 +77,7 @@ module.exports = {
   hasRoom,
   createRoom,
   getRoom,
+  listRooms,
   deleteRoom,
   joinRoom
 }

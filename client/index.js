@@ -1,13 +1,40 @@
 import User from '../data/user'
+import Room from '../data/room'
 import Hand from './objects/hand'
 import * as render from './render'
 import { DEG2RAD } from './utils'
+import * as messages from '../services/participant.messages'
 
 /** @type {Map<string, User>} */
 const users = {}
 
 /** @type {Map<string, Hand>} */
 const hands = {}
+
+const context = {
+  room: new Room(undefined),
+  user: new User(undefined, undefined)
+}
+
+const messageHandlers = {
+  'Confirm-Join': confirmJoinHandler,
+  'Add-Participant': addParticipantHandler,
+  'Remove-Participant': removeParticipantHandler
+}
+
+function createHand (user) {
+  const { camera, scene } = render.context
+  const models = render.context.models.hand
+  const hand = new Hand({
+    name: user.name,
+    camera,
+    models,
+    scene
+  })
+  render.context.objects.push(hand)
+
+  return hand
+}
 
 /**
  * Align hands around the screen.
@@ -44,79 +71,68 @@ async function main () {
     updateHands()
   }
 
-  const userId = document.querySelector('.data.user-id').innerHTML
-  const userName = document.querySelector('.data.user-name').innerHTML
-  const roomId = document.querySelector('.data.room-id').innerHTML
-
-  console.log({
-    userId,
-    userName,
-    roomId
-  })
+  const { room, user } = context
+  user.name = document.querySelector('.data.user-name').innerHTML
+  room.id = document.querySelector('.data.room-id').innerHTML
 
   console.log('Connecting to WS...')
-  const webSocket = new WebSocket(`ws://localhost:3000/rooms/${roomId}`)
+  const webSocket = new WebSocket(`ws://localhost:3000/rooms/${room.id}`)
   webSocket.onopen = () => {
     console.log('Socket open!')
 
-    webSocket.send(JSON.stringify({
-      type: 'Join',
-      data: {
-        roomId
-      }
-    }))
+    webSocket.send(JSON.stringify(messages.join(user.name, room.id)))
   }
 
   webSocket.onmessage = event => {
     const message = JSON.parse(event.data)
     console.log('Received message', message)
 
-    if (message.type === 'Update-Participants') {
-      participantsHandler(message.data)
-    }
+    const handler = messageHandlers[message.type]
+    handler && handler(message.data)
   }
 }
 
 /**
- * Handle 'Response/Participants' message.
- * @param {User[]} participants participants
+ * Handle a Confirm Join message.
+ * @param {any} param0 Event data
+ * @param {User} param0.user Confirmed User data
  */
-function participantsHandler (participants) {
-  console.log('Received participants', participants)
+function confirmJoinHandler ({ user }) {
+  console.log('Join confirmed with user data', user)
+  context.user = user
 
-  // Remove users that have left
-  Object.keys(users)
-    .filter(userId => !participants.some(user => user.id === userId))
-    .forEach(userId => {
-      console.log(`Removing user ${userId}`)
-      users[userId] = undefined
+  const hand = createHand(user)
+  context.user.hand = hand
+}
 
-      render.context.objects = render.context.objects.filter(object => object !== hands[userId])
-      hands[userId].dispose()
-      hands[userId] = undefined
-    })
+/**
+ * Handle an Add Participant message.
+ * @param {any} param0 Event data
+ * @param {User} param0.user Confirmed User data
+ */
+function addParticipantHandler ({ user }) {
+  context.room.users.push(user)
 
-  // Add users that are not present
-  const { camera, scene } = render.context
-  const models = render.context.models.hand
+  console.log(`Adding user ${user.id}`)
 
-  participants
-    .filter(user => !users[user.id])
-    .forEach(user => {
-      console.log(`Adding user ${user.id}`)
+  const hand = createHand(user)
+  user.hand = hand
 
-      const hand = new Hand({
-        name: user.name,
-        camera,
-        models,
-        scene
-      })
+  updateHands()
+}
 
-      users[user.id] = user
-      hands[user.id] = hand
+/**
+ * Handle a Remove Participant message.
+ * @param {any} param0 Event data
+ * @param {string} param0.id User id
+ */
+function removeParticipantHandler ({ id }) {
+  const user = context.room.users.find(u => u.id === id)
+  context.room.removeUser(id)
 
-      render.context.objects.push(hand)
-    })
+  const hand = user.hand
+  render.context.objects = render.context.objects.filter(object => object !== hand)
+  hand.dispose()
 
   updateHands()
 }

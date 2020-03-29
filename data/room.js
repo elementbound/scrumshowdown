@@ -21,12 +21,21 @@ class Room {
   }
 
   /**
-   * Check if the room has a user with given id
+   * Check if the room has a user with given id.
    * @param {string} id User id
    * @returns {boolean}
    */
   hasUser (id) {
     return this.users.some(user => user.id === id)
+  }
+
+  /**
+   * Remove a user by id.
+   * @param {string} id  User id
+   */
+  removeUser (id) {
+    this.users = this.users.filter(u => u.id !== id)
+    return this
   }
 }
 

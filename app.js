@@ -23,7 +23,8 @@ app.use('/', indexRouter)
 app.use('/room', roomRouter)
 
 // WS Handlers
-require('./handlers/participants')()
+require('./handlers/join')()
+require('./handlers/leave')()
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

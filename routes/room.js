@@ -12,11 +12,8 @@ router.get('/:roomId', (req, res, next) => {
     return
   }
 
-  const user = roomService.joinRoom(room, username)
-
   res.render('room', {
-    userId: user.id,
-    userName: user.name,
+    userName: username,
     roomId: room.id
   })
 })

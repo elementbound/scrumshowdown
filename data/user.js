@@ -9,9 +9,13 @@ class User {
    * @param {string} id User id
    * @param {string} name User name
    */
-  constructor (id, name) {
+  constructor (id, name, websocket) {
     this.id = id
     this.name = name
+    this.websocket = websocket
+
+    /** @member {any} */
+    this.websocket = undefined
   }
 }
 
