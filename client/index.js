@@ -1,10 +1,10 @@
 import Mustache from 'mustache'
 import User from '../data/user'
-import Room from '../data/room'
 import Hand from './objects/hand'
 import * as render from './render'
 import { DEG2RAD } from './utils'
 import * as messages from '../data/messages'
+import context from './context'
 
 const EMOTE_DURATION = 1000
 
@@ -24,15 +24,6 @@ const RESULTS_TEMPLATE = `
     </div>
   {{/votes}}
 `
-
-const context = {
-  room: new Room(undefined),
-  user: new User(undefined, undefined),
-  topic: '',
-
-  emoteTimeout: undefined,
-  estimations: []
-}
 
 const messageHandlers = {
   [messages.Types.ConfirmJoin]: confirmJoinHandler,
