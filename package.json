@@ -1,6 +1,6 @@
 {
   "name": "scrumshowdown",
-  "version": "0.19.5",
+  "version": "0.20.0",
   "description": "",
   "main": "app.js",
   "scripts": {
