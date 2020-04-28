@@ -44,6 +44,10 @@ The application can be accessed on [Heroku](https://scrumshowdown.herokuapp.com/
 
 > NOTE: Estimation result history is stored as long as the room is alive. Rooms are removed once all the participants have left.
 
+## Issues
+
+In case you encounter anything unexpected or have some feedback about Scrum Showdown, please feel free to [submit an issue](https://github.com/elementbound/scrumshowdown/issues).
+
 ## License
 
 See [LICENSE](LICENSE)
