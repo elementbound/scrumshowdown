@@ -23,11 +23,13 @@
             <div class="row">
                 <button class="action toggle-ready" 
                     data-toggle-on="✔️"
-                    data-toggle-off="❌">
+                    data-toggle-off="❌"
+                    title="Ready"
+                    >
                     ❌
                 </button>
 
-                <select name="estimate">
+                <select name="estimate" class="action" title="Estimate">
                     <option>1</option>
                     <option>2</option>
                     <option>3</option>
@@ -39,10 +41,10 @@
                     <option>❌</option>
                 </select>
 
-                <button class="action thumbsup">👍</button>
-                <button class="action thumbsdown">👎</button>
-                <button class="action request-estimate" aria-label="Request estimates">🃏</button>
-                <button class="action toggle-logs" aria-label="Toggle logs">📃</button>
+                <button class="action thumbsup" title="React with thumbs up">👍</button>
+                <button class="action thumbsdown" title="React with thumbs down">👎</button>
+                <button class="action request-estimate" title="Request estimates">🃏</button>
+                <button class="action toggle-logs" title="Toggle logs">📃</button>
             </div>
 
             <div class="hidden" id="logs">
