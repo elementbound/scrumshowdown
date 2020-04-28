@@ -1,5 +1,5 @@
 const wsRouter = require('../services/wsrouter')
-const messages = require('../services/participant.messages')
+const messages = require('../data/messages')
 const User = require('../data/user')
 
 function stateHandler () {

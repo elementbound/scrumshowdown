@@ -1,6 +1,6 @@
 const wsRouter = require('../services/wsrouter')
 const roomService = require('../services/rooms')
-const messages = require('../services/participant.messages')
+const messages = require('../data/messages')
 
 const PING_INTERVAL = 3000
 

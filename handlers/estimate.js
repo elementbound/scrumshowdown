@@ -1,7 +1,7 @@
 const User = require('../data/user')
 const Estimation = require('../data/estimation')
 const wsRouter = require('../services/wsrouter')
-const messages = require('../services/participant.messages')
+const messages = require('../data/messages')
 
 function waitForEstimate (user) {
   return new Promise((resolve, reject) => {

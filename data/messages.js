@@ -1,4 +1,4 @@
-const User = require('../data/user')
+const User = require('./user')
 
 function join (username, roomId) {
   return {

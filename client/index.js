@@ -4,7 +4,7 @@ import Room from '../data/room'
 import Hand from './objects/hand'
 import * as render from './render'
 import { DEG2RAD } from './utils'
-import * as messages from '../services/participant.messages'
+import * as messages from '../data/messages'
 
 const EMOTE_DURATION = 1000
 

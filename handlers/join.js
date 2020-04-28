@@ -1,6 +1,6 @@
 const roomService = require('../services/rooms')
 const wsRouter = require('../services/wsrouter')
-const messages = require('../services/participant.messages')
+const messages = require('../data/messages')
 
 function joinHandler () {
   wsRouter.onMessage((ws, message) => {
