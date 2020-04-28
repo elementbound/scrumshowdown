@@ -10,7 +10,10 @@ module.exports = {
 
   devtool: 'source-map',
   optimization: {
-    minimize: false
+    minimize: false,
+    splitChunks: {
+      chunks: 'all'
+    }
   },
 
   devServer: {
