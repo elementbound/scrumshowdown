@@ -13,6 +13,14 @@ input, button, select {
     
     min-width: 1.5em;
     min-height: 1.5em;
+
+    border-radius: 1.5em;
+    box-shadow: 0 0.15em rgba(0,0,0, 0.5);
+    padding: 0.25em;
+}
+
+input:active, input:focus, button:active, select:active {
+    box-shadow: inset 0 0.15em rgba(0,0,0, 0.5);
 }
 
 select {
