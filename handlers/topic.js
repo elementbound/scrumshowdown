@@ -3,7 +3,7 @@ const messages = require('../data/messages')
 
 function topicHandler () {
   wsRouter.onMessage((ws, message) => {
-    if (message.type !== 'Update-Topic') {
+    if (message.type !== messages.Types.UpdateTopic) {
       return
     }
 

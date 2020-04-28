@@ -4,7 +4,7 @@ const User = require('../data/user')
 
 function stateHandler () {
   wsRouter.onMessage((ws, message) => {
-    if (message.type !== 'State-Change-Request') {
+    if (message.type !== messages.Types.StateChangeRequest) {
       return
     }
 

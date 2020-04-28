@@ -4,7 +4,7 @@ const messages = require('../data/messages')
 
 function joinHandler () {
   wsRouter.onMessage((ws, message) => {
-    if (message.type !== 'Join') {
+    if (message.type !== messages.Types.Join) {
       return
     }
 

@@ -10,7 +10,7 @@ function waitForEstimate (user) {
     websocket.once('message', data => {
       const message = JSON.parse(data)
 
-      if (message.type === 'Estimate-Response') {
+      if (message.type === messages.Types.EstimateResponse) {
         console.log('Estimate arrived for user', user.id)
 
         resolve({
@@ -24,7 +24,7 @@ function waitForEstimate (user) {
 
 function estimateHandler () {
   wsRouter.onMessage(async (ws, message) => {
-    if (message.type !== 'Estimate-Request') {
+    if (message.type !== messages.Types.EstimateRequest) {
       return
     }
 

@@ -1,8 +1,26 @@
 const User = require('./user')
 
+const Types = Object.freeze({
+  Join: 'Join',
+  ConfirmJoin: 'Confirm-Join',
+
+  AddParticipant: 'Add-Participant',
+  RemoveParticipant: 'Remove-Participant',
+
+  StateChangeRequest: 'State-Change-Request',
+  StateChange: 'State-Change',
+
+  EstimateRequest: 'Estimate-Request',
+  EstimateDecline: 'Estimate-Decline',
+  EstimateResponse: 'Estimate-Response',
+  EstimateResult: 'Estimate-Result',
+
+  UpdateTopic: 'Update-Topic'
+})
+
 function join (username, roomId) {
   return {
-    type: 'Join',
+    type: Types.Join,
     data: {
       roomId, username
     }
@@ -15,7 +33,7 @@ function join (username, roomId) {
  */
 function confirmJoin (user) {
   return {
-    type: 'Confirm-Join',
+    type: Types.ConfirmJoin,
     data: {
       user: User.sanitize(user)
     }
@@ -24,7 +42,7 @@ function confirmJoin (user) {
 
 function addParticipant (user) {
   return {
-    type: 'Add-Participant',
+    type: Types.AddParticipant,
     data: {
       user: User.sanitize(user)
     }
@@ -33,7 +51,7 @@ function addParticipant (user) {
 
 function removeParticipant (user) {
   return {
-    type: 'Remove-Participant',
+    type: Types.RemoveParticipant,
     data: {
       id: user.id
     }
@@ -42,7 +60,7 @@ function removeParticipant (user) {
 
 function stateChangeRequest (isReady, emote) {
   return {
-    type: 'State-Change-Request',
+    type: Types.StateChangeRequest,
     data: {
       isReady, emote
     }
@@ -51,7 +69,7 @@ function stateChangeRequest (isReady, emote) {
 
 function stateChange (user, isReady, emote) {
   return {
-    type: 'State-Change',
+    type: Types.StateChange,
     data: {
       id: user.id,
       isReady,
@@ -62,19 +80,19 @@ function stateChange (user, isReady, emote) {
 
 function estimateRequest () {
   return {
-    type: 'Estimate-Request'
+    type: Types.EstimateRequest
   }
 }
 
 function estimateDecline () {
   return {
-    type: 'Estimate-Decline'
+    type: Types.EstimateDecline
   }
 }
 
 function estimateResponse (estimate) {
   return {
-    type: 'Estimate-Response',
+    type: Types.EstimateResponse,
     data: {
       estimate
     }
@@ -87,7 +105,7 @@ function estimateResponse (estimate) {
  */
 function estimateResult (estimation) {
   return {
-    type: 'Estimate-Result',
+    type: Types.EstimateResult,
     data: {
       estimation
     }
@@ -96,7 +114,7 @@ function estimateResult (estimation) {
 
 function updateTopic (topic) {
   return {
-    type: 'Update-Topic',
+    type: Types.UpdateTopic,
     data: {
       topic
     }
@@ -104,6 +122,8 @@ function updateTopic (topic) {
 }
 
 module.exports = {
+  Types,
+
   join,
   confirmJoin,
 

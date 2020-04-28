@@ -35,13 +35,13 @@ const context = {
 }
 
 const messageHandlers = {
-  'Confirm-Join': confirmJoinHandler,
-  'Add-Participant': addParticipantHandler,
-  'Remove-Participant': removeParticipantHandler,
-  'State-Change': stateChangeHandler,
-  'Estimate-Request': estimateRequestHandler,
-  'Estimate-Result': estimateResultHandler,
-  'Update-Topic': updateTopicHandler
+  [messages.Types.ConfirmJoin]: confirmJoinHandler,
+  [messages.Types.AddParticipant]: addParticipantHandler,
+  [messages.Types.RemoveParticipant]: removeParticipantHandler,
+  [messages.Types.StateChange]: stateChangeHandler,
+  [messages.Types.EstimateRequest]: estimateRequestHandler,
+  [messages.Types.EstimateResult]: estimateResultHandler,
+  [messages.Types.UpdateTopic]: updateTopicHandler
 }
 
 function createHand (user) {
