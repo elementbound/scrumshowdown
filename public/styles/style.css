@@ -4,6 +4,10 @@ body {
     color: white;
 }
 
+a {
+    color: white;
+}
+
 input, button, select {
     font-family: inherit;
     font-size: inherit;
@@ -92,4 +96,35 @@ select {
 
 .data, .hidden {
     display: none;
+}
+
+.splash.hidden {
+    display: block;
+    opacity: 0;
+    transition: all 1s ease;
+
+    z-index: -131072;
+}
+
+.splash {
+    display: block;
+    width: 100vw;
+    height: 100vh;
+    z-index: 131078;
+    background-color: rgba(0,0,0, 0.75);
+    position: fixed;
+    left: 0;
+    top: 0;
+    
+    opacity: 1;
+    transition: all 1s ease;
+}
+
+.splash__content {
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+
+    text-align: center;
 }

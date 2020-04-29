@@ -15,7 +15,10 @@ const Types = Object.freeze({
   EstimateResponse: 'Estimate-Response',
   EstimateResult: 'Estimate-Result',
 
-  UpdateTopic: 'Update-Topic'
+  UpdateTopic: 'Update-Topic',
+
+  KickRequest: 'Kick-Request',
+  KickNotification: 'Kick-Notification'
 })
 
 function join (username, roomId) {
@@ -121,6 +124,25 @@ function updateTopic (topic) {
   }
 }
 
+/**
+ * Create a Kick Request message
+ * @param {User} user user
+ */
+function kickRequest (user) {
+  return {
+    type: Types.KickRequest,
+    data: {
+      id: user.id
+    }
+  }
+}
+
+function kickNotification () {
+  return {
+    type: Types.KickNotification
+  }
+}
+
 module.exports = {
   Types,
 
@@ -138,5 +160,8 @@ module.exports = {
   estimateDecline,
   estimateResult,
 
-  updateTopic
+  updateTopic,
+
+  kickRequest,
+  kickNotification
 }

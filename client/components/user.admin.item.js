@@ -21,6 +21,8 @@ export default class UserAdminItem extends HTMLElement {
   constructor () {
     super()
     this._update()
+
+    this.onKick = undefined
   }
 
   get name () {
@@ -60,6 +62,12 @@ export default class UserAdminItem extends HTMLElement {
       name: this.name,
       badges
     })
+
+    this._bind()
+  }
+
+  _bind () {
+    this.querySelector('.action.admin-kick').onclick = () => this.onKick && this.onKick()
   }
 
   static define (name) {

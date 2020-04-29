@@ -49,6 +49,15 @@ class Room {
   }
 
   /**
+   * Find user by id.
+   * @param {string} id User id
+   * @return {User}
+   */
+  findUser (id) {
+    return this.users.find(user => user.id === id)
+  }
+
+  /**
    * Find all admins in room.
    * @returns {User[]} admin users
    */

@@ -1,4 +1,5 @@
 import UserAdminItem from './user.admin.item'
+import * as events from '../events'
 
 export default class UserAdmin extends HTMLElement {
   constructor () {
@@ -12,6 +13,8 @@ export default class UserAdmin extends HTMLElement {
     userItem.name = user.name
     userItem.isAdmin = user.isAdmin
     userItem.isSpectator = user.isSpectator
+
+    userItem.onKick = () => events.emit(events.Types.AdminKick, user)
 
     this.appendChild(userItem)
 
