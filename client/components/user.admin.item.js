@@ -17,7 +17,7 @@ const HTML_TEMPLATE = `
 </div>
 `
 
-export default class UserItem extends HTMLElement {
+export default class UserAdminItem extends HTMLElement {
   constructor () {
     super()
     this._update()
@@ -63,6 +63,6 @@ export default class UserItem extends HTMLElement {
   }
 
   static define (name) {
-    customElements.define(name || 'user-item', UserItem)
+    customElements.define(name || 'user-admin-item', UserAdminItem)
   }
 }
