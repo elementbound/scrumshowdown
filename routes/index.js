@@ -13,8 +13,6 @@ router.post('/', (req, res, next) => {
   const { roomId, name, join, create } = req.body
   res.cookie('Scrum-Name', name)
 
-  console.log('Hey!')
-
   if (create) {
     const room = roomService.createRoom()
     console.log('Created room', room)

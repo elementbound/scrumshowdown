@@ -10,6 +10,8 @@ const STATE_EMOJIS = {
   thumbsDown: '👎'
 }
 
+const ADMIN_EMOJI = '👑'
+
 /**
  * Represents a hand.
  */
@@ -22,6 +24,7 @@ class Hand {
    * @param {THREE.Scene} options.scene Scene
    * @param {THREE.PerspectiveCamera} options.camera Scene camera
    * @param {string} [options.htmlClass=hand__name] HTML class for nameplate
+   * @param {boolean} [options.isAdmin=false] Is Admin?
    */
   constructor (options) {
     this._name = options.name || 'Anonymous'
@@ -29,6 +32,7 @@ class Hand {
     this._camera = options.camera
     this._scene = options.scene
     this._model = options.model
+    this._isAdmin = options.isAdmin || false
 
     const object = SkeletonUtils.clone(this._model.scene)
     this._object = object
@@ -93,12 +97,21 @@ class Hand {
     this._updateHTML()
   }
 
+  get isAdmin () {
+    return this._isAdmin
+  }
+
+  set isAdmin (val) {
+    this._isAdmin = !!val
+    this._updateHTML()
+  }
+
   get object () {
     return this._object
   }
 
   _updateHTML () {
-    this._html.innerText = `${this._name}${STATE_EMOJIS[this._state]}`
+    this._html.innerText = `${this._name}${STATE_EMOJIS[this._state]}${this._isAdmin ? ADMIN_EMOJI : ''}`
   }
 
   update (time) {

@@ -30,6 +30,7 @@ export function createHand (user) {
   const model = render.context.models.hand
   const hand = new Hand({
     name: user.name,
+    isAdmin: user.isAdmin,
     camera,
     model,
     scene

@@ -19,6 +19,9 @@ function joinHandler () {
     const user = roomService.joinRoom(room, username)
     user.websocket = ws
 
+    // First joiner is admin
+    user.isAdmin = (room.findAdmins().length === 0)
+
     ws.room = room
     ws.user = user
 

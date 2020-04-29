@@ -47,6 +47,14 @@ class Room {
     this.users = this.users.filter(u => u.id !== id)
     return this
   }
+
+  /**
+   * Find all admins in room.
+   * @returns {User[]} admin users
+   */
+  findAdmins () {
+    return this.users.filter(user => user.isAdmin)
+  }
 }
 
 module.exports = Room

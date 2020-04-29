@@ -16,13 +16,16 @@ class User {
     /** @member {boolean} */
     this.isReady = false
 
+    /** @member {boolean} */
+    this.isAdmin = false
+
     /** @member {string} */
     this.emote = ''
 
-    /** @member {any} */
+    /** @member {any} websocket [server] Websocket connection */
     this.websocket = undefined
 
-    /** @member {any} */
+    /** @member {any} hand [client] Hand model used on the frontend */
     this.hand = undefined
   }
 
@@ -36,11 +39,15 @@ class User {
     if (!user) {
       return {}
     } else {
-      const result = new User(user.id, user.name)
-      result.isReady = user.isReady
-      result.emote = user.emote
+      const removeKeys = [
+        'websocket',
+        'hand'
+      ]
 
-      return result
+      const safeEntries = Object.entries(user)
+        .filter(([key, _]) => !removeKeys.includes(key))
+
+      return Object.fromEntries(safeEntries)
     }
   }
 }
