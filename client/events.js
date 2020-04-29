@@ -1,5 +1,6 @@
 export const Types = Object.freeze({
-  AdminKick: 'Admin-Kick'
+  AdminKick: 'Admin-Kick',
+  AdminPromote: 'Admin-Promote'
 })
 
 const subscribers = {}

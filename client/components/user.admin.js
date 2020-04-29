@@ -15,6 +15,7 @@ export default class UserAdmin extends HTMLElement {
     userItem.isSpectator = user.isSpectator
 
     userItem.onKick = () => events.emit(events.Types.AdminKick, user)
+    userItem.onPromote = () => events.emit(events.Types.AdminPromote, user)
 
     this.appendChild(userItem)
 
@@ -43,6 +44,10 @@ export default class UserAdmin extends HTMLElement {
   get users () {
     return this._users
       .map(entry => entry.user)
+  }
+
+  get userEntries () {
+    return [...this._users]
   }
 
   static define (name) {

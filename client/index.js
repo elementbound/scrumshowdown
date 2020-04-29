@@ -14,6 +14,7 @@ import { updateTopicHandler } from './handler/update.topic'
 import UserAdminItem from './components/user.admin.item'
 import UserAdmin from './components/user.admin'
 import { kickNotificationHandler } from './handler/kick.notification'
+import { promoteNotificationHandler } from './handler/promote.notification'
 
 function bindUI () {
   document.querySelector('.action.toggle-more').onclick = function () {
@@ -30,10 +31,13 @@ function bindUI () {
     }
   }
 
-  events.subscribe(events.Types.AdminKick, user => {
-    console.log('Kick request', { user })
+  events.subscribe(events.Types.AdminKick, user =>
     context.user.websocket.send(messages.kickRequest(user))
-  })
+  )
+
+  events.subscribe(events.Types.AdminPromote, user =>
+    context.user.websocket.send(messages.promoteRequest(user))
+  )
 }
 
 async function main () {
@@ -56,6 +60,7 @@ async function main () {
   messageHandlers.register(messages.Types.UpdateTopic, updateTopicHandler)
 
   messageHandlers.register(messages.Types.KickNotification, kickNotificationHandler)
+  messageHandlers.register(messages.Types.PromoteNotification, promoteNotificationHandler)
 
   const oldResize = window.onresize
   window.onresize = () => {

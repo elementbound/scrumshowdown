@@ -18,7 +18,10 @@ const Types = Object.freeze({
   UpdateTopic: 'Update-Topic',
 
   KickRequest: 'Kick-Request',
-  KickNotification: 'Kick-Notification'
+  KickNotification: 'Kick-Notification',
+
+  PromoteRequest: 'Promote-Request',
+  PromoteNotification: 'Promote-Notification'
 })
 
 function join (username, roomId) {
@@ -143,6 +146,24 @@ function kickNotification () {
   }
 }
 
+function promoteRequest (user) {
+  return {
+    type: Types.PromoteRequest,
+    data: {
+      id: user.id
+    }
+  }
+}
+
+function promoteNotification (user) {
+  return {
+    type: Types.PromoteNotification,
+    data: {
+      id: user.id
+    }
+  }
+}
+
 module.exports = {
   Types,
 
@@ -163,5 +184,8 @@ module.exports = {
   updateTopic,
 
   kickRequest,
-  kickNotification
+  kickNotification,
+
+  promoteRequest,
+  promoteNotification
 }

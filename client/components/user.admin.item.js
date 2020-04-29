@@ -23,6 +23,7 @@ export default class UserAdminItem extends HTMLElement {
     this._update()
 
     this.onKick = undefined
+    this.onPromote = undefined
   }
 
   get name () {
@@ -68,6 +69,7 @@ export default class UserAdminItem extends HTMLElement {
 
   _bind () {
     this.querySelector('.action.admin-kick').onclick = () => this.onKick && this.onKick()
+    this.querySelector('.action.admin-promote').onclick = () => this.onPromote && this.onPromote()
   }
 
   static define (name) {
