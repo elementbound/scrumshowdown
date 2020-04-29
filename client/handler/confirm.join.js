@@ -15,6 +15,8 @@ export default function confirmJoinHandler ({ user }) {
   const hand = createHand(user)
   context.user.hand = hand
 
+  document.querySelector('#users').add(user)
+
   document.querySelector('.action.toggle-ready').onclick = () => {
     const { user } = context
 

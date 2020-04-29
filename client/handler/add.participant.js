@@ -15,5 +15,7 @@ export function addParticipantHandler ({ user }) {
   hand.state = getHandState(user)
   user.hand = hand
 
+  document.querySelector('#users').add(user)
+
   updateHands()
 }

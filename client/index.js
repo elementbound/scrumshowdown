@@ -10,7 +10,8 @@ import { estimateRequestHandler } from './handler/estimate.request'
 import { estimateResultHandler } from './handler/estimate.result'
 import { stateChangeHandler } from './handler/state.change'
 import { updateTopicHandler } from './handler/update.topic'
-import UserItem from './components/user.item'
+import UserAdminItem from './components/user.admin.item'
+import UserAdmin from './components/user.admin'
 
 function bindUI () {
   document.querySelector('.action.toggle-more').onclick = function () {
@@ -30,7 +31,8 @@ function bindUI () {
 
 async function main () {
   // Init custom components
-  UserItem.define()
+  UserAdminItem.define()
+  UserAdmin.define()
 
   // Start renderer
   await render.startLoop()

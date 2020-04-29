@@ -15,5 +15,7 @@ export function removeParticipantHandler ({ id }) {
   render.context.objects = render.context.objects.filter(object => object !== hand)
   hand.dispose()
 
+  document.querySelector('#users').remove(user)
+
   updateHands()
 }
