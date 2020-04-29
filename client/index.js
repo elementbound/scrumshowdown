@@ -10,8 +10,29 @@ import { estimateRequestHandler } from './handler/estimate.request'
 import { estimateResultHandler } from './handler/estimate.result'
 import { stateChangeHandler } from './handler/state.change'
 import { updateTopicHandler } from './handler/update.topic'
+import UserItem from './components/user.item'
+
+function bindUI () {
+  document.querySelector('.action.toggle-more').onclick = function () {
+    const users = document.querySelector('#users')
+    const toggleOn = this.getAttribute('data-toggle-on')
+    const toggleOff = this.getAttribute('data-toggle-off')
+
+    if (users.classList.contains('hidden')) {
+      users.classList.remove('hidden')
+      this.innerHTML = toggleOn
+    } else {
+      users.classList.add('hidden')
+      this.innerHTML = toggleOff
+    }
+  }
+}
 
 async function main () {
+  // Init custom components
+  UserItem.define()
+
+  // Start renderer
   await render.startLoop()
 
   // Register message handlers
@@ -54,6 +75,8 @@ async function main () {
 
     messageHandlers.invoke(message.type, message.data)
   }
+
+  bindUI()
 }
 
 main()

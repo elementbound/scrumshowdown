@@ -8,3 +8,40 @@
 .action:active {
   box-shadow: inset 0 0.15em rgba(0,0,0, 0.5);
 }
+
+.users {
+  text-align: left;
+  background-color: ivory;
+  color: #505050;
+  border-radius: 1em;
+  display: block;
+  width: 100%;
+
+  transition: all 0.5s ease;
+}
+
+.users.hidden {
+  display: none;
+}
+
+.users__item {
+  display: flex;
+  padding: 0.25em;
+  border-radius: 1em;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.users__item:hover {
+  background-color: #e0e0e0;
+}
+
+.users__tools {
+  font-size: 0.75em;
+}
+
+.users__tools > .action {
+  width: 1.666em;
+  height: 1.666em;
+  text-align: center;
+}

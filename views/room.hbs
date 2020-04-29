@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <link rel="stylesheet" href="/styles/style.css">
+    <link rel="stylesheet" href="/styles/room.css">
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -45,9 +46,21 @@
                 <button class="action thumbsdown" title="React with thumbs down">👎</button>
                 <button class="action request-estimate" title="Request estimates">🃏</button>
                 <button class="action toggle-logs" title="Toggle logs">📃</button>
+
+                
+                <button class="action toggle-more" 
+                    data-toggle-on="▲"
+                    data-toggle-off="▼"
+                    title="Toggle more"
+                    >
+                    ▼
+                </button>
             </div>
 
             <div class="hidden" id="logs">
+            </div>
+
+            <div class="hidden users" id="users">
             </div>
         </div>
     </div>
