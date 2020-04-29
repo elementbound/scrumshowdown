@@ -53,6 +53,12 @@ function estimateHandler () {
 
     console.log('Broadcasting results', votesData)
     room.users.forEach(user => user.websocket.send(messages.estimateResult(estimation)))
+
+    // Unready everyone after vote
+    room.users.forEach(source => {
+      source.isReady = false
+      room.users.forEach(target => target.websocket.send(messages.stateChange(source, false, source.emote)))
+    })
   })
 }
 
