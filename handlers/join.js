@@ -11,6 +11,15 @@ function joinHandler () {
     const { roomId, user: requestUser } = message.data
     console.log('Join request', { roomId, requestUser })
 
+    if (!requestUser.name) {
+      console.error('Joining without username, declining')
+
+      ws.send(messages.kickNotification('Missing profile'))
+
+      ws.close()
+      return
+    }
+
     const room = roomService.getRoom(roomId)
     if (!room) {
       console.error('Joining non-existing room', roomId)

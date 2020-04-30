@@ -140,9 +140,16 @@ function kickRequest (user) {
   }
 }
 
-function kickNotification () {
+/**
+ * Create a Kick Notification message
+ * @param {string} [reason] reason
+ */
+function kickNotification (reason) {
   return {
-    type: Types.KickNotification
+    type: Types.KickNotification,
+    data: {
+      reason
+    }
   }
 }
 

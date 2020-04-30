@@ -6,7 +6,8 @@ const publicDir = path.resolve(__dirname, 'public')
 module.exports = {
   entry: {
     main: './client/index.js',
-    profile: './client/profile.js'
+    profile: './client/profile.js',
+    'redirect.without.profile': './client/redirect.without.profile.js'
   },
 
   devtool: 'source-map',
