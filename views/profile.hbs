@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="styles/style.css">
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scrum Showdown</title>
+</head>
+<body>
+    <div class="content">
+      <div class="modal">
+        <div class="modal__title">
+          <h1>Your profile</h1>
+        </div>
+
+        <div class="modal__body">
+          <div>
+            <div class="row">
+              <input type="text" name="name" placeholder="Name" />
+            </div>
+
+            <div class="row">
+              <button class="action color" id="color" disabled></button>
+
+              <button class="action color" style="background-color: #E6C8AC;" data-color="#E6C8AC"></button>
+              <button class="action color" style="background-color: #C29770;" data-color="#C29770"></button>
+              <button class="action color" style="background-color: #885A30;" data-color="#885A30"></button>
+              <button class="action color" style="background-color: #5A3310;" data-color="#5A3310"></button>
+              <button class="action color" style="background-color: #D3A9CA;" data-color="#D3A9CA"></button>
+              <button class="action color" style="background-color: #C9D3A9;" data-color="#C9D3A9"></button>
+            </div>
+
+            <button id="save">Save</button>
+          </div>
+
+          <p><small>NOTE: All user data is stored locally, on your device.</small></p>
+        </div>
+      </div>
+    </div>
+
+    <script src="/bundles/vendors~main.js"></script>
+    <script src="/bundles/profile.js"></script>
+</body>
+</html>

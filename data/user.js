@@ -22,6 +22,9 @@ class User {
     /** @member {string} */
     this.emote = ''
 
+    /** @member {string} */
+    this.color = ''
+
     /** @member {any} websocket [server] Websocket connection */
     this.websocket = undefined
 

@@ -24,11 +24,11 @@ const Types = Object.freeze({
   PromoteNotification: 'Promote-Notification'
 })
 
-function join (username, roomId) {
+function join (user, roomId) {
   return {
     type: Types.Join,
     data: {
-      roomId, username
+      roomId, user
     }
   }
 }

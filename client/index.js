@@ -15,6 +15,7 @@ import UserAdminItem from './components/user.admin.item'
 import UserAdmin from './components/user.admin'
 import { kickNotificationHandler } from './handler/kick.notification'
 import { promoteNotificationHandler } from './handler/promote.notification'
+import { loadUserData } from './storage/user.data'
 
 function bindUI () {
   document.querySelector('.action.toggle-more').onclick = function () {
@@ -69,8 +70,11 @@ async function main () {
   }
 
   const { room, user } = context
-  user.name = document.querySelector('.data.user-name').innerHTML
   room.id = document.querySelector('.data.room-id').innerHTML
+
+  const userData = loadUserData()
+  user.name = userData.name
+  user.color = userData.color
 
   console.log('Connecting to WS...')
   const protocol = location.protocol.startsWith('https') ? 'wss' : 'ws'
@@ -78,11 +82,13 @@ async function main () {
   webSocket.onopen = () => {
     console.log('Socket open!')
 
-    context.user.websocket = webSocket
+    user.websocket = webSocket
+
+    console.log('Joining with user', user)
 
     const rawSend = webSocket.send
     webSocket.send = data => rawSend.apply(webSocket, [JSON.stringify(data)])
-    webSocket.send(messages.join(user.name, room.id))
+    webSocket.send(messages.join(user, room.id))
   }
 
   webSocket.onmessage = event => {

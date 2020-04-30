@@ -8,7 +8,8 @@ function joinHandler () {
       return
     }
 
-    const { roomId, username } = message.data
+    const { roomId, user: requestUser } = message.data
+    console.log('Join request', { roomId, requestUser })
 
     const room = roomService.getRoom(roomId)
     if (!room) {
@@ -16,7 +17,7 @@ function joinHandler () {
       return
     }
 
-    const user = roomService.joinRoom(room, username)
+    const user = roomService.joinRoom(room, requestUser)
     user.websocket = ws
 
     // First joiner is admin

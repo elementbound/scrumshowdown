@@ -60,17 +60,19 @@ function deleteRoom (id) {
 /**
  * Join Room.
  * @param {Room} room Room
- * @param {string} username Username
+ * @param {User} user User
  * @returns {User} Joining user
  */
-function joinRoom (room, username) {
+function joinRoom (room, user) {
   let userId
   for (; !userId || room.hasUser(userId); userId = generateId(8)) {}
 
-  const user = new User(userId, username)
-  room.users.push(user)
+  const joinedUser = new User()
+  Object.assign(joinedUser, user, { id: userId })
 
-  return user
+  room.users.push(joinedUser)
+
+  return joinedUser
 }
 
 module.exports = {
