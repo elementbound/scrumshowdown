@@ -54,9 +54,19 @@
   text-align: center;
 }
 
-.summary {
+.estimation__summary {
   display: flex;
   width: 100%;
+}
+
+
+.estimation__vote {
+  display: flex;
+  width: 100%;
+  padding: 0.25em;
+  border-radius: 1em;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .estimation {

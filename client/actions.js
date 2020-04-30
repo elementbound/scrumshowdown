@@ -10,18 +10,20 @@ const RESULTS_TEMPLATE = `
   <h2>{{topic}}</h2>
 
   {{#summary}}
-    <div class="summary">
+    <div class="estimation__summary">
       <button class="action small">{{estimate}}</button>
       <nice-progress value="{{percentage}}">{{count}}</nice-progress>
     </div>
   {{/summary}}
 
-  {{#votes}}
-    <div class="row vote">
-      <div>{{user.name}}</div>
-      <div>{{estimate}}</div>
-    </div>
-  {{/votes}}
+  <div class="estimation__votes">
+    {{#votes}}
+      <div class="estimation__vote">
+        {{user.name}}
+        <button class="action small">{{estimate}}</button>
+      </div>
+    {{/votes}}
+  </div>
 `
 
 const EMOTE_DURATION = 1000
