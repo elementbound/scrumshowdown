@@ -24,15 +24,16 @@ The application can be accessed on [Heroku](https://scrumshowdown.herokuapp.com/
 1. Open [Scrum Showdown](https://scrumshowdown.herokuapp.com/) in your browser
 1. Input your name ( this is how others will see you )
 1. Click 'Create'
-1. Click on 'Room' to copy the room ID
-1. Share the room ID with your participants
+1. Copy the current URL
+1. Share the URL with your participants
 
-### As first-time client
+### As client
 
-1. Open [Scrum Showdown](https://scrumshowdown.herokuapp.com/) in your browser
-1. Input your name ( this is how others will see you )
-1. Input the room ID you've received from your host
-1. Click 'Join'
+1. If it's your first time using Scrum Showdown
+    1. Open the [Scrum Showdown](https://scrumshowdown.herokuapp.com/) in your browser
+    1. Setup your profile
+    1. Click save
+1. Open the Scrum Showdown link provided by your host
 
 ### Estimations
 
