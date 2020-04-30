@@ -5,6 +5,14 @@
   box-shadow: 0 0.15em rgba(0,0,0, 0.5);
 }
 
+.action.small {
+  width: 1em;
+  height: 1em;
+  border-radius: 1em;
+
+  font-size: 0.75em;
+}
+
 .action:active {
   box-shadow: inset 0 0.15em rgba(0,0,0, 0.5);
 }
@@ -44,4 +52,19 @@
   width: 1.666em;
   height: 1.666em;
   text-align: center;
+}
+
+.summary {
+  display: flex;
+  width: 100%;
+}
+
+.estimation {
+  width: 100%;
+  display: block;
+}
+
+.blockrow {
+  width: 100%;
+  display: block;
 }

@@ -8,6 +8,8 @@ export function estimateResultHandler ({ estimation }) {
   const resultHtml = renderEstimationResults(estimation.topic, estimation.estimates)
 
   const logItem = document.createElement('div')
+  logItem.classList.add('estimation')
+
   const logs = document.querySelector('#logs')
   logItem.innerHTML = resultHtml
   logs.prepend(logItem)

@@ -10,8 +10,9 @@ const RESULTS_TEMPLATE = `
   <h2>{{topic}}</h2>
 
   {{#summary}}
-    <div class="row summary">
-      {{estimate}} <progress value="{{percentage}}">{{count}}</progress>
+    <div class="summary">
+      <button class="action small">{{estimate}}</button>
+      <nice-progress value="{{percentage}}">{{count}}</nice-progress>
     </div>
   {{/summary}}
 
@@ -132,7 +133,7 @@ export function renderEstimationResults (topic, estimates) {
     })
 
   const summary = Object.entries(votes
-    .reduce((collector, { user, estimate }) => Object.assign({}, collector, {
+    .reduce((collector, { estimate }) => Object.assign({}, collector, {
       [estimate]: (collector[estimate] || 0) + 1 / votes.length
     }), {}))
     .map(([estimate, percentage]) => ({ estimate, percentage, count: percentage * votes.length }))

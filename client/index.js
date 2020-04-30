@@ -16,6 +16,7 @@ import UserAdmin from './components/user.admin'
 import { kickNotificationHandler } from './handler/kick.notification'
 import { promoteNotificationHandler } from './handler/promote.notification'
 import { loadUserData } from './storage/user.data'
+import NiceProgress from './components/nice.progress'
 
 function bindUI () {
   document.querySelector('.action.toggle-more').onclick = function () {
@@ -45,6 +46,7 @@ async function main () {
   // Init custom components
   UserAdminItem.define()
   UserAdmin.define()
+  NiceProgress.define()
 
   // Start renderer
   await render.startLoop()
