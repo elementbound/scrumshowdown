@@ -20,6 +20,7 @@ class Hand {
    * Create a new Hand.
    * @param {object} options options
    * @param {string} options.name Hand name
+   * @param {string} options.color Color
    * @param {THREE.Scene} options.model Hand model
    * @param {THREE.Scene} options.scene Scene
    * @param {THREE.PerspectiveCamera} options.camera Scene camera
@@ -28,15 +29,28 @@ class Hand {
    */
   constructor (options) {
     this._name = options.name || 'Anonymous'
+    this._color = 0xffffff
     this._offset = Math.random()
     this._camera = options.camera
     this._scene = options.scene
     this._model = options.model
     this._isAdmin = options.isAdmin || false
 
+    this._material = new three.MeshStandardMaterial({
+      color: this._color,
+      metalness: 0,
+      roughness: 0.65
+    })
+
     const object = SkeletonUtils.clone(this._model.scene)
     this._object = object
     this._scene.add(this._object)
+
+    this._object.traverse(o => {
+      if (o.name === 'Cube') {
+        o.material = this._material
+      }
+    })
 
     this._mixer = new three.AnimationMixer(object)
 
@@ -66,6 +80,7 @@ class Hand {
     }
 
     this.state = 'idle'
+    this.color = options.color || 0xffffff
   }
 
   get name () {
@@ -75,6 +90,17 @@ class Hand {
   set name (val) {
     this._name = val
     this._updateHTML()
+  }
+
+  get color () {
+    return this._color
+  }
+
+  set color (val) {
+    this._color = new three.Color(val)
+
+    console.log('Assigning color', { val, color: this._color })
+    this._material.color = this._color
   }
 
   get state () {
