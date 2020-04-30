@@ -26,6 +26,7 @@ function init () {
     alpha: true,
     antialias: true
   })
+
   renderer.setSize(window.innerWidth, window.innerHeight)
 
   context.scene = scene

@@ -49,7 +49,21 @@ async function main () {
   NiceProgress.define()
 
   // Start renderer
-  await render.startLoop()
+  try {
+    await render.startLoop()
+  } catch (e) {
+    console.error('Failed to initialize renderer', e)
+
+    const errorSplash = document.querySelector('#error-splash')
+    const errorDescription = document.querySelector('#error-description')
+    const errorException = document.querySelector('#error-exception')
+
+    errorSplash.classList.remove('hidden')
+    errorDescription.textContent = 'Failed to initialize renderer. Unfortunately, WebGL support is required.'
+    errorException.textContent = e.toString()
+
+    return false
+  }
 
   // Register message handlers
   messageHandlers.register(messages.Types.ConfirmJoin, confirmJoinHandler)
