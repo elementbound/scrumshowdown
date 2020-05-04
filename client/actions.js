@@ -35,6 +35,7 @@ export function createHand (user) {
     name: user.name,
     color: user.color,
     isAdmin: user.isAdmin,
+    isSpectator: user.isSpectator,
     camera,
     model,
     scene

@@ -30,17 +30,19 @@ function estimateHandler () {
 
     const room = ws.room
 
-    if (!room.users.every(user => user.isReady)) {
+    if (!room.users.every(user => user.isReady || user.isSpectator)) {
       console.log('Some users are not ready yet, declining')
       room.users.forEach(user => user.websocket.send(messages.estimateDecline()))
       return
     }
 
+    const votingUsers = room.users.filter(user => !user.isSpectator)
+
     console.log('Broadcasting estimate request')
-    room.users.forEach(user => user.websocket.send(messages.estimateRequest()))
+    votingUsers.forEach(user => user.websocket.send(messages.estimateRequest()))
 
     console.log(`Waiting for ${room.users.length} responses...`)
-    const resultPromises = room.users.map(user => waitForEstimate(user))
+    const resultPromises = votingUsers.map(user => waitForEstimate(user))
     const results = await Promise.all(resultPromises)
 
     const votesData = {}

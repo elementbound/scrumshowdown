@@ -21,7 +21,10 @@ const Types = Object.freeze({
   KickNotification: 'Kick-Notification',
 
   PromoteRequest: 'Promote-Request',
-  PromoteNotification: 'Promote-Notification'
+  PromoteNotification: 'Promote-Notification',
+
+  SpectatorRequest: 'Spectator-Request',
+  SpectatorChange: 'Spectator-Change'
 })
 
 function join (user, roomId) {
@@ -171,6 +174,26 @@ function promoteNotification (user) {
   }
 }
 
+function spectatorRequest (user, isSpectator) {
+  return {
+    type: Types.SpectatorRequest,
+    data: {
+      id: user.id,
+      isSpectator: !!isSpectator
+    }
+  }
+}
+
+function spectatorChange (user, isSpectator) {
+  return {
+    type: Types.SpectatorChange,
+    data: {
+      id: user.id,
+      isSpectator: !!isSpectator
+    }
+  }
+}
+
 module.exports = {
   Types,
 
@@ -194,5 +217,8 @@ module.exports = {
   kickNotification,
 
   promoteRequest,
-  promoteNotification
+  promoteNotification,
+
+  spectatorRequest,
+  spectatorChange
 }

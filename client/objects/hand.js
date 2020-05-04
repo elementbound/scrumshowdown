@@ -11,6 +11,7 @@ const STATE_EMOJIS = {
 }
 
 const ADMIN_EMOJI = '👑'
+const SPECTATOR_EMOJI = '👁️'
 
 /**
  * Represents a hand.
@@ -26,6 +27,7 @@ class Hand {
    * @param {THREE.PerspectiveCamera} options.camera Scene camera
    * @param {string} [options.htmlClass=hand__name] HTML class for nameplate
    * @param {boolean} [options.isAdmin=false] Is Admin?
+   * @param {boolean} [options.isSpectator=false] Is Spectator?
    */
   constructor (options) {
     this._name = options.name || 'Anonymous'
@@ -35,6 +37,7 @@ class Hand {
     this._scene = options.scene
     this._model = options.model
     this._isAdmin = options.isAdmin || false
+    this._isSpectator = options.isSpectator || false
 
     this._material = new three.MeshStandardMaterial({
       color: this._color,
@@ -132,12 +135,24 @@ class Hand {
     this._updateHTML()
   }
 
+  get isSpectator () {
+    return this._isSpectator
+  }
+
+  set isSpectator (val) {
+    this._isSpectator = !!val
+    this._updateHTML()
+  }
+
   get object () {
     return this._object
   }
 
   _updateHTML () {
-    this._html.innerText = `${this._name}${STATE_EMOJIS[this._state]}${this._isAdmin ? ADMIN_EMOJI : ''}`
+    this._html.innerText =
+      `${this._name}${STATE_EMOJIS[this._state]}` +
+      `${this._isSpectator ? SPECTATOR_EMOJI : ''}` +
+      `${this._isAdmin ? ADMIN_EMOJI : ''}`
   }
 
   update (time) {

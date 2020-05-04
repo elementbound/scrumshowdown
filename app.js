@@ -32,6 +32,7 @@ require('./handlers/topic')()
 require('./handlers/leave')()
 require('./handlers/kick')()
 require('./handlers/promote')()
+require('./handlers/spectator')()
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

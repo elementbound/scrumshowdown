@@ -17,6 +17,7 @@ import { kickNotificationHandler } from './handler/kick.notification'
 import { promoteNotificationHandler } from './handler/promote.notification'
 import { loadUserData } from './storage/user.data'
 import NiceProgress from './components/nice.progress'
+import { spectatorChangeHandler } from './handler/spectator.change'
 
 function bindUI () {
   document.querySelector('.action.toggle-more').onclick = function () {
@@ -40,6 +41,12 @@ function bindUI () {
   events.subscribe(events.Types.AdminPromote, user =>
     context.user.websocket.send(messages.promoteRequest(user))
   )
+
+  events.subscribe(events.Types.AdminSpectatorToggle, user => {
+    const isSpectator = !user.isSpectator
+    console.log('Sending spectator request', { user, isSpectator })
+    context.user.websocket.send(messages.spectatorRequest(user, isSpectator))
+  })
 }
 
 async function main () {
@@ -78,6 +85,7 @@ async function main () {
 
   messageHandlers.register(messages.Types.KickNotification, kickNotificationHandler)
   messageHandlers.register(messages.Types.PromoteNotification, promoteNotificationHandler)
+  messageHandlers.register(messages.Types.SpectatorChange, spectatorChangeHandler)
 
   const oldResize = window.onresize
   window.onresize = () => {

@@ -19,6 +19,9 @@ class User {
     /** @member {boolean} */
     this.isAdmin = false
 
+    /** @member {boolean} */
+    this.isSpectator = false
+
     /** @member {string} */
     this.emote = ''
 

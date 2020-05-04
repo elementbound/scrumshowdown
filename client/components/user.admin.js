@@ -16,6 +16,10 @@ export default class UserAdmin extends HTMLElement {
 
     userItem.onKick = () => events.emit(events.Types.AdminKick, user)
     userItem.onPromote = () => events.emit(events.Types.AdminPromote, user)
+    userItem.onToggleSpectator = () => {
+      console.log('Spectator toggle event emit', { user })
+      events.emit(events.Types.AdminSpectatorToggle, user)
+    }
 
     this.appendChild(userItem)
 

@@ -24,6 +24,7 @@ export default class UserAdminItem extends HTMLElement {
 
     this.onKick = undefined
     this.onPromote = undefined
+    this.onToggleSpectator = undefined
   }
 
   get name () {
@@ -70,6 +71,7 @@ export default class UserAdminItem extends HTMLElement {
   _bind () {
     this.querySelector('.action.admin-kick').onclick = () => this.onKick && this.onKick()
     this.querySelector('.action.admin-promote').onclick = () => this.onPromote && this.onPromote()
+    this.querySelector('.action.admin-toggle-spectator').onclick = () => this.onToggleSpectator && this.onToggleSpectator()
   }
 
   static define (name) {
