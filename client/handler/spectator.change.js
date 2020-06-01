@@ -12,6 +12,7 @@ export function spectatorChangeHandler ({ id, isSpectator }) {
 
   [...document.querySelectorAll('user-admin')]
     .flatMap(userAdmin => userAdmin.userEntries)
+    .filter(entry => entry.user.id === user.id)
     .forEach(({ user, item }) => {
       user.isSpectator = isSpectator
       item.isSpectator = isSpectator
