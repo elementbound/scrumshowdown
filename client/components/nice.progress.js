@@ -26,10 +26,8 @@ export default class NiceProgress extends HTMLElement {
   _update () {
     this.innerHTML = Mustache.render(HTML_TEMPLATE, {
       value: this.value,
-      valuePercent: ~~(this.value * 100)
+      valuePercent: Math.round(this.value * 100)
     })
-
-    this._bind()
   }
 
   static define (name) {

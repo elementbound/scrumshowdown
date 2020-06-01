@@ -142,6 +142,18 @@ export function renderEstimationResults (topic, estimates) {
     .map(([estimate, percentage]) => ({ estimate, percentage, count: percentage * votes.length }))
     .sort((a, b) => b.percentage - a.percentage)
 
+  // Make sure that no percentage is lost due to rounding
+  if (summary.length > 0) {
+    const percents = summary
+      .map(({ percentage }) => Math.round(percentage * 100))
+    const percentageSum = percents
+      .reduce((a, b) => a + b)
+
+    summary[0].percentage += (100 - percentageSum) / 100
+
+    console.log('Summary adjustment', { percentageSum, adjustment: (100 - percentageSum) / 100 })
+  }
+
   return Mustache.render(RESULTS_TEMPLATE, {
     topic, votes, summary
   })
