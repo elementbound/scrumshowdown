@@ -1,6 +1,6 @@
 {
   "name": "scrumshowdown",
-  "version": "1.14.3",
+  "version": "1.14.4",
   "description": "",
   "main": "app.js",
   "scripts": {
@@ -10,7 +10,6 @@
     "jsdoc": "jsdoc -c .jsdoc.js",
     "lint": "eslint bin/www client/**.js handlers/**.js routes/**.js services/**.js app.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-
     "heroku-postbuild": "webpack -p"
   },
   "author": "elementbound",
@@ -19,7 +18,7 @@
     "cookie-parser": "~1.4.3",
     "debug": "~2.6.9",
     "express": "~4.16.0",
-    "hbs": "^4.1.0",
+    "hbs": "^4.1.1",
     "http-errors": "~1.6.2",
     "morgan": "~1.9.0",
     "mustache": "^4.0.1",
@@ -39,6 +38,6 @@
     "nodemon": "^2.0.2",
     "webpack": "^4.42.1",
     "webpack-cli": "^3.3.11",
-    "webpack-dev-server": "^3.10.3"
+    "webpack-dev-server": "^3.11.0"
   }
 }
