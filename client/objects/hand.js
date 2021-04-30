@@ -42,7 +42,8 @@ class Hand {
     this._material = new three.MeshStandardMaterial({
       color: this._color,
       metalness: 0,
-      roughness: 0.65
+      roughness: 0.65,
+      skinning: true
     })
 
     const object = SkeletonUtils.clone(this._model.scene)
