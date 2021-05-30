@@ -23,7 +23,7 @@
     "morgan": "~1.9.0",
     "mustache": "^4.0.1",
     "three": "^0.115.0",
-    "ws": "^7.2.3"
+    "ws": "^7.4.6"
   },
   "devDependencies": {
     "@types/ws": "^7.2.3",
