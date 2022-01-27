@@ -22,7 +22,7 @@
     "http-errors": "~1.6.2",
     "morgan": "~1.9.0",
     "mustache": "^4.0.1",
-    "three": "^0.115.0",
+    "three": "^0.137.0",
     "ws": "^7.2.3"
   },
   "devDependencies": {
