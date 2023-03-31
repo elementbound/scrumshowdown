@@ -154,5 +154,5 @@ tags.temp
 *.blend2
 *.blend3
 
-public/bundles
+**/public/bundles
 docs
