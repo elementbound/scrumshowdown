@@ -4,30 +4,33 @@
  * Module dependencies.
  */
 
-const app = require('../app')
-const debug = require('debug')('scrumshowdown:server')
-const http = require('http')
-const ws = require('ws')
-const wsrouter = require('../services/wsrouter')
+import app, { set, locals } from '../src/server/app.mjs'
+import { createServer } from 'http'
+import { Server } from 'ws'
+import { callConnect, callOpen, callClose, callMessage, server as _server } from '../src/wsrouter.mjs'
+import debugFactory from 'debug'
+
+// const debug = require('debug')('scrumshowdown:server')
+const debug = debugFactory('scrumshowdown:server')
 
 /**
  * Get port from environment and store in Express.
  */
 
 const port = normalizePort(process.env.PORT || '3000')
-app.set('port', port)
+set('port', port)
 
 /**
  * Create HTTP server.
  */
 
-const server = http.createServer(app)
+const server = createServer(app)
 
 /**
  * Create WS server.
  */
-const webSocketServer = new ws.Server({ server })
-app.locals.ws = webSocketServer
+const webSocketServer = new Server({ server })
+locals.ws = webSocketServer
 
 /**
  * Listen on provided port, on all network interfaces.
@@ -100,11 +103,11 @@ function onListening () {
  */
 console.log('WebSocket Server listening...')
 webSocketServer.on('connection', ws => {
-  wsrouter.callConnect(ws)
+  callConnect(ws)
 
-  ws.on('open', () => wsrouter.callOpen(ws))
-  ws.on('close', (code, reason) => wsrouter.callClose(ws, code, reason))
-  ws.on('message', data => wsrouter.callMessage(ws, data))
+  ws.on('open', () => callOpen(ws))
+  ws.on('close', (code, reason) => callClose(ws, code, reason))
+  ws.on('message', data => callMessage(ws, data))
 })
 
-wsrouter.server(webSocketServer)
+_server(webSocketServer)
