@@ -1,10 +1,10 @@
-const wsRouter = require('../services/wsrouter')
-const messages = require('../data/messages')
-const User = require('../data/user')
+import { onMessage } from '../services/wsrouter'
+import { Types, stateChange } from '../data/messages'
+import { sanitize } from '../data/user'
 
 function stateHandler () {
-  wsRouter.onMessage((ws, message) => {
-    if (message.type !== messages.Types.StateChangeRequest) {
+  onMessage((ws, message) => {
+    if (message.type !== Types.StateChangeRequest) {
       return
     }
 
@@ -12,14 +12,14 @@ function stateHandler () {
     const user = ws.user
     const { isReady, emote } = message.data
 
-    console.log('User requesting to change state', { user: User.sanitize(user), isReady, emote })
+    console.log('User requesting to change state', { user: sanitize(user), isReady, emote })
 
     user.isReady = isReady
     user.emote = emote
 
     room.users
-      .forEach(u => u.websocket.send(messages.stateChange(user, isReady, emote)))
+      .forEach(u => u.websocket.send(stateChange(user, isReady, emote)))
   })
 }
 
-module.exports = stateHandler
+export default stateHandler

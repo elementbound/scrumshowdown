@@ -1,24 +1,24 @@
-const createError = require('http-errors')
-const express = require('express')
-const path = require('path')
-const cookieParser = require('cookie-parser')
-const logger = require('morgan')
+import createError from 'http-errors'
+import express, { json, urlencoded } from 'express'
+import { join } from 'path'
+import cookieParser from 'cookie-parser'
+import logger from 'morgan'
 
-const indexRouter = require('./routes/index')
-const roomRouter = require('./routes/room')
-const profileRouter = require('./routes/profile')
+import indexRouter from './routes/index'
+import roomRouter from './routes/room'
+import profileRouter from './routes/profile'
 
 const app = express()
 
 // view engine setup
-app.set('views', path.join(__dirname, 'views'))
+app.set('views', join(__dirname, 'views'))
 app.set('view engine', 'hbs')
 
 app.use(logger('dev'))
-app.use(express.json())
-app.use(express.urlencoded({ extended: false }))
+app.use(json())
+app.use(urlencoded({ extended: false }))
 app.use(cookieParser())
-app.use(express.static(path.join(__dirname, 'public')))
+app.use(express.static(join(__dirname, 'public')))
 
 app.use('/', indexRouter)
 app.use('/profile', profileRouter)
@@ -50,4 +50,4 @@ app.use(function (err, req, res, next) {
   res.render('error')
 })
 
-module.exports = app
+export default app

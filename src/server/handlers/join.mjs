@@ -1,10 +1,10 @@
-const roomService = require('../services/rooms')
-const wsRouter = require('../services/wsrouter')
-const messages = require('../data/messages')
+import { getRoom, joinRoom } from '../services/rooms'
+import { onMessage } from '../services/wsrouter'
+import { Types, kickNotification, confirmJoin, addParticipant, updateTopic, estimateResult } from '../data/messages'
 
 function joinHandler () {
-  wsRouter.onMessage((ws, message) => {
-    if (message.type !== messages.Types.Join) {
+  onMessage((ws, message) => {
+    if (message.type !== Types.Join) {
       return
     }
 
@@ -14,19 +14,19 @@ function joinHandler () {
     if (!requestUser.name) {
       console.error('Joining without username, declining')
 
-      ws.send(messages.kickNotification('Missing profile'))
+      ws.send(kickNotification('Missing profile'))
 
       ws.close()
       return
     }
 
-    const room = roomService.getRoom(roomId)
+    const room = getRoom(roomId)
     if (!room) {
       console.error('Joining non-existing room', roomId)
       return
     }
 
-    const user = roomService.joinRoom(room, requestUser)
+    const user = joinRoom(room, requestUser)
     user.websocket = ws
 
     // First joiner is admin
@@ -35,25 +35,25 @@ function joinHandler () {
     ws.room = room
     ws.user = user
 
-    ws.send(messages.confirmJoin(user))
+    ws.send(confirmJoin(user))
     room.users
       .filter(u => u !== user)
       .forEach(u => {
         // Let the joinee know about the others
-        ws.send(messages.addParticipant(u))
+        ws.send(addParticipant(u))
 
         // Let the others know about the joinee
-        u.websocket.send(messages.addParticipant(user))
+        u.websocket.send(addParticipant(user))
       })
 
     // Let the joinee know the current topic
-    ws.send(messages.updateTopic(room.topic))
+    ws.send(updateTopic(room.topic))
 
     // Stream past estimations to the joinee
-    room.estimations.forEach(estimation => ws.send(messages.estimateResult(estimation)))
+    room.estimations.forEach(estimation => ws.send(estimateResult(estimation)))
 
     console.log(room)
   })
 }
 
-module.exports = joinHandler
+export default joinHandler

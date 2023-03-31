@@ -73,7 +73,7 @@ function broadcast (data) {
   wsServer.clients.forEach(ws => ws.send(data))
 }
 
-module.exports = {
+export default {
   callConnect,
   callOpen,
   callMessage,

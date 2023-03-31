@@ -1,4 +1,4 @@
-const User = require('./user')
+import { sanitize } from './user'
 
 const Types = Object.freeze({
   Join: 'Join',
@@ -44,7 +44,7 @@ function confirmJoin (user) {
   return {
     type: Types.ConfirmJoin,
     data: {
-      user: User.sanitize(user)
+      user: sanitize(user)
     }
   }
 }
@@ -53,7 +53,7 @@ function addParticipant (user) {
   return {
     type: Types.AddParticipant,
     data: {
-      user: User.sanitize(user)
+      user: sanitize(user)
     }
   }
 }
@@ -194,7 +194,7 @@ function spectatorChange (user, isSpectator) {
   }
 }
 
-module.exports = {
+export default {
   Types,
 
   join,

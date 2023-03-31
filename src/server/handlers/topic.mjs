@@ -1,9 +1,9 @@
-const wsRouter = require('../services/wsrouter')
-const messages = require('../data/messages')
+import { onMessage } from '../services/wsrouter'
+import { Types, updateTopic } from '../data/messages'
 
 function topicHandler () {
-  wsRouter.onMessage((ws, message) => {
-    if (message.type !== messages.Types.UpdateTopic) {
+  onMessage((ws, message) => {
+    if (message.type !== Types.UpdateTopic) {
       return
     }
 
@@ -14,8 +14,8 @@ function topicHandler () {
     room.topic = topic
 
     room.users
-      .forEach(u => u.websocket.send(messages.updateTopic(room.topic)))
+      .forEach(u => u.websocket.send(updateTopic(room.topic)))
   })
 }
 
-module.exports = topicHandler
+export default topicHandler

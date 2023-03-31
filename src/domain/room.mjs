@@ -66,4 +66,4 @@ class Room {
   }
 }
 
-module.exports = Room
+export default Room

@@ -12,4 +12,4 @@ class Estimation {
   }
 }
 
-module.exports = Estimation
+export default Estimation

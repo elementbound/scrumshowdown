@@ -1,10 +1,10 @@
-const wsRouter = require('../services/wsrouter')
-const messages = require('../data/messages')
-const User = require('../data/user')
+import { onMessage } from '../services/wsrouter'
+import { Types, spectatorChange } from '../data/messages'
+import { sanitize } from '../data/user'
 
 function spectatorRequestHandler () {
-  wsRouter.onMessage((ws, message) => {
-    if (message.type !== messages.Types.SpectatorRequest) {
+  onMessage((ws, message) => {
+    if (message.type !== Types.SpectatorRequest) {
       return
     }
 
@@ -21,7 +21,7 @@ function spectatorRequestHandler () {
     }
 
     if (!user.isAdmin && user !== spectator) {
-      console.warn('User is not admin, and not applying to self', { user: User.sanitize(user), spectatorId })
+      console.warn('User is not admin, and not applying to self', { user: sanitize(user), spectatorId })
       return
     }
 
@@ -30,8 +30,8 @@ function spectatorRequestHandler () {
 
     // Broadcast change
     room.users
-      .forEach(u => u.websocket.send(messages.spectatorChange(spectator, spectator.isSpectator)))
+      .forEach(u => u.websocket.send(spectatorChange(spectator, spectator.isSpectator)))
   })
 }
 
-module.exports = spectatorRequestHandler
+export default spectatorRequestHandler
