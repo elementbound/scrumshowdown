@@ -1,6 +1,6 @@
-import { onMessage } from '../services/wsrouter'
-import { Types, kickNotification, removeParticipant } from '../data/messages'
-import { sanitize } from '../data/user'
+import { onMessage } from '../../wsrouter.mjs'
+import { Types, kickNotification, removeParticipant } from '../../domain/messages.mjs'
+import User from '../../domain/user.mjs'
 
 function kickRequestHandler () {
   onMessage((ws, message) => {
@@ -13,7 +13,7 @@ function kickRequestHandler () {
     const kickId = message.data.id
     const kickee = room.findUser(kickId)
 
-    console.log('User requesting to kick another', { kicker: sanitize(user), kickId, kickee: sanitize(kickee) })
+    console.log('User requesting to kick another', { kicker: User.sanitize(user), kickId, kickee: User.sanitize(kickee) })
 
     if (!kickee) {
       console.log('Kickee is not present in room', { kickId })
@@ -21,12 +21,12 @@ function kickRequestHandler () {
     }
 
     if (!user.isAdmin) {
-      console.log('User is not admin, rejecting', { user: sanitize(user) })
+      console.log('User is not admin, rejecting', { user: User.sanitize(user) })
       return
     }
 
     if (kickee === user) {
-      console.log('User is trying to kick self, rejecting', { user: sanitize(user) })
+      console.log('User is trying to kick self, rejecting', { user: User.sanitize(user) })
       return
     }
 

@@ -1,20 +1,20 @@
-const express = require('express')
-const meta = require('../services/meta')
-const roomService = require('../services/rooms')
-const router = express.Router()
+import { Router } from 'express'
+import { version as _version } from '../services/meta.mjs'
+import { createRoom } from '../services/rooms.mjs'
+const indexRouter = Router()
 
-router.get('/', (req, res, next) => {
+indexRouter.get('/', (req, res, next) => {
   res.render('index', {
-    version: meta.version
+    version: _version
   })
 })
 
-router.post('/', (req, res, next) => {
+indexRouter.post('/', (req, res, next) => {
   const { roomId, name, join, create } = req.body
   res.cookie('Scrum-Name', name)
 
   if (create) {
-    const room = roomService.createRoom()
+    const room = createRoom()
     console.log('Created room', room)
 
     res.redirect(`/room/${room.id}`)
@@ -25,4 +25,4 @@ router.post('/', (req, res, next) => {
   res.render('room')
 })
 
-module.exports = router
+export default indexRouter

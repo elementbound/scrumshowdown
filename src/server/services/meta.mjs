@@ -1,14 +1,10 @@
-const fs = require('fs')
+import { readFileSync } from 'fs'
 
 function getVersion () {
-  const packageContents = fs.readFileSync('package.json')
+  const packageContents = readFileSync('package.json')
   const packageData = JSON.parse(packageContents)
 
   return packageData.version
 }
 
-const version = getVersion()
-
-module.exports = {
-  version
-}
+export const version = getVersion()

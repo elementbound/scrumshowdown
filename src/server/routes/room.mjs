@@ -1,10 +1,10 @@
-const express = require('express')
-const roomService = require('../services/rooms')
-const router = express.Router()
+import { Router } from 'express'
+import { getRoom } from '../services/rooms.mjs'
+const roomRouter = Router()
 
-router.get('/:roomId', (req, res, next) => {
+roomRouter.get('/:roomId', (req, res, next) => {
   const roomId = req.params.roomId
-  const room = roomService.getRoom(roomId)
+  const room = getRoom(roomId)
   const username = req.cookies['Scrum-Name']
 
   if (!room) {
@@ -18,4 +18,4 @@ router.get('/:roomId', (req, res, next) => {
   })
 })
 
-module.exports = router
+export default roomRouter

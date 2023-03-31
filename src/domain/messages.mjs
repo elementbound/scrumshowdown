@@ -1,6 +1,6 @@
-import { sanitize } from './user'
+import User from './user.mjs'
 
-const Types = Object.freeze({
+export const Types = Object.freeze({
   Join: 'Join',
   ConfirmJoin: 'Confirm-Join',
 
@@ -27,7 +27,7 @@ const Types = Object.freeze({
   SpectatorChange: 'Spectator-Change'
 })
 
-function join (user, roomId) {
+export function join (user, roomId) {
   return {
     type: Types.Join,
     data: {
@@ -40,25 +40,25 @@ function join (user, roomId) {
  * Create a Confirm Join message.
  * @param {User} user User
  */
-function confirmJoin (user) {
+export function confirmJoin (user) {
   return {
     type: Types.ConfirmJoin,
     data: {
-      user: sanitize(user)
+      user: User.sanitize(user)
     }
   }
 }
 
-function addParticipant (user) {
+export function addParticipant (user) {
   return {
     type: Types.AddParticipant,
     data: {
-      user: sanitize(user)
+      user: User.sanitize(user)
     }
   }
 }
 
-function removeParticipant (user) {
+export function removeParticipant (user) {
   return {
     type: Types.RemoveParticipant,
     data: {
@@ -67,7 +67,7 @@ function removeParticipant (user) {
   }
 }
 
-function stateChangeRequest (isReady, emote) {
+export function stateChangeRequest (isReady, emote) {
   return {
     type: Types.StateChangeRequest,
     data: {
@@ -76,7 +76,7 @@ function stateChangeRequest (isReady, emote) {
   }
 }
 
-function stateChange (user, isReady, emote) {
+export function stateChange (user, isReady, emote) {
   return {
     type: Types.StateChange,
     data: {
@@ -87,13 +87,13 @@ function stateChange (user, isReady, emote) {
   }
 }
 
-function estimateRequest () {
+export function estimateRequest () {
   return {
     type: Types.EstimateRequest
   }
 }
 
-function estimateDecline () {
+export function estimateDecline () {
   return {
     type: Types.EstimateDecline
   }
@@ -112,7 +112,7 @@ function estimateResponse (estimate) {
  * Create an Estimate Result message.
  * @param {Estimation} estimation
  */
-function estimateResult (estimation) {
+export function estimateResult (estimation) {
   return {
     type: Types.EstimateResult,
     data: {
@@ -121,7 +121,7 @@ function estimateResult (estimation) {
   }
 }
 
-function updateTopic (topic) {
+export function updateTopic (topic) {
   return {
     type: Types.UpdateTopic,
     data: {
@@ -134,7 +134,7 @@ function updateTopic (topic) {
  * Create a Kick Request message
  * @param {User} user user
  */
-function kickRequest (user) {
+export function kickRequest (user) {
   return {
     type: Types.KickRequest,
     data: {
@@ -147,7 +147,7 @@ function kickRequest (user) {
  * Create a Kick Notification message
  * @param {string} [reason] reason
  */
-function kickNotification (reason) {
+export function kickNotification (reason) {
   return {
     type: Types.KickNotification,
     data: {
@@ -156,7 +156,7 @@ function kickNotification (reason) {
   }
 }
 
-function promoteRequest (user) {
+export function promoteRequest (user) {
   return {
     type: Types.PromoteRequest,
     data: {
@@ -165,7 +165,7 @@ function promoteRequest (user) {
   }
 }
 
-function promoteNotification (user) {
+export function promoteNotification (user) {
   return {
     type: Types.PromoteNotification,
     data: {
@@ -174,7 +174,7 @@ function promoteNotification (user) {
   }
 }
 
-function spectatorRequest (user, isSpectator) {
+export function spectatorRequest (user, isSpectator) {
   return {
     type: Types.SpectatorRequest,
     data: {
@@ -184,7 +184,7 @@ function spectatorRequest (user, isSpectator) {
   }
 }
 
-function spectatorChange (user, isSpectator) {
+export function spectatorChange (user, isSpectator) {
   return {
     type: Types.SpectatorChange,
     data: {
@@ -192,33 +192,4 @@ function spectatorChange (user, isSpectator) {
       isSpectator: !!isSpectator
     }
   }
-}
-
-export default {
-  Types,
-
-  join,
-  confirmJoin,
-
-  addParticipant,
-  removeParticipant,
-
-  stateChangeRequest,
-  stateChange,
-
-  estimateRequest,
-  estimateResponse,
-  estimateDecline,
-  estimateResult,
-
-  updateTopic,
-
-  kickRequest,
-  kickNotification,
-
-  promoteRequest,
-  promoteNotification,
-
-  spectatorRequest,
-  spectatorChange
 }

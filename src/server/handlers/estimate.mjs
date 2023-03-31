@@ -1,7 +1,7 @@
-const User = require('../data/user')
-const Estimation = require('../data/estimation')
-const wsRouter = require('../services/wsrouter')
-const messages = require('../data/messages')
+import User from '../../domain/user.mjs'
+import Estimation from '../../domain/estimation.mjs'
+import { onMessage } from '../../wsrouter.mjs'
+import { Types, estimateDecline, estimateRequest, estimateResult, stateChange } from '../../domain/messages.mjs'
 
 function waitForEstimate (user) {
   return new Promise((resolve, reject) => {
@@ -10,7 +10,7 @@ function waitForEstimate (user) {
     websocket.once('message', data => {
       const message = JSON.parse(data)
 
-      if (message.type === messages.Types.EstimateResponse) {
+      if (message.type === Types.EstimateResponse) {
         console.log('Estimate arrived for user', user.id)
 
         resolve({
@@ -23,8 +23,8 @@ function waitForEstimate (user) {
 }
 
 function estimateHandler () {
-  wsRouter.onMessage(async (ws, message) => {
-    if (message.type !== messages.Types.EstimateRequest) {
+  onMessage(async (ws, message) => {
+    if (message.type !== Types.EstimateRequest) {
       return
     }
 
@@ -32,14 +32,14 @@ function estimateHandler () {
 
     if (!room.users.every(user => user.isReady || user.isSpectator)) {
       console.log('Some users are not ready yet, declining')
-      room.users.forEach(user => user.websocket.send(messages.estimateDecline()))
+      room.users.forEach(user => user.websocket.send(estimateDecline()))
       return
     }
 
     const votingUsers = room.users.filter(user => !user.isSpectator)
 
     console.log('Broadcasting estimate request')
-    votingUsers.forEach(user => user.websocket.send(messages.estimateRequest()))
+    votingUsers.forEach(user => user.websocket.send(estimateRequest()))
 
     console.log(`Waiting for ${room.users.length} responses...`)
     const resultPromises = votingUsers.map(user => waitForEstimate(user))
@@ -54,14 +54,14 @@ function estimateHandler () {
     room.estimations.push(estimation)
 
     console.log('Broadcasting results', votesData)
-    room.users.forEach(user => user.websocket.send(messages.estimateResult(estimation)))
+    room.users.forEach(user => user.websocket.send(estimateResult(estimation)))
 
     // Unready everyone after vote
     room.users.forEach(source => {
       source.isReady = false
-      room.users.forEach(target => target.websocket.send(messages.stateChange(source, false, source.emote)))
+      room.users.forEach(target => target.websocket.send(stateChange(source, false, source.emote)))
     })
   })
 }
 
-module.exports = estimateHandler
+export default estimateHandler

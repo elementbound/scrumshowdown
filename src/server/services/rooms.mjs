@@ -1,9 +1,9 @@
-const Room = require('../data/room')
-const User = require('../data/user')
+import Room from '../../domain/room.mjs'
+import User from '../../domain/user.mjs'
 
 const rooms = {}
 
-function hasRoom (roomId) {
+export function hasRoom (roomId) {
   return !!rooms[roomId]
 }
 
@@ -22,7 +22,7 @@ function generateId (length) {
  * Create a new Room.
  * @returns {Room} Resulting room
  */
-function createRoom () {
+export function createRoom () {
   let roomId
   for (; !roomId || hasRoom(roomId); roomId = generateId(8)) {}
 
@@ -37,7 +37,7 @@ function createRoom () {
  * @param {string} id Room id
  * @returns {Room} Found room, or undefined
  */
-function getRoom (id) {
+export function getRoom (id) {
   return rooms[id] || undefined
 }
 
@@ -45,7 +45,7 @@ function getRoom (id) {
  * Return all rooms
  * @returns {Room[]} All rooms
  */
-function listRooms () {
+export function listRooms () {
   return Object.values(rooms)
 }
 
@@ -53,7 +53,7 @@ function listRooms () {
  * Remove room.
  * @param {string} id Room id
  */
-function deleteRoom (id) {
+export function deleteRoom (id) {
   rooms[id] = undefined
 }
 
@@ -63,7 +63,7 @@ function deleteRoom (id) {
  * @param {User} user User
  * @returns {User} Joining user
  */
-function joinRoom (room, user) {
+export function joinRoom (room, user) {
   let userId
   for (; !userId || room.hasUser(userId); userId = generateId(8)) {}
 
@@ -73,13 +73,4 @@ function joinRoom (room, user) {
   room.users.push(joinedUser)
 
   return joinedUser
-}
-
-module.exports = {
-  hasRoom,
-  createRoom,
-  getRoom,
-  listRooms,
-  deleteRoom,
-  joinRoom
 }

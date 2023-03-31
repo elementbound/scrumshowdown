@@ -4,9 +4,9 @@
  * Module dependencies.
  */
 
-import app, { set, locals } from '../src/server/app.mjs'
+import app from '../src/server/app.mjs'
 import { createServer } from 'http'
-import { Server } from 'ws'
+import ws from 'ws'
 import { callConnect, callOpen, callClose, callMessage, server as _server } from '../src/wsrouter.mjs'
 import debugFactory from 'debug'
 
@@ -18,7 +18,7 @@ const debug = debugFactory('scrumshowdown:server')
  */
 
 const port = normalizePort(process.env.PORT || '3000')
-set('port', port)
+app.set('port', port)
 
 /**
  * Create HTTP server.
@@ -29,8 +29,8 @@ const server = createServer(app)
 /**
  * Create WS server.
  */
-const webSocketServer = new Server({ server })
-locals.ws = webSocketServer
+const webSocketServer = new ws.Server({ server })
+app.locals.ws = webSocketServer
 
 /**
  * Listen on provided port, on all network interfaces.

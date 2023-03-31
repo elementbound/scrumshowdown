@@ -1,6 +1,6 @@
-import { getRoom, joinRoom } from '../services/rooms'
-import { onMessage } from '../services/wsrouter'
-import { Types, kickNotification, confirmJoin, addParticipant, updateTopic, estimateResult } from '../data/messages'
+import { getRoom, joinRoom } from '../services/rooms.mjs'
+import { onMessage } from '../../wsrouter.mjs'
+import { Types, kickNotification, confirmJoin, addParticipant, updateTopic, estimateResult } from '../../domain/messages.mjs'
 
 function joinHandler () {
   onMessage((ws, message) => {

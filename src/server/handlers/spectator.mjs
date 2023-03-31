@@ -1,6 +1,6 @@
-import { onMessage } from '../services/wsrouter'
-import { Types, spectatorChange } from '../data/messages'
-import { sanitize } from '../data/user'
+import { onMessage } from '../../wsrouter.mjs'
+import { Types, spectatorChange } from '../../domain/messages.mjs'
+import User from '../../domain/user.mjs'
 
 function spectatorRequestHandler () {
   onMessage((ws, message) => {
@@ -21,7 +21,7 @@ function spectatorRequestHandler () {
     }
 
     if (!user.isAdmin && user !== spectator) {
-      console.warn('User is not admin, and not applying to self', { user: sanitize(user), spectatorId })
+      console.warn('User is not admin, and not applying to self', { user: User.sanitize(user), spectatorId })
       return
     }
 

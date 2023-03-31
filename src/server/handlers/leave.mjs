@@ -1,11 +1,11 @@
-const wsRouter = require('../services/wsrouter')
-const roomService = require('../services/rooms')
-const messages = require('../data/messages')
+import { onConnect, onClose } from '../../wsrouter.mjs'
+import { deleteRoom } from '../services/rooms.mjs'
+import { removeParticipant } from '../../domain/messages.mjs'
 
 const PING_INTERVAL = 3000
 
 function leaveHandler () {
-  wsRouter.onConnect(ws => {
+  onConnect(ws => {
     ws.isAlive = true
 
     const interval = setInterval(function ping () {
@@ -20,7 +20,7 @@ function leaveHandler () {
     }, PING_INTERVAL)
   })
 
-  wsRouter.onClose(ws => {
+  onClose(ws => {
     const room = ws.room
     const user = ws.user
 
@@ -33,15 +33,15 @@ function leaveHandler () {
 
     room.users
       .filter(u => u !== user)
-      .forEach(u => u.websocket.send(messages.removeParticipant(user)))
+      .forEach(u => u.websocket.send(removeParticipant(user)))
 
     room.removeUser(user.id)
 
     if (!room.users.length) {
       console.log('Removing empty room', room.id)
-      roomService.deleteRoom(room.id)
+      deleteRoom(room.id)
     }
   })
 }
 
-module.exports = leaveHandler
+export default leaveHandler

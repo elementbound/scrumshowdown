@@ -23,36 +23,36 @@ function _callHandlers (type, ...args) {
   handlers[type].forEach(handler => handler(...args))
 }
 
-function callConnect (ws) {
+export function callConnect (ws) {
   ws = _withJSONSend(ws)
   _callHandlers('connect', ws)
 }
 
-function callOpen (ws) {
+export function callOpen (ws) {
   _callHandlers('open', ws)
 }
 
-function callMessage (ws, data) {
+export function callMessage (ws, data) {
   _callHandlers('message', ws, JSON.parse(data))
 }
 
-function callClose (ws, code, reason) {
+export function callClose (ws, code, reason) {
   _callHandlers('close', ws, code, reason)
 }
 
-function onConnect (handler) {
+export function onConnect (handler) {
   _pushHandler('connect', handler)
 }
 
-function onOpen (handler) {
+export function onOpen (handler) {
   _pushHandler('open', handler)
 }
 
-function onMessage (handler) {
+export function onMessage (handler) {
   _pushHandler('message', handler)
 }
 
-function onClose (handler) {
+export function onClose (handler) {
   _pushHandler('close', handler)
 }
 
@@ -61,7 +61,7 @@ function onClose (handler) {
  * @param {ws.Server} value WS Server
  * @returns {ws.Server} server
  */
-function server (value) {
+export function server (value) {
   if (value) {
     wsServer = value
   }
@@ -69,21 +69,6 @@ function server (value) {
   return wsServer
 }
 
-function broadcast (data) {
+export function broadcast (data) {
   wsServer.clients.forEach(ws => ws.send(data))
-}
-
-export default {
-  callConnect,
-  callOpen,
-  callMessage,
-  callClose,
-
-  onConnect,
-  onOpen,
-  onMessage,
-  onClose,
-
-  server,
-  broadcast
 }

@@ -1,10 +1,10 @@
-const wsRouter = require('../services/wsrouter')
-const messages = require('../data/messages')
-const User = require('../data/user')
+import { onMessage } from '../../wsrouter.mjs'
+import { Types, promoteNotification } from '../../domain/messages.mjs'
+import User from '../../domain/user.mjs'
 
 function promoteRequestHandler () {
-  wsRouter.onMessage((ws, message) => {
-    if (message.type !== messages.Types.PromoteRequest) {
+  onMessage((ws, message) => {
+    if (message.type !== Types.PromoteRequest) {
       return
     }
 
@@ -35,8 +35,8 @@ function promoteRequestHandler () {
 
     // Broadcast promotion
     room.users
-      .forEach(u => u.websocket.send(messages.promoteNotification(promotee)))
+      .forEach(u => u.websocket.send(promoteNotification(promotee)))
   })
 }
 
-module.exports = promoteRequestHandler
+export default promoteRequestHandler

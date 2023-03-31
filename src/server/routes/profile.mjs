@@ -1,8 +1,8 @@
-const express = require('express')
-const router = express.Router()
+import { Router } from 'express'
+const profileRouter = Router()
 
-router.get('/', (req, res, next) => {
+profileRouter.get('/', (req, res, next) => {
   res.render('profile')
 })
 
-module.exports = router
+export default profileRouter

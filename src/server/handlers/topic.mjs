@@ -1,5 +1,5 @@
-import { onMessage } from '../services/wsrouter'
-import { Types, updateTopic } from '../data/messages'
+import { onMessage } from '../../wsrouter.mjs'
+import { Types, updateTopic } from '../../domain/messages.mjs'
 
 function topicHandler () {
   onMessage((ws, message) => {

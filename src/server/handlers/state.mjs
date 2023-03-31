@@ -1,6 +1,6 @@
-import { onMessage } from '../services/wsrouter'
-import { Types, stateChange } from '../data/messages'
-import { sanitize } from '../data/user'
+import { onMessage } from '../../wsrouter.mjs'
+import { Types, stateChange } from '../../domain/messages.mjs'
+import User from '../../domain/user.mjs'
 
 function stateHandler () {
   onMessage((ws, message) => {
@@ -12,7 +12,7 @@ function stateHandler () {
     const user = ws.user
     const { isReady, emote } = message.data
 
-    console.log('User requesting to change state', { user: sanitize(user), isReady, emote })
+    console.log('User requesting to change state', { user: User.sanitize(user), isReady, emote })
 
     user.isReady = isReady
     user.emote = emote
