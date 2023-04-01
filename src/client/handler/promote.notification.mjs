@@ -1,4 +1,4 @@
-import context from '../context'
+import context from '../context.mjs'
 
 export function promoteNotificationHandler ({ id }) {
   const user = context.room.findUser(id)

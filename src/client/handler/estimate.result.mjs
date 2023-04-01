@@ -1,5 +1,5 @@
-import context from '../context'
-import { renderEstimationResults } from '../actions'
+import context from '../context.mjs'
+import { renderEstimationResults } from '../actions.mjs'
 
 export function estimateResultHandler ({ estimation }) {
   console.log('Received estimation', estimation)

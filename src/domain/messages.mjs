@@ -99,7 +99,7 @@ export function estimateDecline () {
   }
 }
 
-function estimateResponse (estimate) {
+export function estimateResponse (estimate) {
   return {
     type: Types.EstimateResponse,
     data: {

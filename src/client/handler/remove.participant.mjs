@@ -1,6 +1,6 @@
-import context from '../context'
-import * as render from '../render'
-import { updateHands } from '../actions'
+import context from '../context.mjs'
+import * as render from '../render.mjs'
+import { updateHands } from '../actions.mjs'
 
 /**
  * Handle a Remove Participant message.

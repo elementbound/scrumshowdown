@@ -1,4 +1,4 @@
-import { loadUserData } from './storage/user.data'
+import { loadUserData } from './storage/user.data.mjs'
 
 const userData = loadUserData()
 

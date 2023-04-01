@@ -1,4 +1,4 @@
-import * as three from 'three'
+import three from 'three'
 import { clamp } from '../utils'
 
 /**

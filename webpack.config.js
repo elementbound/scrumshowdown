@@ -1,13 +1,13 @@
 const path = require('path')
 
-const distDir = path.resolve(__dirname, 'public/bundles')
-const publicDir = path.resolve(__dirname, 'public')
+const publicDir = path.resolve(__dirname, 'src', 'server', 'public')
+const distDir = path.resolve(publicDir, 'bundles')
 
 module.exports = {
   entry: {
-    main: './client/index.js',
-    profile: './client/profile.js',
-    'redirect.without.profile': './client/redirect.without.profile.js'
+    main: './src/client/index.mjs',
+    profile: './src/client/profile.mjs',
+    'redirect.without.profile': './src/client/redirect.without.profile.mjs'
   },
 
   devtool: 'source-map',

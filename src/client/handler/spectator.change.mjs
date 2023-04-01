@@ -1,4 +1,4 @@
-import context from '../context'
+import context from '../context.mjs'
 
 export function spectatorChangeHandler ({ id, isSpectator }) {
   const user = context.room.findUser(id)

@@ -1,5 +1,5 @@
-import User from '../data/user'
-import Room from '../data/room'
+import User from '../domain/user.mjs'
+import Room from '../domain/room.mjs'
 
 const context = {
   room: new Room(undefined),

@@ -1,10 +1,10 @@
 import Mustache from 'mustache'
-import User from '../data/user'
-import * as messages from '../data/messages'
-import context from './context'
-import * as render from './render'
-import Hand from './objects/hand'
-import { DEG2RAD } from './utils'
+import User from '../domain/user.mjs'
+import * as messages from '../domain/messages.mjs'
+import context from './context.mjs'
+import * as render from './render.mjs'
+import Hand from './objects/hand.mjs'
+import { DEG2RAD } from './utils.mjs'
 
 const RESULTS_TEMPLATE = `
   <h2>{{topic}}</h2>

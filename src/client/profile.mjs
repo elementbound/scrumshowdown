@@ -1,4 +1,4 @@
-import { UserData, saveUserData, loadUserData } from './storage/user.data'
+import { UserData, saveUserData, loadUserData } from './storage/user.data.mjs'
 
 const nameInput = document.querySelector('[name="name"]')
 const colorButton = document.querySelector('#color')

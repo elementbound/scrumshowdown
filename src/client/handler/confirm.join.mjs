@@ -1,6 +1,6 @@
-import context from '../context'
-import * as messages from '../../data/messages'
-import { createHand, sendStateChange, sendEmote, updateTopic } from '../actions'
+import context from '../context.mjs'
+import * as messages from '../../domain/messages.mjs'
+import { createHand, sendStateChange, sendEmote, updateTopic } from '../actions.mjs'
 
 /**
  * Handle a Confirm Join message.

@@ -1,5 +1,5 @@
-import context from '../context'
-import { createHand, getHandState, updateHands } from '../actions'
+import context from '../context.mjs'
+import { createHand, getHandState, updateHands } from '../actions.mjs'
 
 /**
  * Handle an Add Participant message.

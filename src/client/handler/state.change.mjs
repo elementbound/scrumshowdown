@@ -1,5 +1,5 @@
-import context from '../context'
-import { getHandState } from '../actions'
+import context from '../context.mjs'
+import { getHandState } from '../actions.mjs'
 
 /**
  * Handle a State Change message.

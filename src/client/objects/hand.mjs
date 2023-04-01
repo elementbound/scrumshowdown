@@ -1,5 +1,5 @@
-import * as three from 'three'
-import { SkeletonUtils } from 'three/examples/jsm/utils/SkeletonUtils'
+import three from 'three'
+import { SkeletonUtils } from 'three/examples/jsm/utils/SkeletonUtils.js'
 import { DEG2RAD } from '../utils'
 import AlignedElement from './aligned.element'
 
