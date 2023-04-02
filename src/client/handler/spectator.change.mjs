@@ -1,0 +1,20 @@
+import context from '../context.mjs'
+
+export function spectatorChangeHandler ({ id, isSpectator }) {
+  const user = context.room.findUser(id)
+
+  console.log('Spectator change', { id, user, isSpectator })
+
+  user.isSpectator = isSpectator
+  user.hand.isSpectator = isSpectator
+
+  console.log('Spectator change applied', { user, context });
+
+  [...document.querySelectorAll('user-admin')]
+    .flatMap(userAdmin => userAdmin.userEntries)
+    .filter(entry => entry.user.id === user.id)
+    .forEach(({ user, item }) => {
+      user.isSpectator = isSpectator
+      item.isSpectator = isSpectator
+    })
+}
