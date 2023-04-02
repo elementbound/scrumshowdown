@@ -1,20 +1,12 @@
-'use strict';
-
 module.exports = {
   plugins: [
     'plugins/markdown'
   ],
 
   source: {
+    includePattern: '\\.mjs$',
     include: [
-      'bin/www',
-      'client',
-      'data',
-      'routes',
-      'services',
-      'lib',
-      'handlers',
-      'app.js'
+      'src/'
     ]
   },
 
