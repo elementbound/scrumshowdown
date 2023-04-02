@@ -2,18 +2,17 @@
   "name": "scrumshowdown",
   "version": "2.0.0",
   "description": "",
-  "main": "src/server/app.js",
+  "main": "src/server/index.mjs",
   "scripts": {
-    "start": "node ./bin/www.mjs",
-    "start:dev": "concurrently \"webpack -w\" \"nodemon bin/www.mjs\"",
+    "start": "node .",
+    "start:dev": "concurrently \"webpack -w\" \"nodemon\"",
     "build": "webpack",
     "jsdoc": "jsdoc -c .jsdoc.js",
-    "lint": "eslint bin/www client/**.js handlers/**.js routes/**.js services/**.js app.js",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint src/*.mjs src/**/*.mjs",
     "heroku-postbuild": "webpack -p"
   },
   "author": "elementbound",
-  "license": "ISC",
+  "license": "MIT",
   "engines": {
     "node": "^16"
   },
@@ -25,7 +24,7 @@
     "http-errors": "~1.6.2",
     "morgan": "~1.9.0",
     "mustache": "^4.0.1",
-    "three": "^0.115.0",
+    "three": "0.115.0",
     "ws": "^7.2.3"
   },
   "devDependencies": {
