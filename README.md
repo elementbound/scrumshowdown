@@ -13,8 +13,8 @@ The application can be accessed on [Heroku](https://scrumshowdown.herokuapp.com/
 ### Local
 
 1. Clone this repository
-1. `npm install`
-1. `npm run start:dev`
+1. `pnpm install`
+1. `pnpm start:dev`
 1. Have fun!
 
 ## Usage
