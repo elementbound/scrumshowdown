@@ -1,6 +1,6 @@
 const path = require('path')
 
-const publicDir = path.resolve(__dirname, 'src', 'server', 'public')
+const publicDir = path.resolve(__dirname, 'public')
 const distDir = path.resolve(publicDir, 'bundles')
 
 module.exports = {

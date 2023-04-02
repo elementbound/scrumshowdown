@@ -1,31 +1,24 @@
 import createError from 'http-errors'
 import express, { json, urlencoded } from 'express'
-import * as path from 'path'
 import cookieParser from 'cookie-parser'
 import logger from 'morgan'
 
 import indexRouter from './routes/index.mjs'
 import roomRouter from './routes/room.mjs'
 import profileRouter from './routes/profile.mjs'
+import { getPublicDir, getViewDir } from './directories.mjs'
 
 const app = express()
-const dirname = [import.meta.url]
-  .map(u => new URL(u))
-  .map(u => u.pathname)
-  .map(path.dirname)
-  [0]
-
-console.log(dirname)
 
 // view engine setup
-app.set('views', path.join(dirname, 'views'))
+app.set('views', getViewDir())
 app.set('view engine', 'hbs')
 
 app.use(logger('dev'))
 app.use(json())
 app.use(urlencoded({ extended: false }))
 app.use(cookieParser())
-app.use(express.static(path.join(dirname, 'public')))
+app.use(express.static(getPublicDir()))
 
 app.use('/', indexRouter)
 app.use('/profile', profileRouter)
