@@ -4,9 +4,6 @@ dependencies:
   cookie-parser:
     specifier: ~1.4.3
     version: 1.4.3
-  debug:
-    specifier: ~2.6.9
-    version: 2.6.9(supports-color@6.1.0)
   express:
     specifier: ~4.16.0
     version: 4.16.0
