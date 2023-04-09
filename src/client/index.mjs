@@ -21,7 +21,6 @@ import { spectatorChangeHandler } from './handler/spectator.change.mjs'
 import { rootLogger } from '../logger.mjs'
 
 const logger = rootLogger()
-console.error('Yo where the fuck my errors at')
 
 function bindUI () {
   document.querySelector('.action.toggle-more').onclick = function () {

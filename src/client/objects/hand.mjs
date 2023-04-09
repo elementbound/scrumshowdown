@@ -6,8 +6,6 @@ import AlignedElement from './aligned.element.mjs'
 
 const logger = getLogger({ name: 'Hand' })
 
-console.log('Yo!')
-
 const STATE_EMOJIS = {
   idle: '',
   ready: '✔️',
@@ -51,7 +49,6 @@ class Hand {
       skinning: true
     })
 
-    console.log('No hand?')
     logger.info('Cloning hand scene')
     const object = SkeletonUtils.clone(this._model.scene)
     logger.info({ object }, 'Clone done')
