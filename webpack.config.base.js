@@ -13,5 +13,18 @@ module.exports = {
   output: {
     filename: '[name].js',
     path: distDir
+  },
+
+  optimization: {
+    runtimeChunk: 'single',
+    splitChunks: {
+      cacheGroups: {
+        vendor: {
+          test: /[\\/]node_modules[\\/]/,
+          name: 'vendors',
+          chunks: 'all'
+        }
+      }
+    }
   }
 }

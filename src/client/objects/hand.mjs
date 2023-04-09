@@ -1,5 +1,5 @@
 import * as three from 'three'
-import { SkeletonUtils } from 'three/examples/jsm/utils/SkeletonUtils.js'
+import * as SkeletonUtils from 'three/examples/jsm/utils/SkeletonUtils.js'
 import { getLogger } from '../../logger.mjs'
 import { DEG2RAD } from '../utils.mjs'
 import AlignedElement from './aligned.element.mjs'
@@ -49,7 +49,9 @@ class Hand {
       skinning: true
     })
 
+    logger.info('Cloning hand scene')
     const object = SkeletonUtils.clone(this._model.scene)
+    logger.info({ object }, 'Clone done')
     this._object = object
     this._scene.add(this._object)
 

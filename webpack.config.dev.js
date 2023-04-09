@@ -1,13 +1,11 @@
+const merge = require('deepmerge')
 const base = require('./webpack.config.base.js')
 
-module.exports = Object.assign({}, base, {
+module.exports = merge(base, {
   mode: 'development',
 
   devtool: 'source-map',
   optimization: {
-    minimize: false,
-    splitChunks: {
-      chunks: 'all'
-    }
+    minimize: false
   }
 })

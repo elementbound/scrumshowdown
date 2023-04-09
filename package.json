@@ -1,6 +1,6 @@
 {
   "name": "scrumshowdown",
-  "version": "2.0.8",
+  "version": "2.0.9",
   "description": "",
   "main": "src/server/index.mjs",
   "scripts": {
@@ -16,7 +16,7 @@
   "author": "elementbound",
   "license": "MIT",
   "engines": {
-    "node": "^16"
+    "node": "^18"
   },
   "dependencies": {
     "cookie-parser": "^1.4.6",
@@ -28,12 +28,13 @@
     "nodemon": "^2.0.22",
     "pino": "^8.11.0",
     "pino-http": "^8.3.3",
-    "three": "0.115.0",
+    "three": "0.151.3",
     "ws": "^7.2.3"
   },
   "devDependencies": {
     "@types/ws": "^7.2.3",
     "concurrently": "^5.1.0",
+    "deepmerge": "^4.3.1",
     "eslint": "^6.8.0",
     "eslint-config-standard": "^14.1.1",
     "eslint-plugin-import": "^2.20.1",

@@ -29,8 +29,8 @@ dependencies:
     specifier: ^8.3.3
     version: 8.3.3
   three:
-    specifier: 0.115.0
-    version: 0.115.0
+    specifier: 0.151.3
+    version: 0.151.3
   ws:
     specifier: ^7.2.3
     version: 7.2.3
@@ -42,6 +42,9 @@ devDependencies:
   concurrently:
     specifier: ^5.1.0
     version: 5.1.0
+  deepmerge:
+    specifier: ^4.3.1
+    version: 4.3.1
   eslint:
     specifier: ^6.8.0
     version: 6.8.0
@@ -865,6 +868,11 @@ packages:
 
   /deep-is@0.1.4:
     resolution: {integrity: sha512-oIPzksmTg4/MriiaYGO+okXDT7ztn/w3Eptv/+gSIdMdKsJo0u4CfYNFJPy+4SKMuCqGw2wxnA+URMg3t8a/bQ==}
+    dev: true
+
+  /deepmerge@4.3.1:
+    resolution: {integrity: sha512-3sUqbMEc77XqpdNO7FRyRog+eW3ph+GYCbj+rK+uYyRMuwsVy0rMiVtPn+QJlKFvWP/1PYpapqYn0Me2knFn+A==}
+    engines: {node: '>=0.10.0'}
     dev: true
 
   /define-properties@1.2.0:
@@ -3072,8 +3080,8 @@ packages:
       real-require: 0.2.0
     dev: false
 
-  /three@0.115.0:
-    resolution: {integrity: sha512-mAV2Ky3RdcbdSbR9capI+tKLvRldWYxd4151PZTT/o7+U2jh9Is3a4KmnYwzyUAhB2ZA3pXSgCd2DOY4Tj5kow==}
+  /three@0.151.3:
+    resolution: {integrity: sha512-+vbuqxFy8kzLeO5MgpBHUvP/EAiecaDwDuOPPDe6SbrZr96kccF0ktLngXc7xA7bzyd3N0t2f6mw3Z9y6JCojQ==}
     dev: false
 
   /through@2.3.8:
