@@ -1,7 +1,7 @@
 import { onConnect, onClose } from '../../wsrouter.mjs'
 import { deleteRoom } from '../services/rooms.mjs'
 import { removeParticipant } from '../../domain/messages.mjs'
-import { rootLogger } from '../../logger.mjs'
+import { getLogger } from '../../logger.mjs'
 
 // TODO: Config
 const PING_INTERVAL = 3000
@@ -9,7 +9,7 @@ const PING_INTERVAL = 3000
 function leaveHandler () {
   onConnect(ws => {
     ws.isAlive = true
-    const logger = rootLogger().child({ name: 'leaveHandler', event: 'interval' })
+    const logger = getLogger({ name: 'leaveHandler', event: 'interval' })
 
     const interval = setInterval(function ping () {
       if (ws.isAlive === false) {
@@ -29,7 +29,7 @@ function leaveHandler () {
   onClose(ws => {
     const room = ws.room
     const user = ws.user
-    const logger = rootLogger().child({
+    const logger = getLogger({
       name: 'leaveHandler',
       event: 'close',
       room: room?.id,

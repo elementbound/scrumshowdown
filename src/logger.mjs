@@ -7,3 +7,9 @@ const root = pino({
 export function rootLogger () {
   return root
 }
+
+export function getLogger (data) {
+  return pino({
+    ...data
+  })
+}

@@ -1,6 +1,6 @@
 import { onMessage } from '../../wsrouter.mjs'
 import { Types, updateTopic } from '../../domain/messages.mjs'
-import { rootLogger } from '../../logger.mjs'
+import { getLogger } from '../../logger.mjs'
 
 function topicHandler () {
   onMessage((ws, message) => {
@@ -10,7 +10,7 @@ function topicHandler () {
 
     const room = ws.room
     const topic = message.data.topic
-    const logger = rootLogger().child({
+    const logger = getLogger({
       name: 'topicHandler',
       room: room?.id,
       topic

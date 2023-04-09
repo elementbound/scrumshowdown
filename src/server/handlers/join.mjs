@@ -1,7 +1,7 @@
 import { getRoom, joinRoom } from '../services/rooms.mjs'
 import { onMessage } from '../../wsrouter.mjs'
 import { Types, kickNotification, confirmJoin, addParticipant, updateTopic, estimateResult } from '../../domain/messages.mjs'
-import { rootLogger } from '../../logger.mjs'
+import { getLogger, rootLogger } from '../../logger.mjs'
 import User from '../../domain/user.mjs'
 
 function joinHandler () {
@@ -11,7 +11,7 @@ function joinHandler () {
     }
 
     const { roomId, user: requestUser } = message.data
-    const logger = rootLogger().child({
+    const logger = getLogger({
       name: 'joinHandler',
       room: roomId,
       user: requestUser?.id

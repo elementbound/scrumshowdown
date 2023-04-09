@@ -1,7 +1,6 @@
 import { onMessage } from '../../wsrouter.mjs'
 import { Types, stateChange } from '../../domain/messages.mjs'
-import User from '../../domain/user.mjs'
-import { rootLogger } from '../../logger.mjs'
+import { getLogger } from '../../logger.mjs'
 
 function stateHandler () {
   onMessage((ws, message) => {
@@ -12,7 +11,7 @@ function stateHandler () {
     const room = ws.room
     const user = ws.user
     const { isReady, emote } = message.data
-    const logger = rootLogger().child({
+    const logger = getLogger({
       name: 'stateHandler',
       room: room?.id,
       user: user?.id,

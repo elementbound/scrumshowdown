@@ -1,6 +1,6 @@
 import { onMessage } from '../../wsrouter.mjs'
 import { Types, kickNotification, removeParticipant } from '../../domain/messages.mjs'
-import { rootLogger } from '../../logger.mjs'
+import { getLogger } from '../../logger.mjs'
 
 function kickRequestHandler () {
   onMessage((ws, message) => {
@@ -13,7 +13,7 @@ function kickRequestHandler () {
     const kickId = message.data.id
     const kickee = room.findUser(kickId)
 
-    const logger = rootLogger().child({
+    const logger = getLogger({
       room: room?.id,
       user: user?.id,
       target: kickId

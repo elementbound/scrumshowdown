@@ -1,7 +1,6 @@
 import { onMessage } from '../../wsrouter.mjs'
 import { Types, spectatorChange } from '../../domain/messages.mjs'
-import User from '../../domain/user.mjs'
-import { rootLogger } from '../../logger.mjs'
+import { getLogger } from '../../logger.mjs'
 
 function spectatorRequestHandler () {
   onMessage((ws, message) => {
@@ -14,7 +13,7 @@ function spectatorRequestHandler () {
     const spectatorId = message.data.id
     const spectator = room.findUser(spectatorId)
 
-    const logger = rootLogger().child({
+    const logger = getLogger({
       name: 'spectatorRequestHandler',
       room: room?.id,
       user: user?.id,

@@ -5,7 +5,7 @@
   "main": "src/server/index.mjs",
   "scripts": {
     "start": "node .",
-    "start:dev": "concurrently \"webpack -w\" \"nodemon\"",
+    "start:dev": "concurrently \"webpack -w\" \"nodemon | pino-pretty\"",
     "build": "webpack",
     "jsdoc": "jsdoc -c .jsdoc.js",
     "lint": "eslint src/*.mjs src/**/*.mjs",
@@ -38,6 +38,7 @@
     "eslint-plugin-standard": "^4.0.1",
     "jsdoc": "^3.6.3",
     "nodemon": "^2.0.2",
+    "pino-pretty": "^10.0.0",
     "webpack": "^4.42.1",
     "webpack-cli": "^3.3.11",
     "webpack-dev-server": "^3.11.0"

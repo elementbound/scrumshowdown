@@ -1,10 +1,10 @@
 import { Router } from 'express'
-import { rootLogger } from '../../logger.mjs'
+import { getLogger } from '../../logger.mjs'
 import { version as _version } from '../services/meta.mjs'
 import { createRoom } from '../services/rooms.mjs'
 
 const indexRouter = Router()
-const logger = rootLogger({ name: 'indexRouter' })
+const logger = getLogger({ name: 'indexRouter' })
 
 indexRouter.get('/', (req, res, next) => {
   res.render('index', {

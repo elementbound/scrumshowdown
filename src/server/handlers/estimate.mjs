@@ -2,10 +2,10 @@ import User from '../../domain/user.mjs'
 import Estimation from '../../domain/estimation.mjs'
 import { onMessage } from '../../wsrouter.mjs'
 import { Types, estimateDecline, estimateRequest, estimateResult, stateChange } from '../../domain/messages.mjs'
-import { rootLogger } from '../../logger.mjs'
+import { getLogger } from '../../logger.mjs'
 
 function waitForEstimate (user, logger) {
-  logger ??= rootLogger().child({ name: 'waitForEstimate' })
+  logger ??= getLogger({ name: 'waitForEstimate' })
 
   return new Promise((resolve, reject) => {
     const websocket = user.websocket
@@ -32,7 +32,10 @@ function estimateHandler () {
     }
 
     const room = ws.room
-    const logger = rootLogger().child({ room: room?.id })
+    const logger = getLogger({
+      name: 'estimateHandler',
+      room: room?.id
+    })
 
     if (!room.users.every(user => user.isReady || user.isSpectator)) {
       logger.info('Some users are not ready yet, declining')

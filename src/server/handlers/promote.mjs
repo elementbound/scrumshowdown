@@ -1,7 +1,6 @@
 import { onMessage } from '../../wsrouter.mjs'
 import { Types, promoteNotification } from '../../domain/messages.mjs'
-import User from '../../domain/user.mjs'
-import { rootLogger } from '../../logger.mjs'
+import { getLogger } from '../../logger.mjs'
 
 function promoteRequestHandler () {
   onMessage((ws, message) => {
@@ -14,7 +13,7 @@ function promoteRequestHandler () {
     const promoteId = message.data.id
     const promotee = room.findUser(promoteId)
 
-    const logger = rootLogger().child({
+    const logger = getLogger({
       name: 'promoteRequestHandler',
       room: room?.id,
       user: user?.id,
