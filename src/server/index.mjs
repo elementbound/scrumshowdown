@@ -17,7 +17,6 @@ appServer.on('listening', () =>
 appServer.on('error', err => { throw err })
 
 // Start WS server
-// const wsServer = new ws.Server({ server: appServer })
 const wsServer = new ws.WebSocketServer({ server: appServer })
 wsServer.on('listening', () =>
   rootLogger().info('WS server listening')
