@@ -19,10 +19,10 @@
     "node": "^16"
   },
   "dependencies": {
-    "cookie-parser": "~1.4.3",
-    "express": "~4.16.0",
-    "hbs": "^4.1.1",
-    "http-errors": "~1.6.2",
+    "cookie-parser": "^1.4.6",
+    "express": "^4.18.2",
+    "hbs": "^4.2.0",
+    "http-errors": "^2.0.0",
     "mustache": "^4.0.1",
     "nanoid": "^4.0.2",
     "nodemon": "^2.0.22",
