@@ -12,8 +12,6 @@ const projectRoot = resolve(current, '..', '..')
 const viewsDir = resolve(sourceRoot, 'server', 'views')
 const publicDir = resolve(projectRoot, 'public')
 
-console.log({ sourceRoot, projectRoot, viewsDir, publicDir })
-
 export function getViewDir () {
   return viewsDir
 }

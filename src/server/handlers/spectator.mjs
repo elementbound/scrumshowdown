@@ -1,6 +1,6 @@
 import { onMessage } from '../../wsrouter.mjs'
 import { Types, spectatorChange } from '../../domain/messages.mjs'
-import User from '../../domain/user.mjs'
+import { getLogger } from '../../logger.mjs'
 
 function spectatorRequestHandler () {
   onMessage((ws, message) => {
@@ -13,22 +13,31 @@ function spectatorRequestHandler () {
     const spectatorId = message.data.id
     const spectator = room.findUser(spectatorId)
 
-    console.log('Spectator change request')
+    const logger = getLogger({
+      name: 'spectatorRequestHandler',
+      room: room?.id,
+      user: user?.id,
+      target: spectatorId
+    })
+
+    logger.info('Spectator change request')
 
     if (!spectator) {
-      console.warn('Trying to make non-existant user spectator', { spectatorId })
+      logger.error('Trying to make non-existant user spectator')
       return
     }
 
     if (!user.isAdmin && user !== spectator) {
-      console.warn('User is not admin, and not applying to self', { user: User.sanitize(user), spectatorId })
+      logger.warn('User is not admin, and not applying to self')
       return
     }
 
     // Update the target
+    logger.info('Updating target\'s spectator flag')
     spectator.isSpectator = message.data.isSpectator
 
     // Broadcast change
+    logger.info('Sending spectator notification')
     room.users
       .forEach(u => u.websocket.send(spectatorChange(spectator, spectator.isSpectator)))
   })

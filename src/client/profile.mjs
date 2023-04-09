@@ -29,7 +29,6 @@ function bind () {
     button.onclick = () => {
       colorButton.style.backgroundColor = data
       colorButton.setAttribute('data-color', data)
-      console.log('Received color', color)
     }
   })
 }

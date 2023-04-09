@@ -1,6 +1,8 @@
 import { getRoom, joinRoom } from '../services/rooms.mjs'
 import { onMessage } from '../../wsrouter.mjs'
 import { Types, kickNotification, confirmJoin, addParticipant, updateTopic, estimateResult } from '../../domain/messages.mjs'
+import { getLogger, rootLogger } from '../../logger.mjs'
+import User from '../../domain/user.mjs'
 
 function joinHandler () {
   onMessage((ws, message) => {
@@ -9,10 +11,16 @@ function joinHandler () {
     }
 
     const { roomId, user: requestUser } = message.data
-    console.log('Join request', { roomId, requestUser })
+    const logger = getLogger({
+      name: 'joinHandler',
+      room: roomId,
+      user: requestUser?.id
+    })
+
+    logger.info('Join request')
 
     if (!requestUser.name) {
-      console.error('Joining without username, declining')
+      logger.error('Joining without username, declining')
 
       ws.send(kickNotification('Missing profile'))
 
@@ -22,20 +30,30 @@ function joinHandler () {
 
     const room = getRoom(roomId)
     if (!room) {
-      console.error('Joining non-existing room', roomId)
+      logger.error('Joining non-existing room', roomId)
       return
     }
 
+    logger.info(
+      { userData: User.sanitize(requestUser) },
+      'Adding user to room'
+    )
     const user = joinRoom(room, requestUser)
     user.websocket = ws
 
     // First joiner is admin
-    user.isAdmin = (room.findAdmins().length === 0)
+    if (room.findAdmins().length === 0) {
+      logger.info('Room has no admin, promoting user to admin')
+      user.isAdmin = true
+    }
 
     ws.room = room
     ws.user = user
 
+    logger.info('Confirming join')
     ws.send(confirmJoin(user))
+
+    logger.info('Synchronizing participants')
     room.users
       .filter(u => u !== user)
       .forEach(u => {
@@ -47,12 +65,12 @@ function joinHandler () {
       })
 
     // Let the joinee know the current topic
+    logger.info('Synchronizing topic')
     ws.send(updateTopic(room.topic))
 
     // Stream past estimations to the joinee
+    logger.info('Synchronizing estimation history')
     room.estimations.forEach(estimation => ws.send(estimateResult(estimation)))
-
-    console.log(room)
   })
 }
 

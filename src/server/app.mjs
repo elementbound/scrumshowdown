@@ -1,7 +1,7 @@
 import createError from 'http-errors'
 import express, { json, urlencoded } from 'express'
 import cookieParser from 'cookie-parser'
-import logger from 'morgan'
+import pinoHttp from 'pino-http'
 
 import indexRouter from './routes/index.mjs'
 import roomRouter from './routes/room.mjs'
@@ -14,7 +14,7 @@ const app = express()
 app.set('views', getViewDir())
 app.set('view engine', 'hbs')
 
-app.use(logger('dev'))
+app.use(pinoHttp())
 app.use(json())
 app.use(urlencoded({ extended: false }))
 app.use(cookieParser())
