@@ -1,8 +1,8 @@
-import three from 'three'
+import * as three from 'three'
 import { SkeletonUtils } from 'three/examples/jsm/utils/SkeletonUtils.js'
 import { getLogger } from '../../logger.mjs'
-import { DEG2RAD } from '../utils'
-import AlignedElement from './aligned.element'
+import { DEG2RAD } from '../utils.mjs'
+import AlignedElement from './aligned.element.mjs'
 
 const logger = getLogger({ name: 'Hand' })
 
