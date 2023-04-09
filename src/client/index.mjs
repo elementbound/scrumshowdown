@@ -95,6 +95,7 @@ async function main () {
     oldResize && oldResize()
     updateHands()
   }
+  updateHands()
 
   const { room, user } = context
   room.id = document.querySelector('.data.room-id').innerHTML
