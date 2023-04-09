@@ -1,5 +1,5 @@
-import three from 'three'
-import { loadGLTF } from './utils'
+import * as three from 'three'
+import { loadGLTF } from './utils.mjs'
 
 export const context = {
   scene: undefined,

@@ -1,5 +1,5 @@
-import three from 'three'
-import { clamp } from '../utils'
+import * as three from 'three'
+import { clamp } from '../utils.mjs'
 
 /**
  * Keeps an HTML Element aligned to a given point in 3D space.

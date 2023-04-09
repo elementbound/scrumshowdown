@@ -1,15 +1,17 @@
 {
   "name": "scrumshowdown",
-  "version": "2.0.4",
+  "version": "2.0.5",
   "description": "",
   "main": "src/server/index.mjs",
   "scripts": {
-    "start": "node .",
-    "start:dev": "concurrently \"webpack -w\" \"nodemon | pino-pretty\"",
-    "build": "webpack",
+    "start": "pnpm build && pnpm host",
+    "start:dev": "concurrently \"pnpm build:dev\" \"pnpm host:dev\"",
+    "host": "nodemon .",
+    "host:dev": "nodemon . | pino-pretty",
+    "build": "webpack -c webpack.config.prod.js",
+    "build:dev": "webpack -w -c webpack.config.dev.js",
     "jsdoc": "jsdoc -c .jsdoc.js",
-    "lint": "eslint src/*.mjs src/**/*.mjs",
-    "heroku-postbuild": "webpack -p"
+    "lint": "eslint src/*.mjs src/**/*.mjs"
   },
   "author": "elementbound",
   "license": "MIT",
@@ -40,8 +42,7 @@
     "jsdoc": "^3.6.3",
     "nodemon": "^2.0.2",
     "pino-pretty": "^10.0.0",
-    "webpack": "^4.42.1",
-    "webpack-cli": "^3.3.11",
-    "webpack-dev-server": "^3.11.0"
+    "webpack": "^5.78.0",
+    "webpack-cli": "^5.0.1"
   }
 }

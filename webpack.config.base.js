@@ -10,34 +10,8 @@ module.exports = {
     'redirect.without.profile': './src/client/redirect.without.profile.mjs'
   },
 
-  devtool: 'source-map',
-  optimization: {
-    minimize: false,
-    splitChunks: {
-      chunks: 'all'
-    }
-  },
-
-  devServer: {
-    contentBase: publicDir
-  },
-
   output: {
     filename: '[name].js',
     path: distDir
-  },
-
-  module: {
-    rules: [
-      {
-        test: /\.(fs|vs)$/,
-        use: 'raw-loader'
-      },
-
-      {
-        test: /\.worker\.js$/,
-        use: 'worker-loader'
-      }
-    ]
   }
 }

@@ -1,5 +1,5 @@
-import UserAdminItem from './user.admin.item'
-import * as events from '../events'
+import UserAdminItem from './user.admin.item.mjs'
+import * as events from '../events.mjs'
 
 export default class UserAdmin extends HTMLElement {
   constructor () {
