@@ -1,7 +1,10 @@
 import { Router } from 'express'
+import { rootLogger } from '../../logger.mjs'
 import { version as _version } from '../services/meta.mjs'
 import { createRoom } from '../services/rooms.mjs'
+
 const indexRouter = Router()
+const logger = rootLogger({ name: 'indexRouter' })
 
 indexRouter.get('/', (req, res, next) => {
   res.render('index', {
@@ -15,7 +18,7 @@ indexRouter.post('/', (req, res, next) => {
 
   if (create) {
     const room = createRoom()
-    console.log('Created room', room)
+    logger.info('Created room', room)
 
     res.redirect(`/room/${room.id}`)
   } else if (join) {

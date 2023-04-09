@@ -1,6 +1,7 @@
 import { onMessage } from '../../wsrouter.mjs'
 import { Types, promoteNotification } from '../../domain/messages.mjs'
 import User from '../../domain/user.mjs'
+import { rootLogger } from '../../logger.mjs'
 
 function promoteRequestHandler () {
   onMessage((ws, message) => {
@@ -13,27 +14,36 @@ function promoteRequestHandler () {
     const promoteId = message.data.id
     const promotee = room.findUser(promoteId)
 
-    console.log('User requesting to kick another', { promoter: User.sanitize(user), promoteId, promotee: User.sanitize(promotee) })
+    const logger = rootLogger().child({
+      name: 'promoteRequestHandler',
+      room: room?.id,
+      user: user?.id,
+      target: promoteId
+    })
+
+    logger.info('User requesting to kick another')
 
     if (!promotee) {
-      console.log('Promotee is not present in room', { promoteId: promoteId })
+      logger.error('Promotee is not present in room')
       return
     }
 
     if (!user.isAdmin) {
-      console.log('User is not admin, rejecting', { user: User.sanitize(user) })
+      logger.error('User is not admin, rejecting')
       return
     }
 
     if (promotee === user) {
-      console.log('User is trying to promote self, rejecting', { user: User.sanitize(user) })
+      logger.warn('User is trying to promote self, rejecting')
       return
     }
 
     // Promote the promotee
+    logger.info('Promoting to admin')
     promotee.isAdmin = true
 
     // Broadcast promotion
+    logger.info('Sending promote notification')
     room.users
       .forEach(u => u.websocket.send(promoteNotification(promotee)))
   })

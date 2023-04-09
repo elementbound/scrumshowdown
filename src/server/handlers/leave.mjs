@@ -1,16 +1,22 @@
 import { onConnect, onClose } from '../../wsrouter.mjs'
 import { deleteRoom } from '../services/rooms.mjs'
 import { removeParticipant } from '../../domain/messages.mjs'
+import { rootLogger } from '../../logger.mjs'
 
+// TODO: Config
 const PING_INTERVAL = 3000
 
 function leaveHandler () {
   onConnect(ws => {
     ws.isAlive = true
+    const logger = rootLogger().child({ name: 'leaveHandler', event: 'interval' })
 
     const interval = setInterval(function ping () {
       if (ws.isAlive === false) {
-        console.log(`User inactive after ${PING_INTERVAL}ms, terminating`)
+        logger.info(
+          { user: ws?.user?.id },
+          `User inactive after ${PING_INTERVAL}ms, terminating`
+        )
         clearInterval(interval)
         return ws.terminate()
       }
@@ -23,13 +29,22 @@ function leaveHandler () {
   onClose(ws => {
     const room = ws.room
     const user = ws.user
+    const logger = rootLogger().child({
+      name: 'leaveHandler',
+      event: 'close',
+      room: room?.id,
+      user: user?.id
+    })
 
     if (!user) {
-      console.warn('Closed connection with no user associated')
+      logger.warn('Closed connection with no user associated')
       return
     }
 
-    console.log('User left room', room, { id: user.id, name: user.name })
+    logger.info(
+      { name: user.name },
+      'User left room'
+    )
 
     room.users
       .filter(u => u !== user)
@@ -38,7 +53,7 @@ function leaveHandler () {
     room.removeUser(user.id)
 
     if (!room.users.length) {
-      console.log('Removing empty room', room.id)
+      logger.info('Removing empty room')
       deleteRoom(room.id)
     }
   })
