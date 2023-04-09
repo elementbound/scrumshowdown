@@ -1,6 +1,9 @@
 import context from '../context.mjs'
 import * as messages from '../../domain/messages.mjs'
 import { createHand, sendStateChange, sendEmote, updateTopic } from '../actions.mjs'
+import { getLogger } from '../../logger.mjs'
+
+const logger = getLogger('confirmJoinHandler')
 
 /**
  * Handle a Confirm Join message.
@@ -8,7 +11,7 @@ import { createHand, sendStateChange, sendEmote, updateTopic } from '../actions.
  * @param {User} param0.user Confirmed User data
  */
 export default function confirmJoinHandler ({ user }) {
-  console.log('Join confirmed with user data', user)
+  logger.info({ user }, 'Join confirmed with user data')
   context.user = Object.assign({}, context.user, user)
   context.room.users.push(context.user)
 
@@ -30,7 +33,7 @@ export default function confirmJoinHandler ({ user }) {
   document.querySelector('.action.request-estimate').onclick = () => {
     const { user } = context
 
-    console.log('Requesting estimates')
+    logger.info('Requesting estimates')
     user.websocket.send(messages.estimateRequest())
   }
 
@@ -55,7 +58,6 @@ export default function confirmJoinHandler ({ user }) {
 
   topic.onkeypress = event => {
     if (event.keyCode === 13) {
-      console.log(topic.innerText)
       context.user.websocket.send(messages.updateTopic(topic.innerText))
 
       topic.blur()

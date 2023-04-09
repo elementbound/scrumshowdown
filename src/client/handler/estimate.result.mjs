@@ -1,8 +1,11 @@
 import context from '../context.mjs'
 import { renderEstimationResults } from '../actions.mjs'
+import { getLogger } from '../../logger.mjs'
+
+const logger = getLogger({ name: 'estimateResultHandler' })
 
 export function estimateResultHandler ({ estimation }) {
-  console.log('Received estimation', estimation)
+  logger.info('Received estimation %s', estimation)
   context.estimations.push(estimation)
 
   const resultHtml = renderEstimationResults(estimation.topic, estimation.estimates)

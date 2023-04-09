@@ -18,6 +18,9 @@ import { promoteNotificationHandler } from './handler/promote.notification.mjs'
 import { loadUserData } from './storage/user.data.mjs'
 import NiceProgress from './components/nice.progress.mjs'
 import { spectatorChangeHandler } from './handler/spectator.change.mjs'
+import { rootLogger } from '../logger.mjs'
+
+const logger = rootLogger()
 
 function bindUI () {
   document.querySelector('.action.toggle-more').onclick = function () {
@@ -44,7 +47,6 @@ function bindUI () {
 
   events.subscribe(events.Types.AdminSpectatorToggle, user => {
     const isSpectator = !user.isSpectator
-    console.log('Sending spectator request', { user, isSpectator })
     context.user.websocket.send(messages.spectatorRequest(user, isSpectator))
   })
 }
@@ -59,7 +61,7 @@ async function main () {
   try {
     await render.startLoop()
   } catch (e) {
-    console.error('Failed to initialize renderer', e)
+    logger.error('Failed to initialize renderer', e)
 
     const errorSplash = document.querySelector('#error-splash')
     const errorDescription = document.querySelector('#error-description')
@@ -100,15 +102,15 @@ async function main () {
   user.name = userData.name
   user.color = userData.color
 
-  console.log('Connecting to WS...')
+  logger.info('Connecting to WS...')
   const protocol = location.protocol.startsWith('https') ? 'wss' : 'ws'
   const webSocket = new WebSocket(`${protocol}://${window.location.host}/rooms/${room.id}`)
   webSocket.onopen = () => {
-    console.log('Socket open!')
+    logger.info('Socket open!')
 
     user.websocket = webSocket
 
-    console.log('Joining with user', user)
+    logger.info('Joining with user', user)
 
     const rawSend = webSocket.send
     webSocket.send = data => rawSend.apply(webSocket, [JSON.stringify(data)])
@@ -117,7 +119,7 @@ async function main () {
 
   webSocket.onmessage = event => {
     const message = JSON.parse(event.data)
-    console.log('Received message', message)
+    logger.info('Received message', message)
 
     messageHandlers.invoke(message.type, message.data)
   }

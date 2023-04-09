@@ -1,14 +1,17 @@
+import { getLogger } from '../../logger.mjs'
 import context from '../context.mjs'
+
+const logger = getLogger({ name: 'spectatorChangeHandler' })
 
 export function spectatorChangeHandler ({ id, isSpectator }) {
   const user = context.room.findUser(id)
 
-  console.log('Spectator change', { id, user, isSpectator })
+  logger.info({ id, user, isSpectator }, 'Spectator change')
 
   user.isSpectator = isSpectator
   user.hand.isSpectator = isSpectator
 
-  console.log('Spectator change applied', { user, context });
+  logger.info({ user, context }, 'Spectator change applied');
 
   [...document.querySelectorAll('user-admin')]
     .flatMap(userAdmin => userAdmin.userEntries)

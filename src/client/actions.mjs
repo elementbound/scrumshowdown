@@ -55,8 +55,6 @@ export function sendStateChange (user) {
 
 export function sendEmote (emote) {
   return function () {
-    console.log('Sending emote', emote)
-
     const { user } = context
     const { websocket } = user
 
@@ -88,8 +86,6 @@ export function getHandState (user) {
  */
 export function alignHands (hands) {
   const handCount = hands.length
-
-  console.log(`Realigning with ${handCount} hands`)
 
   const scale = Hand.calculateScale(handCount, render.context.camera)
   hands.forEach((hand, i) => hand.align(i, handCount, scale))
@@ -150,8 +146,6 @@ export function renderEstimationResults (topic, estimates) {
       .reduce((a, b) => a + b)
 
     summary[0].percentage += (100 - percentageSum) / 100
-
-    console.log('Summary adjustment', { percentageSum, adjustment: (100 - percentageSum) / 100 })
   }
 
   return Mustache.render(RESULTS_TEMPLATE, {

@@ -40,8 +40,6 @@ function init () {
 
 async function loadModels () {
   context.models.hand = await loadGLTF('/assets/hand.glb')
-
-  console.log('Animations', context.models.hand.animations)
 }
 
 function resize (width, height) {

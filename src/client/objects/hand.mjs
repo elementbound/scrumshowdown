@@ -1,7 +1,10 @@
 import three from 'three'
 import { SkeletonUtils } from 'three/examples/jsm/utils/SkeletonUtils.js'
+import { getLogger } from '../../logger.mjs'
 import { DEG2RAD } from '../utils'
 import AlignedElement from './aligned.element'
+
+const logger = getLogger({ name: 'Hand' })
 
 const STATE_EMOJIS = {
   idle: '',
@@ -63,7 +66,7 @@ class Hand {
       this._actions[animation.name] = this._mixer.clipAction(animation)
     })
 
-    console.log('Actions', this._actions)
+    logger.info({ actions: this._actions }, 'Loaded actions')
 
     const html = document.createElement('div')
     html.classList.add(options.htmlClass || 'hand__name')
@@ -102,8 +105,6 @@ class Hand {
 
   set color (val) {
     this._color = new three.Color(val)
-
-    console.log('Assigning color', { val, color: this._color })
     this._material.color = this._color
   }
 
