@@ -1,3 +1,4 @@
+import { nanoid } from 'nanoid'
 import Room from '../../domain/room.mjs'
 import User from '../../domain/user.mjs'
 
@@ -7,15 +8,44 @@ export function hasRoom (roomId) {
   return !!rooms[roomId]
 }
 
-function generateId (length) {
-  const charset =
-    'ABCDEFGHIJKLMNOPQRSTUVWXYZ' +
-    '0123456789'
+// TODO: Config
+const ROOM_ID_LENGTH = 8
+const USER_ID_LENGTH = 21
+const MAX_ID_ATTEMPTS = 8192
 
-  return [...Array(length).keys()]
-    .map(i => Math.floor(charset.length * Math.random()))
-    .map(i => charset.charAt(i))
-    .join('')
+/**
+* Generate a random id.
+* @param {number} length Length
+* @returns {string} Id
+*/
+function getId (length) {
+  return nanoid(length)
+}
+
+/**
+* Generate random id while making sure it's not in use already.
+* @param {number} length Length
+* @param {function(string):boolean} validator Validator method
+* @param {number} maxAttempts Maximum number of attempts
+* @returns {string} Id
+*/
+function getSafeId (length, validator, maxAttempts) {
+  for (let attempts = 0; attempts < maxAttempts; ++attempts) {
+    const id = getId(length)
+    if (validator(id)) {
+      return id
+    }
+  }
+
+  throw Error(`Failed to generate id in ${maxAttempts} attempts!`)
+}
+
+function getRoomId () {
+  return getSafeId(ROOM_ID_LENGTH, id => !hasRoom(id), MAX_ID_ATTEMPTS)
+}
+
+function getUserId () {
+  return getId(USER_ID_LENGTH)
 }
 
 /**
@@ -23,9 +53,7 @@ function generateId (length) {
  * @returns {Room} Resulting room
  */
 export function createRoom () {
-  let roomId
-  for (; !roomId || hasRoom(roomId); roomId = generateId(8)) {}
-
+  const roomId = getRoomId()
   const room = new Room(roomId)
 
   rooms[roomId] = room
@@ -64,9 +92,7 @@ export function deleteRoom (id) {
  * @returns {User} Joining user
  */
 export function joinRoom (room, user) {
-  let userId
-  for (; !userId || room.hasUser(userId); userId = generateId(8)) {}
-
+  const userId = getUserId()
   const joinedUser = new User()
   Object.assign(joinedUser, user, { id: userId })
 

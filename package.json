@@ -1,6 +1,6 @@
 {
   "name": "scrumshowdown",
-  "version": "2.0.3",
+  "version": "2.0.4",
   "description": "",
   "main": "src/server/index.mjs",
   "scripts": {
@@ -22,6 +22,7 @@
     "hbs": "^4.1.1",
     "http-errors": "~1.6.2",
     "mustache": "^4.0.1",
+    "nanoid": "^4.0.2",
     "pino": "^8.11.0",
     "pino-http": "^8.3.3",
     "three": "0.115.0",
