@@ -10,8 +10,4 @@ module.exports = Object.assign({}, base, {
       chunks: 'all'
     }
   }
-
-  // devServer: {
-  //   contentBase: publicDir
-  // },
 })

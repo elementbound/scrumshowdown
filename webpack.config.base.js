@@ -14,18 +14,4 @@ module.exports = {
     filename: '[name].js',
     path: distDir
   }
-
-  // module: {
-  //   rules: [
-  //     {
-  //       test: /\.(fs|vs)$/,
-  //       use: 'raw-loader'
-  //     },
-
-  //     {
-  //       test: /\.worker\.js$/,
-  //       use: 'worker-loader'
-  //     }
-  //   ]
-  // }
 }
