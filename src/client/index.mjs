@@ -37,15 +37,15 @@ function bindUI () {
     }
   }
 
-  events.subscribe(events.Types.AdminKick, user =>
+  events.Source.on(events.Types.AdminKick, user =>
     context.user.websocket.send(messages.kickRequest(user))
   )
 
-  events.subscribe(events.Types.AdminPromote, user =>
+  events.Source.on(events.Types.AdminPromote, user =>
     context.user.websocket.send(messages.promoteRequest(user))
   )
 
-  events.subscribe(events.Types.AdminSpectatorToggle, user => {
+  events.Source.on(events.Types.AdminSpectatorToggle, user => {
     const isSpectator = !user.isSpectator
     context.user.websocket.send(messages.spectatorRequest(user, isSpectator))
   })

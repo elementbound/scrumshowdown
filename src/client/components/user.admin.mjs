@@ -14,10 +14,10 @@ export default class UserAdmin extends HTMLElement {
     userItem.isAdmin = user.isAdmin
     userItem.isSpectator = user.isSpectator
 
-    userItem.onKick = () => events.emit(events.Types.AdminKick, user)
-    userItem.onPromote = () => events.emit(events.Types.AdminPromote, user)
+    userItem.onKick = () => events.Source.emit(events.Types.AdminKick, user)
+    userItem.onPromote = () => events.Source.emit(events.Types.AdminPromote, user)
     userItem.onToggleSpectator = () => {
-      events.emit(events.Types.AdminSpectatorToggle, user)
+      events.Source.emit(events.Types.AdminSpectatorToggle, user)
     }
 
     this.appendChild(userItem)
