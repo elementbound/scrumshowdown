@@ -63,6 +63,9 @@ devDependencies:
   eslint-plugin-promise:
     specifier: ^6.1.1
     version: 6.1.1(eslint@8.38.0)
+  events:
+    specifier: ^3.3.0
+    version: 3.3.0
   jsdoc:
     specifier: ^4.0.2
     version: 4.0.2

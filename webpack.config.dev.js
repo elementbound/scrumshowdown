@@ -1,7 +1,6 @@
-const merge = require('deepmerge')
 const base = require('./webpack.config.base.js')
 
-module.exports = merge(base, {
+module.exports = base.configure({
   mode: 'development',
 
   devtool: 'source-map',
