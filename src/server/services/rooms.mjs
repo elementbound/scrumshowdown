@@ -1,4 +1,5 @@
 import { nanoid } from 'nanoid'
+import { config } from '../config.mjs'
 import Room from '../../domain/room.mjs'
 import User from '../../domain/user.mjs'
 
@@ -8,10 +9,9 @@ export function hasRoom (roomId) {
   return !!rooms[roomId]
 }
 
-// TODO: Config
-const ROOM_ID_LENGTH = 8
-const USER_ID_LENGTH = 21
-const MAX_ID_ATTEMPTS = 8192
+const ROOM_ID_LENGTH = config.id.length.room
+const USER_ID_LENGTH = config.id.length.user
+const MAX_ID_ATTEMPTS = config.id.attempts
 
 /**
 * Generate a random id.

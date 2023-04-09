@@ -1,10 +1,10 @@
+import { config } from '../config.mjs'
 import { onConnect, onClose } from '../../wsrouter.mjs'
 import { deleteRoom } from '../services/rooms.mjs'
 import { removeParticipant } from '../../domain/messages.mjs'
 import { getLogger } from '../../logger.mjs'
 
-// TODO: Config
-const PING_INTERVAL = 3000
+const PING_INTERVAL = config.ws.ping.interval
 
 function leaveHandler () {
   onConnect(ws => {
