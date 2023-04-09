@@ -16,6 +16,9 @@ dependencies:
   mustache:
     specifier: ^4.0.1
     version: 4.0.1
+  nanoid:
+    specifier: ^4.0.2
+    version: 4.0.2
   pino:
     specifier: ^8.11.0
     version: 8.11.0
@@ -3702,6 +3705,12 @@ packages:
     requiresBuild: true
     dev: true
     optional: true
+
+  /nanoid@4.0.2:
+    resolution: {integrity: sha512-7ZtY5KTCNheRGfEFxnedV5zFiORN1+Y1N6zvPTnHQd8ENUvfaDBeuJDZb2bN/oXwXxu3qkTXDzy57W5vAmDTBw==}
+    engines: {node: ^14 || ^16 || >=18}
+    hasBin: true
+    dev: false
 
   /nanomatch@1.2.13(supports-color@6.1.0):
     resolution: {integrity: sha512-fpoe2T0RbHwBTBUOftAfBPaDEi06ufaUai0mE6Yn1kacc3SnTErfb/h+X94VXzI64rKFHYImXSvdwGGCmwOqCA==}
