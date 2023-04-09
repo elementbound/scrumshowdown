@@ -2,21 +2,11 @@
   "restartable": "rs",
   "ignore": [
     ".git",
-    "node_modules/**/node_modules"
+    "node_modules/**/node_modules",
+    "src/client"
   ],
-  "verbose": true,
   "watch": [
-    "data",
-    "routes",
-    "services",
-    "lib",
-    "handlers",
-    "bin/www",
-    "app.js"
+    "src"
   ],
-  "env": {
-    "NODE_ENV": "development",
-    "DEBUG": "scrumshowdown:*"
-  },
-  "ext": "js json"
+  "ext": "js mjs json"
 }
