@@ -1,5 +1,6 @@
+const merge = require('deepmerge')
 const base = require('./webpack.config.base.js')
 
-module.exports = Object.assign({}, base, {
+module.exports = merge(base, {
   mode: 'production'
 })
