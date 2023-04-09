@@ -1,7 +1,7 @@
 import * as events from './events.mjs'
 import * as render from './render.mjs'
 import * as messages from '../domain/messages.mjs'
-import * as messageHandlers from './message.handlers.mjs'
+import { MessageSource } from './message.handlers.mjs'
 import context from './context.mjs'
 import { updateHands } from './actions.mjs'
 import confirmJoinHandler from './handler/confirm.join.mjs'
@@ -75,19 +75,19 @@ async function main () {
   }
 
   // Register message handlers
-  messageHandlers.register(messages.Types.ConfirmJoin, confirmJoinHandler)
-  messageHandlers.register(messages.Types.AddParticipant, addParticipantHandler)
-  messageHandlers.register(messages.Types.RemoveParticipant, removeParticipantHandler)
+  MessageSource.on(messages.Types.ConfirmJoin, confirmJoinHandler)
+  MessageSource.on(messages.Types.AddParticipant, addParticipantHandler)
+  MessageSource.on(messages.Types.RemoveParticipant, removeParticipantHandler)
 
-  messageHandlers.register(messages.Types.EstimateRequest, estimateRequestHandler)
-  messageHandlers.register(messages.Types.EstimateResult, estimateResultHandler)
+  MessageSource.on(messages.Types.EstimateRequest, estimateRequestHandler)
+  MessageSource.on(messages.Types.EstimateResult, estimateResultHandler)
 
-  messageHandlers.register(messages.Types.StateChange, stateChangeHandler)
-  messageHandlers.register(messages.Types.UpdateTopic, updateTopicHandler)
+  MessageSource.on(messages.Types.StateChange, stateChangeHandler)
+  MessageSource.on(messages.Types.UpdateTopic, updateTopicHandler)
 
-  messageHandlers.register(messages.Types.KickNotification, kickNotificationHandler)
-  messageHandlers.register(messages.Types.PromoteNotification, promoteNotificationHandler)
-  messageHandlers.register(messages.Types.SpectatorChange, spectatorChangeHandler)
+  MessageSource.on(messages.Types.KickNotification, kickNotificationHandler)
+  MessageSource.on(messages.Types.PromoteNotification, promoteNotificationHandler)
+  MessageSource.on(messages.Types.SpectatorChange, spectatorChangeHandler)
 
   const oldResize = window.onresize
   window.onresize = () => {
@@ -122,7 +122,7 @@ async function main () {
     const message = JSON.parse(event.data)
     logger.info('Received message', message)
 
-    messageHandlers.invoke(message.type, message.data)
+    MessageSource.emit(message.type, message.data)
   }
 
   bindUI()
