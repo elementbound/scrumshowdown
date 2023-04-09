@@ -1,23 +1,9 @@
+import * as events from 'node:events'
+
 export const Types = Object.freeze({
   AdminKick: 'Admin-Kick',
   AdminPromote: 'Admin-Promote',
   AdminSpectatorToggle: 'Admin-Spectator-Toggle'
 })
 
-const subscribers = {}
-
-function ensureType (type) {
-  if (!subscribers[type]) {
-    subscribers[type] = []
-  }
-}
-
-export function subscribe (type, handler) {
-  ensureType(type)
-  subscribers[type].push(handler)
-}
-
-export function emit (type, ...data) {
-  ensureType(type)
-  subscribers[type].forEach(subscriber => subscriber(...data))
-}
+export const Source = new events.EventEmitter()
