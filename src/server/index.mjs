@@ -1,17 +1,18 @@
-import app from './app.mjs'
 import { createServer } from 'http'
 import * as ws from 'ws'
+import app from './app.mjs'
+import { config } from './config.mjs'
 import * as wsr from '../wsrouter.mjs'
 import { rootLogger } from '../logger.mjs'
 
 // Start HTTP server
-const port = +(process.env.PORT || 3000)
-app.set('port', port)
-
 const appServer = createServer(app)
-appServer.listen(port)
+appServer.listen(config.http.port, config.http.host)
 appServer.on('listening', () =>
-  rootLogger().info('HTTP server listening on port %d', port)
+  rootLogger().info(
+    'HTTP server listening on %s:%d',
+    config.http.host, config.http.port
+  )
 )
 
 appServer.on('error', err => { throw err })

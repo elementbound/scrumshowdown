@@ -4,7 +4,7 @@ import { deleteRoom } from '../services/rooms.mjs'
 import { removeParticipant } from '../../domain/messages.mjs'
 import { getLogger } from '../../logger.mjs'
 
-const PING_INTERVAL = config.ws.ping.interval
+const PING_INTERVAL_SECONDS = config.ws.ping.interval
 
 function leaveHandler () {
   onConnect(ws => {
@@ -15,7 +15,7 @@ function leaveHandler () {
       if (ws.isAlive === false) {
         logger.info(
           { user: ws?.user?.id },
-          `User inactive after ${PING_INTERVAL}ms, terminating`
+          `User inactive after ${PING_INTERVAL_SECONDS}ms, terminating`
         )
         clearInterval(interval)
         return ws.terminate()
@@ -23,7 +23,7 @@ function leaveHandler () {
 
       ws.isAlive = false
       ws.ping(() => { ws.isAlive = true })
-    }, PING_INTERVAL)
+    }, PING_INTERVAL_SECONDS * 1000)
   })
 
   onClose(ws => {
