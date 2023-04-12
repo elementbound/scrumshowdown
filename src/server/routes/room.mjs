@@ -1,10 +1,10 @@
 import { Router } from 'express'
-import { getRoom } from '../services/rooms.mjs'
+import { roomRepository } from '../rooms/room.repository.mjs'
 const roomRouter = Router()
 
 roomRouter.get('/:roomId', (req, res, next) => {
   const roomId = req.params.roomId
-  const room = getRoom(roomId)
+  const room = roomRepository.find(roomId)
   const username = req.cookies['Scrum-Name']
 
   if (!room) {

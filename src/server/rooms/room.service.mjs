@@ -1,6 +1,8 @@
-import { UserRepository } from '../users/user.repository.mjs'
-import { Participation, ParticipationRepository } from './participation.repository.mjs'
-import { RoomRepository } from './room.repository.mjs'
+/* eslint-disable */
+import { userRepository, UserRepository } from '../users/user.repository.mjs'
+import { Participation, participationRepository, ParticipationRepository } from './participation.repository.mjs'
+import { roomRepository, RoomRepository } from './room.repository.mjs'
+/* eslint-enable */
 import { config } from '../config.mjs'
 import { nanoid } from 'nanoid'
 import Room from '../../domain/room.mjs'
@@ -123,3 +125,9 @@ export class RoomService {
     return nanoid(config.id.length.user)
   }
 }
+
+export const roomService = new RoomService({
+  userRepository,
+  roomRepository,
+  participationRepository
+})
