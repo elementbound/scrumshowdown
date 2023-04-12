@@ -4,7 +4,7 @@ import context from '../context.mjs'
 const logger = getLogger({ name: 'spectatorChangeHandler' })
 
 export function spectatorChangeHandler ({ id, isSpectator }) {
-  const user = context.room.findUser(id)
+  const user = context.findParticipant(id)
 
   logger.info({ id, user, isSpectator }, 'Spectator change')
 

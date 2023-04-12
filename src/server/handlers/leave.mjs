@@ -1,8 +1,7 @@
 import { config } from '../config.mjs'
 import { onConnect, onClose } from '../../wsrouter.mjs'
-import { deleteRoom } from '../services/rooms.mjs'
-import { removeParticipant } from '../../domain/messages.mjs'
 import { getLogger } from '../../logger.mjs'
+import { roomService } from '../rooms/room.service.mjs'
 
 const PING_INTERVAL_SECONDS = config.ws.ping.interval
 
@@ -13,6 +12,7 @@ function leaveHandler () {
 
     const interval = setInterval(function ping () {
       if (ws.isAlive === false) {
+        // TODO: Remove user from userRepository and participationRepository
         logger.info(
           { user: ws?.user?.id },
           `User inactive after ${PING_INTERVAL_SECONDS}ms, terminating`
@@ -41,21 +41,11 @@ function leaveHandler () {
       return
     }
 
+    roomService.leaveRoom(room, user)
     logger.info(
-      { name: user.name },
+      { username: user.name },
       'User left room'
     )
-
-    room.users
-      .filter(u => u !== user)
-      .forEach(u => u.websocket.send(removeParticipant(user)))
-
-    room.removeUser(user.id)
-
-    if (!room.users.length) {
-      logger.info('Removing empty room')
-      deleteRoom(room.id)
-    }
   })
 }
 

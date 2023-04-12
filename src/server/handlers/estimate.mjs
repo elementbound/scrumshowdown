@@ -3,6 +3,7 @@ import Estimation from '../../domain/estimation.mjs'
 import { onMessage } from '../../wsrouter.mjs'
 import { Types, estimateDecline, estimateRequest, estimateResult, stateChange } from '../../domain/messages.mjs'
 import { getLogger } from '../../logger.mjs'
+import { roomService } from '../rooms/room.service.mjs'
 
 function waitForEstimate (user, logger) {
   logger ??= getLogger({ name: 'waitForEstimate' })
@@ -37,18 +38,19 @@ function estimateHandler () {
       room: room?.id
     })
 
-    if (!room.users.every(user => user.isReady || user.isSpectator)) {
+    const participants = roomService.findParticipants(room)
+    const votingUsers = participants.filter(user => !user.isSpectator)
+
+    if (!votingUsers.every(user => user.isReady)) {
       logger.info('Some users are not ready yet, declining')
-      room.users.forEach(user => user.websocket.send(estimateDecline()))
+      participants.forEach(user => user.websocket.send(estimateDecline()))
       return
     }
-
-    const votingUsers = room.users.filter(user => !user.isSpectator)
 
     logger.info('Broadcasting estimate request')
     votingUsers.forEach(user => user.websocket.send(estimateRequest()))
 
-    logger.info(`Waiting for ${room.users.length} responses...`)
+    logger.info('Waiting for %d responses', votingUsers.length)
     const resultPromises = votingUsers.map(user => waitForEstimate(user, logger))
     const results = await Promise.all(resultPromises)
 
@@ -61,13 +63,15 @@ function estimateHandler () {
     room.estimations.push(estimation)
 
     logger.info({ votes: votesData }, 'Broadcasting results')
-    room.users.forEach(user => user.websocket.send(estimateResult(estimation)))
+    roomService.broadcast(room, estimateResult(estimation))
 
     // Unready everyone after vote
-    room.users.forEach(source => {
-      source.isReady = false
-      room.users.forEach(target => target.websocket.send(stateChange(source, false, source.emote)))
-    })
+    participants
+      .filter(p => p.isReady)
+      .forEach(source => {
+        source.isReady = false
+        roomService.broadcast(room, stateChange(source, false, source.emote))
+      })
   })
 }
 

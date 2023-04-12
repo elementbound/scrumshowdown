@@ -1,6 +1,7 @@
 import { onMessage } from '../../wsrouter.mjs'
 import { Types, stateChange } from '../../domain/messages.mjs'
 import { getLogger } from '../../logger.mjs'
+import { roomService } from '../rooms/room.service.mjs'
 
 function stateHandler () {
   onMessage((ws, message) => {
@@ -15,7 +16,8 @@ function stateHandler () {
       name: 'stateHandler',
       room: room?.id,
       user: user?.id,
-      isReady, emote
+      isReady,
+      emote
     })
 
     logger.info('User requesting to change state')
@@ -23,8 +25,7 @@ function stateHandler () {
     user.emote = emote
 
     logger.info('Sending state change notification')
-    room.users
-      .forEach(u => u.websocket.send(stateChange(user, isReady, emote)))
+    roomService.broadcast(room, stateChange(user, isReady, emote))
   })
 }
 

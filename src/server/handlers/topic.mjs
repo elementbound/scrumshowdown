@@ -1,6 +1,7 @@
 import { onMessage } from '../../wsrouter.mjs'
 import { Types, updateTopic } from '../../domain/messages.mjs'
 import { getLogger } from '../../logger.mjs'
+import { roomService } from '../rooms/room.service.mjs'
 
 function topicHandler () {
   onMessage((ws, message) => {
@@ -20,8 +21,7 @@ function topicHandler () {
     room.topic = topic
 
     logger.info('Sending topic change notification')
-    room.users
-      .forEach(u => u.websocket.send(updateTopic(room.topic)))
+    roomService.broadcast(room, updateTopic(room.topic))
   })
 }
 

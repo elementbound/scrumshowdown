@@ -8,7 +8,8 @@ import { getHandState } from '../actions.mjs'
  * @param {string} param0.state New state
  */
 export function stateChangeHandler ({ id, isReady, emote }) {
-  const user = context.room.users.find(u => u.id === id)
+  const user = context.findParticipant(id)
+
   user.isReady = isReady
   user.emote = emote
   user.hand.state = getHandState(user)

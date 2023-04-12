@@ -1,15 +1,13 @@
 import { Router } from 'express'
 import { getLogger } from '../../logger.mjs'
-import { version as _version } from '../services/meta.mjs'
-import { createRoom } from '../services/rooms.mjs'
+import { roomService } from '../rooms/room.service.mjs'
+import { version } from '../services/meta.mjs'
 
 const indexRouter = Router()
 const logger = getLogger({ name: 'indexRouter' })
 
 indexRouter.get('/', (req, res, next) => {
-  res.render('index', {
-    version: _version
-  })
+  res.render('index', { version })
 })
 
 indexRouter.post('/', (req, res, next) => {
@@ -17,8 +15,8 @@ indexRouter.post('/', (req, res, next) => {
   res.cookie('Scrum-Name', name)
 
   if (create) {
-    const room = createRoom()
-    logger.info('Created room', room)
+    const room = roomService.createRoom()
+    logger.info({ room }, 'Created room')
 
     res.redirect(`/room/${room.id}`)
   } else if (join) {
