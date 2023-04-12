@@ -41,8 +41,16 @@ function kickRequestHandler () {
     // Remove user
     if (!roomService.leaveRoom(room, kickee)) {
       logger.warn('User was trying to kick someone from another room, rejecting')
-      return
     }
+
+    // Let the kickee know they are getting kicked
+    logger.info('Notifying target')
+    kickee.websocket.send(kickNotification())
+    kickee.websocket.close()
+
+    // Let the others know the user was kicked
+    logger.info('Notifying others in the room')
+    roomService.broadcast(room, removeParticipant(kickee))
   })
 }
 
