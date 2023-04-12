@@ -35,11 +35,6 @@ function joinHandler () {
       return
     }
 
-    logger.info(
-      { userData: User.sanitize(requestUser) },
-      'Adding user to room'
-    )
-
     // Prepare request user data
     requestUser.websocket = ws
 
@@ -50,6 +45,10 @@ function joinHandler () {
     }
 
     // Add user to room
+    logger.info(
+      { userData: User.sanitize(requestUser) },
+      'Adding user to room'
+    )
     const user = roomService.joinRoom(room, requestUser)
 
     ws.room = room

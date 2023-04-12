@@ -1,5 +1,5 @@
 /* eslint-disable */
-import { Room } from '../../domain/room.mjs'
+import Room from '../../domain/room.mjs'
 /* eslint-enable */
 import { Repository } from '../../repository.mjs'
 

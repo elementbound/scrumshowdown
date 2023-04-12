@@ -8,7 +8,7 @@ import { nanoid } from 'nanoid'
 import Room from '../../domain/room.mjs'
 import User from '../../domain/user.mjs'
 import { getLogger } from '../../logger.mjs'
-import { addParticipant, estimateResult, removeParticipant, updateTopic } from '../../domain/messages.mjs'
+import { addParticipant, estimateResult, kickNotification, removeParticipant, updateTopic } from '../../domain/messages.mjs'
 
 export class RoomService {
   #userRepository
@@ -59,7 +59,7 @@ export class RoomService {
     this.#userRepository.add(joinUser)
     this.#participationRepository.add(new Participation({
       roomId: room.id,
-      userId: user.id
+      userId: joinUser.id
     }))
     logger.info(
       { room: room.id, user: joinUser.id, profile: User.sanitize(joinUser) },
@@ -99,7 +99,11 @@ export class RoomService {
   * @returns {boolean} true, or false if user was not in room
   */
   leaveRoom (room, user) {
-    const logger = getLogger({ name: 'RoomService', room: room.id, user: user.id })
+    const logger = getLogger({
+      name: 'RoomService',
+      room: room.id,
+      user: user.id
+    })
     if (!this.#participationRepository.isUserInRoom(user.id, room.id)) {
       logger.warn('User trying to leave room they\'re not in')
       return false
@@ -110,9 +114,19 @@ export class RoomService {
     logger.info('Removed user from room')
 
     // Notify participants
-    // TODO: Are we intentionally not notifying the leaving user?
     logger.info('Notifying participants of leave')
     this.broadcast(room, removeParticipant(user))
+
+    // Try to notify leaving user
+    try {
+      logger.info('Notifying leaving user')
+      user.websocket.send(kickNotification())
+    } catch (e) {
+      logger.warn(
+        { err: e },
+        'Failed to notify user, they might have closed connection already'
+      )
+    }
 
     // Cleanup empty room
     if (this.findParticipants(room).length === 0) {
@@ -169,7 +183,9 @@ export class RoomService {
   */
   broadcast (room, message) {
     this.findParticipants(room)
-      .forEach(user => user.websocket.send(message))
+      .forEach(user => 
+        user.websocket.send(message)
+      )
   }
 
   #generateRoomId () {

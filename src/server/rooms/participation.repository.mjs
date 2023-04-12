@@ -45,6 +45,7 @@ export class ParticipationRepository extends Repository {
   findUsersInRoom (roomId) {
     return [...this.list()]
       .filter(p => p.roomId === roomId)
+      .map(p => p.userId)
   }
 }
 

@@ -4,7 +4,6 @@ import { getLogger } from '../../logger.mjs'
 import { userRepository } from '../users/user.repository.mjs'
 import { participationRepository } from '../rooms/participation.repository.mjs'
 import { roomService } from '../rooms/room.service.mjs'
-import { promoteNotificationHandler } from '../../client/handler/promote.notification.mjs'
 
 function promoteRequestHandler () {
   onMessage((ws, message) => {
@@ -47,7 +46,7 @@ function promoteRequestHandler () {
 
     // Broadcast promotion
     logger.info('Sending promote notification')
-    roomService.broadcast(room, promoteNotificationHandler(promotee))
+    roomService.broadcast(room, promoteNotification(promotee))
   })
 }
 

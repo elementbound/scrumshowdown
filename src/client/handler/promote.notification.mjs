@@ -1,7 +1,11 @@
+import { getLogger } from '../../logger.mjs'
 import context from '../context.mjs'
+
+const logger = getLogger({ name: 'promoteNotificationHandler' })
 
 export function promoteNotificationHandler ({ id }) {
   const user = context.findParticipant(id)
+  logger.info({ user: id }, 'Promoting user to admin')
 
   user.isAdmin = true
   user.hand.isAdmin = true;

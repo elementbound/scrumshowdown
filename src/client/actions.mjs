@@ -97,7 +97,7 @@ export function alignHands (hands) {
  * Update all hands.
  */
 export function updateHands () {
-  const hands = context.participants.map(user => user.hand)
+  const hands = [...context.participants].map(user => user.hand)
   const handDistance = alignHands(hands)
 
   const { camera } = render.context
