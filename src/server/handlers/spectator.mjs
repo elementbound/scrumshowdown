@@ -1,6 +1,9 @@
 import { onMessage } from '../../wsrouter.mjs'
 import { Types, spectatorChange } from '../../domain/messages.mjs'
 import { getLogger } from '../../logger.mjs'
+import { userRepository } from '../users/user.repository.mjs'
+import { participationRepository } from '../rooms/participation.repository.mjs'
+import { roomService } from '../rooms/room.service.mjs'
 
 function spectatorRequestHandler () {
   onMessage((ws, message) => {
@@ -11,7 +14,7 @@ function spectatorRequestHandler () {
     const room = ws.room
     const user = ws.user
     const spectatorId = message.data.id
-    const spectator = room.findUser(spectatorId)
+    const spectator = userRepository.find(spectatorId)
 
     const logger = getLogger({
       name: 'spectatorRequestHandler',
@@ -27,6 +30,11 @@ function spectatorRequestHandler () {
       return
     }
 
+    if (!participationRepository.isUserInRoom(user.id, room.id)) {
+      logger.error('Trying to make someone spectator in another room!')
+      return
+    }
+
     if (!user.isAdmin && user !== spectator) {
       logger.warn('User is not admin, and not applying to self')
       return
@@ -38,8 +46,7 @@ function spectatorRequestHandler () {
 
     // Broadcast change
     logger.info('Sending spectator notification')
-    room.users
-      .forEach(u => u.websocket.send(spectatorChange(spectator, spectator.isSpectator)))
+    roomService.broadcast(room, spectatorChange(spectator, spectator.isSpectator))
   })
 }
 

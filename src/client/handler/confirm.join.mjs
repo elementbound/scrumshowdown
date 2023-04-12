@@ -13,7 +13,7 @@ const logger = getLogger('confirmJoinHandler')
 export default function confirmJoinHandler ({ user }) {
   logger.info({ user }, 'Join confirmed with user data')
   context.user = Object.assign({}, context.user, user)
-  context.room.users.push(context.user)
+  context.participants.push(context.user)
 
   const hand = createHand(user)
   context.user.hand = hand

@@ -42,18 +42,11 @@ function leaveHandler () {
       return
     }
 
+    roomService.leaveRoom(room, user)
     logger.info(
-      { name: user.name },
+      { username: user.name },
       'User left room'
     )
-
-    // TODO: Use participant repository
-    // TODO: Use roomService.broadcast?
-    room.users
-      .filter(u => u !== user)
-      .forEach(u => u.websocket.send(removeParticipant(user)))
-    // NOTE: Room is cleaned up automatically if it's empty
-    roomService.leaveRoom(room, user)
   })
 }
 

@@ -1,7 +1,7 @@
 import context from '../context.mjs'
 
 export function promoteNotificationHandler ({ id }) {
-  const user = context.room.findUser(id)
+  const user = context.findParticipant(id)
 
   user.isAdmin = true
   user.hand.isAdmin = true;

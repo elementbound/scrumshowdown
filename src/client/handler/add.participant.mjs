@@ -10,7 +10,7 @@ const logger = getLogger({ name: 'addParticipantHandler' })
  * @param {User} param0.user Confirmed User data
  */
 export function addParticipantHandler ({ user }) {
-  context.room.users.push(user)
+  context.participants.push(user)
 
   logger.info(`Adding user ${user.id}`)
 

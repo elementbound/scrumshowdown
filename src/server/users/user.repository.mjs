@@ -1,5 +1,5 @@
 /* eslint-disable */
-import { User } from '../../domain/user.mjs'
+import User from '../../domain/user.mjs'
 /* eslint-enable */
 import { Repository } from '../../repository.mjs'
 

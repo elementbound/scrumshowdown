@@ -97,7 +97,7 @@ export function alignHands (hands) {
  * Update all hands.
  */
 export function updateHands () {
-  const hands = context.room.users.map(user => user.hand)
+  const hands = context.participants.map(user => user.hand)
   const handDistance = alignHands(hands)
 
   const { camera } = render.context
@@ -119,7 +119,7 @@ export function updateTopic () {
 export function renderEstimationResults (topic, estimates) {
   const votes = Object.entries(estimates)
     .map(([id, estimate]) => ({
-      user: context.room.users.find(u => u.id === id) || new User(id, `{${id}}`),
+      user: context.findParticipant(id) || new User(id, `{${id}}`),
       estimate
     }))
     .sort((a, b) => {

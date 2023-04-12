@@ -8,6 +8,7 @@ import { nanoid } from 'nanoid'
 import Room from '../../domain/room.mjs'
 import User from '../../domain/user.mjs'
 import { getLogger } from '../../logger.mjs'
+import { addParticipant, estimateResult, removeParticipant, updateTopic } from '../../domain/messages.mjs'
 
 export class RoomService {
   #userRepository
@@ -65,6 +66,29 @@ export class RoomService {
       'Added new user to room'
     )
 
+    // Notify joinee of participants
+    const otherParticipants = this.findParticipants(room)
+      .filter(p => p.id !== joinUser.id)
+
+    logger.info('Notifying joinee of current participants')
+    otherParticipants
+      .map(participant => addParticipant(participant))
+      .forEach(message => joinUser.websocket.send(message))
+
+    // Notify other participants of joinee
+    logger.info('Notifying current participants of joinee')
+    otherParticipants
+      .forEach(participant =>
+        participant.websocket.send(addParticipant(joinUser))
+      )
+
+    // Notify joinee of topic and estimation history
+    logger.info('Synchronizing room state with joinee')
+    joinUser.websocket.send(updateTopic(room.topic))
+    room.estimations.forEach(estimation =>
+      joinUser.websocket.send(estimateResult(estimation))
+    )
+
     return joinUser
   }
 
@@ -72,22 +96,32 @@ export class RoomService {
   * Leave room.
   * @param {Room} room Room
   * @param {User} user User
+  * @returns {boolean} true, or false if user was not in room
   */
   leaveRoom (room, user) {
     const logger = getLogger({ name: 'RoomService', room: room.id, user: user.id })
     if (!this.#participationRepository.isUserInRoom(user.id, room.id)) {
       logger.warn('User trying to leave room they\'re not in')
-      return
+      return false
     }
 
+    // Remove user from room
     this.#participationRepository.remove(user.id)
     logger.info('Removed user from room')
 
-    if (this.#participationRepository.findUsersInRoom(room.id).length === 0) {
+    // Notify participants
+    // TODO: Are we intentionally not notifying the leaving user?
+    logger.info('Notifying participants of leave')
+    this.broadcast(room, removeParticipant(user))
+
+    // Cleanup empty room
+    if (this.findParticipants(room).length === 0) {
       logger.info('No more users in room, removing')
 
       this.deleteRoom(room)
     }
+
+    return true
   }
 
   /**
@@ -98,13 +132,44 @@ export class RoomService {
     const logger = getLogger({ name: 'RoomService', room: room.id })
 
     // TODO: Reconsider limitation
-    if (this.#participationRepository.findUsersInRoom(room.id).length !== 0) {
+    if (this.findParticipants(room).length !== 0) {
       logger.error('Trying to remove room with users still participating!')
       throw new Error('Room is not empty!')
     }
 
     this.#roomRepository.remove(room.id)
     logger.info('Removed room')
+  }
+
+  /**
+  * Find all participants in room.
+  * @param {Room} room Room
+  * @returns {User[]} Participants
+  */
+  findParticipants (room) {
+    return this.#participationRepository.findUsersInRoom(room.id)
+      .map(uid => this.#userRepository.find(uid))
+      .filter(user => !!user)
+  }
+
+  /**
+  * Find all admins in room.
+  * @param {Room} room Room
+  * @returns {User[]} Admins
+  */
+  findRoomAdmins (room) {
+    return this.findParticipants(room)
+      .filter(user => user.isAdmin)
+  }
+
+  /**
+  * Broadcast a message to every participant in room.
+  * @param {Room} room Room
+  * @param {any} message Message
+  */
+  broadcast (room, message) {
+    this.findParticipants(room)
+      .forEach(user => user.websocket.send(message))
   }
 
   #generateRoomId () {

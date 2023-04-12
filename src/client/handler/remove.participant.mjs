@@ -8,8 +8,8 @@ import { updateHands } from '../actions.mjs'
  * @param {string} param0.id User id
  */
 export function removeParticipantHandler ({ id }) {
-  const user = context.room.users.find(u => u.id === id)
-  context.room.removeUser(id)
+  const user = context.findParticipant(id)
+  context.participants.delete(user)
 
   const hand = user.hand
   render.context.objects = render.context.objects.filter(object => object !== hand)

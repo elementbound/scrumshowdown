@@ -1,6 +1,8 @@
 import { onMessage } from '../../wsrouter.mjs'
 import { Types, kickNotification, removeParticipant } from '../../domain/messages.mjs'
 import { getLogger } from '../../logger.mjs'
+import { userRepository } from '../users/user.repository.mjs'
+import { roomService } from '../rooms/room.service.mjs'
 
 function kickRequestHandler () {
   onMessage((ws, message) => {
@@ -11,7 +13,7 @@ function kickRequestHandler () {
     const room = ws.room
     const user = ws.user
     const kickId = message.data.id
-    const kickee = room.findUser(kickId)
+    const kickee = userRepository.find(kickId)
 
     const logger = getLogger({
       room: room?.id,
@@ -22,7 +24,7 @@ function kickRequestHandler () {
     logger.info('User requesting to kick another')
 
     if (!kickee) {
-      logger.error('Kickee is not present in room')
+      logger.error('Unknown kick target!')
       return
     }
 
@@ -36,18 +38,20 @@ function kickRequestHandler () {
       return
     }
 
+    // Remove user
+    if (!roomService.leaveRoom(room, kickee)) {
+      logger.warn('User was trying to kick someone from another room, rejecting')
+      return
+    }
+
     // Let the kickee know they are getting kicked
     logger.info('Notifying target')
     kickee.websocket.send(kickNotification())
     kickee.websocket.close()
 
-    // Remove user
-    room.removeUser(kickId)
-
     // Let the others know the user was kicked
     logger.info('Notifying others in the room')
-    room.users
-      .forEach(u => u.websocket.send(removeParticipant(kickee)))
+    roomService.broadcast(room, removeParticipant(kickee))
   })
 }
 

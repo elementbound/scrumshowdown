@@ -1,6 +1,10 @@
 import { onMessage } from '../../wsrouter.mjs'
 import { Types, promoteNotification } from '../../domain/messages.mjs'
 import { getLogger } from '../../logger.mjs'
+import { userRepository } from '../users/user.repository.mjs'
+import { participationRepository } from '../rooms/participation.repository.mjs'
+import { roomService } from '../rooms/room.service.mjs'
+import { promoteNotificationHandler } from '../../client/handler/promote.notification.mjs'
 
 function promoteRequestHandler () {
   onMessage((ws, message) => {
@@ -11,7 +15,7 @@ function promoteRequestHandler () {
     const room = ws.room
     const user = ws.user
     const promoteId = message.data.id
-    const promotee = room.findUser(promoteId)
+    const promotee = userRepository.find(promoteId)
 
     const logger = getLogger({
       name: 'promoteRequestHandler',
@@ -20,9 +24,9 @@ function promoteRequestHandler () {
       target: promoteId
     })
 
-    logger.info('User requesting to kick another')
+    logger.info('User requesting to promote another')
 
-    if (!promotee) {
+    if (!promotee || !participationRepository.isUserInRoom(promotee.id, room.id)) {
       logger.error('Promotee is not present in room')
       return
     }
@@ -43,8 +47,7 @@ function promoteRequestHandler () {
 
     // Broadcast promotion
     logger.info('Sending promote notification')
-    room.users
-      .forEach(u => u.websocket.send(promoteNotification(promotee)))
+    roomService.broadcast(room, promoteNotificationHandler(promotee))
   })
 }
 
