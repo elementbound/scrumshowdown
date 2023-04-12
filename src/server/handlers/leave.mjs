@@ -1,6 +1,5 @@
 import { config } from '../config.mjs'
 import { onConnect, onClose } from '../../wsrouter.mjs'
-import { removeParticipant } from '../../domain/messages.mjs'
 import { getLogger } from '../../logger.mjs'
 import { roomService } from '../rooms/room.service.mjs'
 

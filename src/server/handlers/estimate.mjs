@@ -3,8 +3,6 @@ import Estimation from '../../domain/estimation.mjs'
 import { onMessage } from '../../wsrouter.mjs'
 import { Types, estimateDecline, estimateRequest, estimateResult, stateChange } from '../../domain/messages.mjs'
 import { getLogger } from '../../logger.mjs'
-import { participationRepository } from '../rooms/participation.repository.mjs'
-import { userRepository } from '../users/user.repository.mjs'
 import { roomService } from '../rooms/room.service.mjs'
 
 function waitForEstimate (user, logger) {

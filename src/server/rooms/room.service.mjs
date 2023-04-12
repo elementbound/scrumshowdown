@@ -183,7 +183,7 @@ export class RoomService {
   */
   broadcast (room, message) {
     this.findParticipants(room)
-      .forEach(user => 
+      .forEach(user =>
         user.websocket.send(message)
       )
   }
