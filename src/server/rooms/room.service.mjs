@@ -128,6 +128,10 @@ export class RoomService {
       )
     }
 
+    // Remove user
+    logger.info('Removing user from repository')
+    this.#userRepository.remove(user.id)
+
     // Cleanup empty room
     if (this.findParticipants(room).length === 0) {
       logger.info('No more users in room, removing')
