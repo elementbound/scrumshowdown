@@ -47,6 +47,15 @@ export class ParticipationRepository extends Repository {
       .filter(p => p.roomId === roomId)
       .map(p => p.userId)
   }
+
+  /**
+  * Find the room the user is in.
+  * @param {string} userId User id
+  * @returns {Room|undefined} Room or undefined
+  */
+  findUserRoom (userId) {
+    return this.find(userId)
+  }
 }
 
 export const participationRepository = new ParticipationRepository()

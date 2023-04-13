@@ -1,8 +1,8 @@
 /* eslint-disable */
+import * as nlon from '@elementbound/nlon'
 import Room from '../../domain/room.mjs'
 import User from '../../domain/user.mjs'
 /* eslint-enable */
-import * as nlon from '@elementbound/nlon'
 import { getLogger } from '../../logger.mjs'
 import { ajv } from '../ajv.mjs'
 import { requireBody, requireRoom, requireSchema } from '../validators.mjs'
@@ -34,7 +34,7 @@ export default function handleJoin (server) {
     )
 
     /** @type {Room} */
-    const room = context.room
+    const room = corr.context.room
     /** @type {User} */
     const profile = request.profile
 
