@@ -58,6 +58,7 @@ export default function handleJoin (server) {
       'Adding user to room'
     )
     const user = roomService.joinRoom(room, profile)
+    user.peer = peer
 
     logger.info('Join successful')
     corr.finish()

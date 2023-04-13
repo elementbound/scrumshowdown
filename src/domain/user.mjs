@@ -1,3 +1,7 @@
+/* eslint-disable */
+import { Peer } from '@elementbound/nlon'
+/* eslint-enable */
+
 /**
  * Data class to represent a participant within a room.
  *
@@ -28,8 +32,11 @@ class User {
     /** @member {string} */
     this.color = ''
 
-    /** @member {any} websocket [server] Websocket connection */
+    /** @member {WebSocket} websocket [server] Websocket connection */
     this.websocket = undefined
+
+    /** @member {Peer} [peer] nlon peer */
+    this.peer = undefined
 
     /** @member {any} hand [client] Hand model used on the frontend */
     this.hand = undefined
@@ -47,7 +54,8 @@ class User {
     } else {
       const removeKeys = [
         'websocket',
-        'hand'
+        'hand',
+        'peer'
       ]
 
       const safeEntries = Object.entries(user)

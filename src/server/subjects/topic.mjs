@@ -3,10 +3,9 @@ import * as nlon from '@elementbound/nlon'
 import Room from '../../domain/room.mjs'
 import User from '../../domain/user.mjs'
 /* eslint-enable */
-import assert from 'node:assert'
 import { getLogger } from '../../logger.mjs'
 import { ajv } from '../ajv.mjs'
-import { requireAuthorization, requireBody, requireLogin, requireLoginRoom, requireRoom, requireSchema } from '../validators.mjs'
+import { requireAuthorization, requireBody, requireLogin, requireLoginRoom, requireSchema } from '../validators.mjs'
 
 /**
 * @param {nlon.Server} server
