@@ -1,5 +1,6 @@
 import assert from 'node:assert'
 import { ajv } from './ajv.mjs'
+import { participationRepository } from './rooms/participation.repository.mjs'
 import { roomRepository } from './rooms/room.repository.mjs'
 import { userRepository } from './users/user.repository.mjs'
 
@@ -34,4 +35,10 @@ export function requireLogin () {
     context.user = userRepository.find(header.authorization)
     assert(context.user, 'Unknown user!')
   }
+}
+
+export function requireLoginRoom () {
+  return requireRoom((_body, _header, context) =>
+    participationRepository.findUserRoom(context.user.id)
+  )
 }

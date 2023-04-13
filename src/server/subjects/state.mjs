@@ -11,44 +11,44 @@ import { requireAuthorization, requireBody, requireLogin, requireLoginRoom, requ
 /**
 * @param {nlon.Server} server
 */
-export default function handleTopic (server) {
+export function handleState (server) {
   ajv.addSchema({
-    type: 'string'
-  }, 'schema/room/topic')
+    type: 'object',
+    properties: {
+      isReady: { type: 'boolean' },
+      emote: { type: 'string' }
+    }
+  }, 'schema/room/state')
 
-  server.handle('room/topic', async (peer, corr) => {
+  server.handle('room/state', async (peer, corr) => {
     const request = await corr.next(
       requireBody(),
-      requireSchema('schema/room/topic'),
+      requireSchema('schema/room/state'),
       requireAuthorization(),
       requireLogin(),
       requireLoginRoom()
     )
-
-    /** @type {string} */
-    const topic = request
 
     /** @type {User} */
     const user = corr.context.user
     /** @type {Room} */
     const room = corr.context.room
 
+    const { isReady, emote } = request
+
     const logger = getLogger({
-      name: 'topicHandler',
-      room: room.id,
-      user: user.id,
-      topic
+      name: 'stateHandler',
+      room: room?.id,
+      user: user?.id,
+      isReady,
+      emote
     })
 
-    logger.info('Updating room topic')
+    logger.info('User requesting to change state')
+    user.isReady = isReady
+    user.emote = emote
 
-    // Update room
-    room.topic = topic
-
-    // Send notification
-    logger.info('Sending topic change notification')
-    // roomService.broadcast(room, updateTopic(room.topic)) // TODO: Notification service?
-
-    corr.finish()
+    logger.info('Sending state change notification')
+    // roomService.broadcast(room, stateChange(user, isReady, emote)) // TODO
   })
 }
