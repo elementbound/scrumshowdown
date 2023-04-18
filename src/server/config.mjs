@@ -22,7 +22,8 @@ export const config = Object.freeze({
 
   ws: {
     ping: {
-      interval: integer(process.env.SCRUM_WS_PING_INTERVAL) ?? 3000
+      interval: integer(process.env.SCRUM_WS_PING_INTERVAL) ?? 12000,
+      timeout: integer(process.env.SCRUM_WS_PING_TIMEOUT) ?? 60000
     }
   },
 

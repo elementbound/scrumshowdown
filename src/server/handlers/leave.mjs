@@ -12,7 +12,6 @@ function leaveHandler () {
 
     const interval = setInterval(function ping () {
       if (ws.isAlive === false) {
-        // TODO: Remove user from userRepository and participationRepository
         logger.info(
           { user: ws?.user?.id },
           `User inactive after ${PING_INTERVAL_SECONDS}ms, terminating`

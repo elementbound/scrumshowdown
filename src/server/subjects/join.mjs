@@ -3,10 +3,12 @@ import * as nlon from '@elementbound/nlon'
 import Room from '../../domain/room.mjs'
 import User from '../../domain/user.mjs'
 /* eslint-enable */
+import { config } from '../config.mjs'
 import { getLogger } from '../../logger.mjs'
 import { ajv } from '../ajv.mjs'
 import { requireBody, requireRoom, requireSchema } from '../validators.mjs'
 import { roomService } from '../rooms/room.service.mjs'
+import { keepAlive } from '../services/keepalive.mjs'
 
 /**
 * @param {nlon.Server} server
@@ -69,6 +71,12 @@ export default function handleJoin (server) {
       roomService.leaveRoom(room, user)
     })
 
-    // TODO: Regular pings
+    // Regular pings
+    keepAlive(peer.stream, config.ws.ping.interval, config.ws.ping.timeout)
+      .catch(() => {
+        logger.info('User inactive after %dms, terminating', config.ws.ping.timeout)
+        peer.stream.terminate()
+        peer.disconnect()
+      })
   })
 }
