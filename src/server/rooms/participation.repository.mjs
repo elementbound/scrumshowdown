@@ -51,10 +51,10 @@ export class ParticipationRepository extends Repository {
   /**
   * Find the room the user is in.
   * @param {string} userId User id
-  * @returns {Room|undefined} Room or undefined
+  * @returns {string|undefined} Room id or undefined
   */
   findUserRoom (userId) {
-    return this.find(userId)
+    return this.find(userId)?.roomId
   }
 }
 
