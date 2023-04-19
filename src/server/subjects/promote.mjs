@@ -14,18 +14,18 @@ import { roomService } from '../rooms/room.service.mjs'
 /**
 * @param {nlon.Server} server
 */
-export function handleKick (server) {
+export function handlePromote (server) {
   ajv.addSchema({
     type: 'object',
     properties: {
       target: { type: 'string' }
     }
-  }, 'schema/room/kick')
+  }, 'schema/room/promote')
 
-  server.handle('room/kick', async (_peer, corr) => {
+  server.handle('room/promote', async (_peer, corr) => {
     const request = await corr.next(
       requireBody(),
-      requireSchema('schema/room/kick'),
+      requireSchema('schema/room/promote'),
       requireAuthorization(),
       requireLogin(),
       requireLoginRoom()
@@ -41,26 +41,28 @@ export function handleKick (server) {
     const target = userRepository.find(targetId)
 
     const logger = getLogger({
+      name: 'promoteRequestHandler',
       room: room.id,
       user: user.id,
       target: targetId
     })
 
-    logger.info('User requesting kick')
+    logger.info('User requesting to promote another')
 
-    // Validate request
-    assert(target, 'Trying to kick unknown user!')
-    assert(user.isAdmin, 'User is not admin!')
-    assert(user.id !== target.id, 'User trying to kick self!')
+    assert(target, 'Trying to promote unknown user!')
+    assert(user.isAdmin, 'User has no right to promote!')
+    assert(user.id === target.id, 'User is trying to promote self!')
     assert(
       participationRepository.isUserInRoom(target.id, room.id),
-      'Trying to kick user in a different room!'
+      'Target is not in the room!'
     )
 
-    // Remove user
-    logger.info('Removing target from room')
-    roomService.leaveRoom(room, target)
+    // Promote
+    logger.info('Promoting to admin')
+    target.isAdmin = true
 
-    corr.finish()
+    // Broadcast
+    logger.info('Sending promote notification')
+    // TODO: Broadcast
   })
 }
