@@ -39,6 +39,17 @@ const handlers = [
 Promise.all(handlers.map(h => import(h)))
   .then(hs => hs.forEach(h => h.default()))
 
+// NLON subjects
+app.locals.subjects = [
+  './subjects/join.mjs',
+  './subjects/state.mjs',
+  './subjects/estimate.mjs',
+  './subjects/topic.mjs',
+  './subjects/kick.mjs',
+  './subjects/promote.mjs',
+  './subjects/spectator.mjs'
+]
+
 // catch 404 and forward to error handler
 app.use(function (_req, _res, next) {
   next(createError(404))

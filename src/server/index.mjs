@@ -2,8 +2,8 @@ import { createServer } from 'http'
 import * as ws from 'ws'
 import app from './app.mjs'
 import { config } from './config.mjs'
-import * as wsr from '../wsrouter.mjs'
-import { rootLogger } from '../logger.mjs'
+import { getLogger, rootLogger } from '../logger.mjs'
+import { wrapWebSocketServer } from '@elementbound/nlon-websocket'
 
 // Start HTTP server
 const appServer = createServer(app)
@@ -24,12 +24,25 @@ wsServer.on('listening', () =>
 )
 
 app.locals.ws = wsServer
-wsServer.on('connection', ws => {
-  wsr.callConnect(ws)
 
-  ws.on('open', () => wsr.callOpen(ws))
-  ws.on('close', (code, reason) => wsr.callClose(ws, code, reason))
-  ws.on('message', data => wsr.callMessage(ws, data))
+// Start nlon server on WS
+const nlon = wrapWebSocketServer(wsServer, {
+  logger: getLogger({ name: 'nlon' })
 })
 
-wsr.server(wsServer)
+app.locals.nlon = nlon
+
+// Register subjects
+/** @type {string[]} */
+const subjects = app.locals.subjects
+
+Promise.all(subjects.map(subject => import(subject)))
+  .then(subjects =>
+    subjects
+      .flatMap(mod => Object.values(mod))
+      .filter(subject => subject?.name?.startsWith('handle'))
+      .forEach(subject => {
+        rootLogger().info('Loading subject %s', subject.name)
+        subject(nlon)
+      })
+  )
