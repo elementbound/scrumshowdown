@@ -74,6 +74,13 @@ async function main () {
     return false
   }
 
+  // Subjects:
+  // room/update/spectator
+  // room/update/topic
+  // room/update/state
+  // room/update/promote
+  // room/update/estimation
+
   // Register message handlers
   MessageSource.on(messages.Types.ConfirmJoin, confirmJoinHandler)
   MessageSource.on(messages.Types.AddParticipant, addParticipantHandler)

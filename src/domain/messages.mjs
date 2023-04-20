@@ -1,3 +1,4 @@
+import { Message, MessageHeader } from '@elementbound/nlon'
 import User from './user.mjs'
 
 export const Types = Object.freeze({
@@ -192,4 +193,92 @@ export function spectatorChange (user, isSpectator) {
       isSpectator: !!isSpectator
     }
   }
+}
+
+export function EstimationMessageProvider (estimation) {
+  return () => new Message({
+      header: new MessageHeader({
+        subject: 'room/update/estimation'
+      }),
+      body: {
+        estimation
+      }
+    })
+}
+
+export function PromoteMessageProvider (targetId) {
+  return () => new Message({
+      header: new MessageHeader({
+        subject: 'room/update/promote'
+      }),
+      body: {
+        target: targetId
+      }
+    })
+}
+
+export function SpectatorMessageProvider (targetId, isSpectator) {
+  return () => new Message({
+      header: new MessageHeader({
+        subject: 'room/update/spectator'
+      }),
+      body: {
+        target: targetId,
+        isSpectator
+      }
+    })
+}
+
+export function StateMessageProvider (targetId, isReady, emote) {
+  return () => new Message({
+      header: new MessageHeader({
+        subject: 'room/update/state'
+      }),
+      body: {
+        target: targetId,
+        isReady,
+        emote
+      }
+    })
+}
+
+export function TopicMessageProvider (topic) {
+  return () => new Message({
+      header: new MessageHeader({
+        subject: 'room/update/topic'
+      }),
+      body: {
+        topic
+      }
+    })
+}
+
+export function JoinMessageProvider (user) {
+  return () => new Message({
+    header: new MessageHeader({
+      subject: 'room/update/join'
+    }),
+    body: {
+      user: User.sanitize(user)
+    }
+  })
+}
+
+export function LeaveMessageProvider (user) {
+  return () => new Message({
+    header: new MessageHeader({
+      subject: 'room/update/leave'
+    }),
+    body: {
+      user: User.sanitize(user)
+    }
+  })
+}
+
+export function KickMessageProvider () {
+  return () => new Message({
+    header: new MessageHeader({
+      subject: 'room/update/kick'
+    })
+  })
 }

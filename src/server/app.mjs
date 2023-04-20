@@ -24,21 +24,6 @@ app.use('/', indexRouter)
 app.use('/profile', profileRouter)
 app.use('/room', roomRouter)
 
-// WS Handlers
-const handlers = [
-  './handlers/join.mjs',
-  './handlers/state.mjs',
-  './handlers/estimate.mjs',
-  './handlers/topic.mjs',
-  './handlers/leave.mjs',
-  './handlers/kick.mjs',
-  './handlers/promote.mjs',
-  './handlers/spectator.mjs'
-]
-
-Promise.all(handlers.map(h => import(h)))
-  .then(hs => hs.forEach(h => h.default()))
-
 // NLON subjects
 app.locals.subjects = [
   './subjects/join.mjs',

@@ -6,13 +6,18 @@ import User from '../../domain/user.mjs'
 import { getLogger } from '../../logger.mjs'
 import { ajv } from '../ajv.mjs'
 import { requireAuthorization, requireBody, requireLogin, requireLoginRoom, requireSchema } from '../validators.mjs'
+import { roomService } from '../rooms/room.service.mjs'
+import { TopicMessageProvider } from '../../domain/messages.mjs'
 
 /**
 * @param {nlon.Server} server
 */
 export default function handleTopic (server) {
   ajv.addSchema({
-    type: 'string'
+    type: 'object',
+    properties: {
+      topic: { type: 'string' }
+    }
   }, 'schema/room/topic')
 
   server.handle('room/topic', async (peer, corr) => {
@@ -25,7 +30,7 @@ export default function handleTopic (server) {
     )
 
     /** @type {string} */
-    const topic = request
+    const topic = request.topic
 
     /** @type {User} */
     const user = corr.context.user
@@ -43,11 +48,11 @@ export default function handleTopic (server) {
 
     // Update room
     room.topic = topic
+    corr.finish()
 
     // Send notification
     logger.info('Sending topic change notification')
-    // roomService.broadcast(room, updateTopic(room.topic)) // TODO: Notification service?
-
-    corr.finish()
+    roomService.broadcast(room, TopicMessageProvider(room.topic))
+      .forEach(corr => corr.finish())
   })
 }

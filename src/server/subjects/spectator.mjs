@@ -9,6 +9,8 @@ import { ajv } from '../ajv.mjs'
 import { participationRepository } from '../rooms/participation.repository.mjs'
 import { userRepository } from '../users/user.repository.mjs'
 import { requireAuthorization, requireBody, requireLogin, requireLoginRoom, requireSchema } from '../validators.mjs'
+import { roomService } from '../rooms/room.service.mjs'
+import { SpectatorMessageProvider } from '../../domain/messages.mjs'
 
 /**
 * @param {nlon.Server} server
@@ -67,9 +69,11 @@ export default function handleSpectator (server) {
     // Update the target
     logger.info('Updating target\'s spectator flag')
     target.isSpectator = isSpectator
+    corr.finish()
 
     // Broadcast change
     logger.info('Sending spectator notification')
-    // TODO: Broadcast
+    roomService.broadcast(room, SpectatorMessageProvider(target.id, target.isSpectator))
+      .forEach(corr => corr.finish())
   })
 }

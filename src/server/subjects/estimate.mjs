@@ -3,11 +3,13 @@ import * as nlon from '@elementbound/nlon'
 import Room from '../../domain/room.mjs'
 import User from '../../domain/user.mjs'
 /* eslint-enable */
+import Estimation from '../../domain/estimation.mjs'
 import { fail } from 'node:assert'
 import { requireAuthorization, requireBody, requireLogin, requireLoginRoom, requireSchema } from '../validators.mjs'
 import { roomService } from '../rooms/room.service.mjs'
 import { Message, MessageHeader } from '@elementbound/nlon'
 import { ajv } from '../ajv.mjs'
+import { EstimationMessageProvider, StateMessageProvider } from '../../domain/messages.mjs'
 
 /**
 * @param {nlon.Server} server
@@ -44,7 +46,6 @@ export default function handleEstimate (server) {
     // Check if everyone's ready
     if (!votingUsers.every(user => user.isReady)) {
       logger.info('Some users are not ready yet, declining')
-      // TODO: Notify everyone of the decline?
       fail('Not all users are ready!')
     }
 
@@ -76,12 +77,19 @@ export default function handleEstimate (server) {
 
     const estimation = new Estimation(room.topic, votes)
     room.estimations.push(estimation)
+    corr.finish()
 
     // Broadcast results
     logger.info({ votes }, 'Broadcasting results')
-    // TODO
+    roomService.broadcast(room, EstimationMessageProvider(estimation))
+      .forEach(corr => corr.finish())
 
     // Unready everyone after vote
-    // TODO
+    logger.info('Setting everyone to not ready')
+    participants.filter(p => p.isReady)
+      .flatMap(p => roomService.broadcast(room, StateMessageProvider(p.id, p.isReady, p.emote)))
+      .forEach(corr => corr.finish())
+
+    participants.forEach(p => { p.isReady = false })
   })
 }

@@ -2,13 +2,14 @@
 import { userRepository, UserRepository } from '../users/user.repository.mjs'
 import { Participation, participationRepository, ParticipationRepository } from './participation.repository.mjs'
 import { roomRepository, RoomRepository } from './room.repository.mjs'
+import * as nlon from '@elementbound/nlon'
 /* eslint-enable */
 import { config } from '../config.mjs'
 import { nanoid } from 'nanoid'
 import Room from '../../domain/room.mjs'
 import User from '../../domain/user.mjs'
 import { getLogger } from '../../logger.mjs'
-import { addParticipant, estimateResult, kickNotification, removeParticipant, updateTopic } from '../../domain/messages.mjs'
+import { addParticipant, estimateResult, EstimationMessageProvider, JoinMessageProvider, KickMessageProvider, kickNotification, LeaveMessageProvider, removeParticipant, TopicMessageProvider, updateTopic } from '../../domain/messages.mjs'
 
 export class RoomService {
   #userRepository
@@ -71,22 +72,25 @@ export class RoomService {
       .filter(p => p.id !== joinUser.id)
 
     logger.info('Notifying joinee of current participants')
-    otherParticipants
-      .map(participant => addParticipant(participant))
-      .forEach(message => joinUser.websocket.send(message))
+    // TODO: Stream in one correspondence
+    otherParticipants.forEach(other => {
+      user.peer
+        .send(JoinMessageProvider(other)())
+        .finish()
+    })
 
     // Notify other participants of joinee
     logger.info('Notifying current participants of joinee')
-    otherParticipants
-      .forEach(participant =>
-        participant.websocket.send(addParticipant(joinUser))
-      )
+    this.broadcastToUsers(otherParticipants, JoinMessageProvider(joinUser))
+      .forEach(corr => corr.finish())
 
     // Notify joinee of topic and estimation history
     logger.info('Synchronizing room state with joinee')
-    joinUser.websocket.send(updateTopic(room.topic))
+    joinUser.peer.send(TopicMessageProvider(room.topic)()).finish()
+
+    // TODO: Stream in one correspondence
     room.estimations.forEach(estimation =>
-      joinUser.websocket.send(estimateResult(estimation))
+      joinUser.peer.send(EstimationMessageProvider(estimation)())
     )
 
     return joinUser
@@ -98,6 +102,7 @@ export class RoomService {
   * @param {User} user User
   * @returns {boolean} true, or false if user was not in room
   */
+  // TODO: Update
   leaveRoom (room, user) {
     const logger = getLogger({
       name: 'RoomService',
@@ -115,12 +120,13 @@ export class RoomService {
 
     // Notify participants
     logger.info('Notifying participants of leave')
-    this.broadcast(room, removeParticipant(user))
+    this.broadcast(room, LeaveMessageProvider(user))
+      .forEach(corr => corr.finish())
 
     // Try to notify leaving user
     try {
       logger.info('Notifying leaving user')
-      user.websocket.send(kickNotification())
+      user.peer.send(KickMessageProvider()()).finish()
     } catch (e) {
       logger.warn(
         { err: e },
@@ -183,13 +189,22 @@ export class RoomService {
   /**
   * Broadcast a message to every participant in room.
   * @param {Room} room Room
-  * @param {any} message Message
+  * @param {function(): nlon.Message} messageProvder Message provider function
+  * @returns {nlon.Correspondence[]} Correspondences
   */
-  broadcast (room, message) {
-    this.findParticipants(room)
-      .forEach(user =>
-        user.websocket.send(message)
-      )
+  broadcast (room, messageProvider) {
+    return this.findParticipants(room)
+      .map(user => user.peer.send(messageProvider()))
+  }
+
+  /**
+  * Broadcast a message to a list of users.
+  * @param {User[]} users Users
+  * @param {function(): nlon.Message} messageProvder Message provider function
+  * @returns {nlon.Correspondence[]} Correspondences
+  */
+  broadcastToUsers (users, messageProvider) {
+    return users.map(user => user.peer.send(messageProvider()))
   }
 
   #generateRoomId () {

@@ -10,6 +10,7 @@ import { participationRepository } from '../rooms/participation.repository.mjs'
 import { userRepository } from '../users/user.repository.mjs'
 import { requireAuthorization, requireBody, requireLogin, requireLoginRoom, requireSchema } from '../validators.mjs'
 import { roomService } from '../rooms/room.service.mjs'
+import { PromoteMessageProvider } from '../../domain/messages.mjs'
 
 /**
 * @param {nlon.Server} server
@@ -60,9 +61,11 @@ export function handlePromote (server) {
     // Promote
     logger.info('Promoting to admin')
     target.isAdmin = true
+    corr.finish()
 
     // Broadcast
     logger.info('Sending promote notification')
-    // TODO: Broadcast
+    roomService.broadcast(room, PromoteMessageProvider(target.id))
+      .forEach(corr => corr.finish())
   })
 }
