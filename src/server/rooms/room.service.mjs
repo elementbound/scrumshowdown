@@ -4,6 +4,7 @@ import { Participation, participationRepository, ParticipationRepository } from 
 import { roomRepository, RoomRepository } from './room.repository.mjs'
 import * as nlon from '@elementbound/nlon'
 /* eslint-enable */
+import assert from 'node:assert'
 import { config } from '../config.mjs'
 import { nanoid } from 'nanoid'
 import Room from '../../domain/room.mjs'
@@ -56,6 +57,7 @@ export class RoomService {
 
     const joinUser = new User()
     Object.assign(joinUser, user, { id: this.#generateUserId() })
+    assert(joinUser.peer, 'No peer assigned to user!')
 
     this.#userRepository.add(joinUser)
     this.#participationRepository.add(new Participation({

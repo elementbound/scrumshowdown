@@ -26,7 +26,7 @@ export async function keepAlive (ws, interval, timeout) {
   while (true) {
     assert(
       time() - lastPong < timeout,
-      'WebSocket connection timed out!'
+      `WebSocket connection timed out after ${timeout}ms!`
     )
 
     ws.ping()

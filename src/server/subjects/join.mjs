@@ -59,8 +59,8 @@ export default function handleJoin (server) {
       { profile: User.sanitize(profile) },
       'Adding user to room'
     )
+    profile.peer = peer
     const user = roomService.joinRoom(room, profile)
-    user.peer = peer
 
     logger.info('Join successful')
     corr.finish()
@@ -72,11 +72,10 @@ export default function handleJoin (server) {
     })
 
     // Regular pings
-    keepAlive(peer.stream, config.ws.ping.interval, config.ws.ping.timeout)
-      .catch(() => {
-        logger.info('User inactive after %dms, terminating', config.ws.ping.timeout)
-        peer.stream.terminate()
-        peer.disconnect()
+    keepAlive(peer.stream.ws, config.ws.ping.interval, config.ws.ping.timeout)
+      .catch(err => {
+        logger.warn({ err }, 'User keepalive failed, terminating')
+        peer.stream.destroy()
       })
   })
 }

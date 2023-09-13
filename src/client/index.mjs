@@ -20,7 +20,6 @@ import { loadUserData } from './storage/user.data.mjs'
 import NiceProgress from './components/nice.progress.mjs'
 import { spectatorChangeHandler } from './handler/spectator.change.mjs'
 import { rootLogger } from '../logger.mjs'
-import { WebSocketStream } from '@elementbound/nlon-websocket'
 import { AppClient } from './app.client.mjs'
 
 const logger = rootLogger()
@@ -119,6 +118,9 @@ async function main () {
   const hostAddress = `${protocol}://${window.location.host}/rooms/${room.id}`
   const appClient = new AppClient()
   await appClient.connect(hostAddress)
+
+  // Bind events
+  appClient.on('join', confirmJoinHandler)
 
   await appClient.join(context.room.id, context.user)
 

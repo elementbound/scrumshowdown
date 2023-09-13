@@ -7,10 +7,9 @@ const logger = getLogger('confirmJoinHandler')
 
 /**
  * Handle a Confirm Join message.
- * @param {any} param0 Event data
- * @param {User} param0.user Confirmed User data
+ * @param {User} user User data
  */
-export default function confirmJoinHandler ({ user }) {
+export default function confirmJoinHandler (user) {
   logger.info({ user }, 'Join confirmed with user data')
   context.user = Object.assign({}, context.user, user)
   context.participants.add(context.user)

@@ -29,6 +29,7 @@ export class AppClient extends events.EventEmitter {
 
         this.#logger.info('Listening on nlon server')
         this.#nlons = nlons
+        this.configure(nlons)
         resolve(nlons)
       })
 
@@ -53,6 +54,8 @@ export class AppClient extends events.EventEmitter {
 
     await corr.next()
     corr.finish()
+
+    this.emit('join', profile)
   }
 
   /**
@@ -60,24 +63,29 @@ export class AppClient extends events.EventEmitter {
   * @param {nlon.Server} nlons nlon server
   */
   configure (nlons) {
-    nlons.handle('room/update/spectator', corr => {
+    nlons.handle('room/update/spectator', (_peer, corr) => {
       this.emit('spectator') // TODO
+      corr.finish()
     })
 
-    nlons.handle('room/update/topic', corr => {
+    nlons.handle('room/update/topic', (_peer, corr) => {
       this.emit('topic') // TODO
+      corr.finish()
     })
 
-    nlons.handle('room/update/state', corr => {
+    nlons.handle('room/update/state', (_peer, corr) => {
       this.emit('state') // TODO
+      corr.finish()
     })
 
-    nlons.handle('room/update/promote', corr => {
+    nlons.handle('room/update/promote', (_peer, corr) => {
       this.emit('promote') // TODO
+      corr.finish()
     })
 
-    nlons.handle('room/update/estimation', corr => {
+    nlons.handle('room/update/estimation', (_peer, corr) => {
       this.emit('estimation') // TODO
+      corr.finish()
     })
   }
 
