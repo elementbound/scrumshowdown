@@ -2,9 +2,13 @@ import * as nlon from '@elementbound/nlon'
 import * as events from 'node:events'
 import { WebSocketStream } from "@elementbound/nlon-websocket";
 import { rootLogger } from "../logger.mjs";
+import { pino } from 'pino';
 
 export class AppClient extends events.EventEmitter {
+  /** @type {pino.Logger} */
   #logger = rootLogger()
+  /** @type {nlon.Server} */
+  #nlons = undefined
 
   /**
   * Connect to ScrumShowdown API at address.
@@ -24,6 +28,7 @@ export class AppClient extends events.EventEmitter {
         nlons.connect(wss)
 
         this.#logger.info('Listening on nlon server')
+        this.#nlons = nlons
         resolve(nlons)
       })
 
@@ -32,6 +37,22 @@ export class AppClient extends events.EventEmitter {
         reject(err)
       }, { once: true })
     })
+  }
+
+  async join (roomId, profile) {
+    this.#logger.info({ profile, roomId }, 'Joining room')
+    const corr = this.peer.send(new nlon.Message({
+      header: new nlon.MessageHeader({
+        subject: 'room/join'
+      }),
+      body: {
+        roomId,
+        profile
+      }
+    }))
+
+    await corr.next()
+    corr.finish()
   }
 
   /**
@@ -58,5 +79,15 @@ export class AppClient extends events.EventEmitter {
     nlons.handle('room/update/estimation', corr => {
       this.emit('estimation') // TODO
     })
+  }
+
+  /** @type {nlon.Server} */
+  get server () {
+    return this.#nlons
+  }
+
+  /** @type {nlon.Peer} */
+  get peer () {
+    return this.#nlons.peers[0]
   }
 }

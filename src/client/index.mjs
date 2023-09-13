@@ -118,7 +118,9 @@ async function main () {
   const protocol = location.protocol.startsWith('https') ? 'wss' : 'ws'
   const hostAddress = `${protocol}://${window.location.host}/rooms/${room.id}`
   const appClient = new AppClient()
-  appClient.connect(hostAddress)
+  await appClient.connect(hostAddress)
+
+  await appClient.join(context.room.id, context.user)
 
   bindUI()
 }
