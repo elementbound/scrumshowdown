@@ -2,21 +2,22 @@ import context from '../context.mjs'
 import * as render from '../render.mjs'
 import { updateHands } from '../actions.mjs'
 import { getLogger } from '../../logger.mjs'
+import User from '../../domain/user.mjs'
 
 const logger = getLogger({ name: 'removeParticipantHandler' })
 
 /**
  * Handle a Remove Participant message.
- * @param {any} param0 Event data
- * @param {string} param0.id User id
+ * @param {User} user User
  */
-export function removeParticipantHandler ({ id }) {
+export function removeParticipantHandler (user) {
+  const id = user.id
   logger.info(
     { user: id, participants: context.participants },
     'Removing user from room'
   )
 
-  const user = context.findParticipant(id)
+  user = context.findParticipant(id)
   logger.info(
     { user },
     'Found user to remove'

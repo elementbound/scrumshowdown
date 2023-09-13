@@ -6,10 +6,9 @@ const logger = getLogger({ name: 'addParticipantHandler' })
 
 /**
  * Handle an Add Participant message.
- * @param {any} param0 Event data
- * @param {User} param0.user Confirmed User data
+ * @param {User} user User data
  */
-export function addParticipantHandler ({ user }) {
+export function addParticipantHandler (user) {
   context.participants.add(user)
 
   logger.info(`Adding user ${user.id}`)

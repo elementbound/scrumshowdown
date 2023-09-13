@@ -19,8 +19,14 @@ function sleep (interval) {
 */
 export async function keepAlive (ws, interval, timeout) {
   let lastPong = time()
+  let isClosed = false
   ws.on('pong', () => {
     lastPong = time()
+  })
+
+  ws.on('close', () => {
+    // TODO: Why doesn't nlon.Peer catch this?
+    isClosed = true
   })
 
   while (true) {
@@ -28,6 +34,8 @@ export async function keepAlive (ws, interval, timeout) {
       time() - lastPong < timeout,
       `WebSocket connection timed out after ${timeout}ms!`
     )
+
+    assert(!isClosed, 'WebSocket connection closed!')
 
     ws.ping()
     await sleep(interval)

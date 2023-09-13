@@ -120,7 +120,9 @@ async function main () {
   await appClient.connect(hostAddress)
 
   // Bind events
-  appClient.on('join', confirmJoinHandler)
+  appClient.on('accept', confirmJoinHandler)
+  appClient.on('join', addParticipantHandler)
+  appClient.on('leave', removeParticipantHandler)
 
   await appClient.join(context.room.id, context.user)
 

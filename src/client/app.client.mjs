@@ -52,10 +52,10 @@ export class AppClient extends events.EventEmitter {
       }
     }))
 
-    await corr.next()
+    const user = await corr.next()
     corr.finish()
 
-    this.emit('join', profile)
+    this.emit('accept', user)
   }
 
   /**
@@ -63,6 +63,24 @@ export class AppClient extends events.EventEmitter {
   * @param {nlon.Server} nlons nlon server
   */
   configure (nlons) {
+    nlons.handle('room/update/join', async (_peer, corr) => {
+      const user = await corr.next()
+      this.emit('join', user)
+      corr.finish()
+    })
+
+    nlons.handle('room/update/leave', async (_peer, corr) => {
+      const user = await corr.next()
+      this.emit('leave', user)
+      corr.finish()
+    })
+
+    nlons.handle('room/update/estimation', async (_peer, corr) => {
+      corr.error({
+        type: 'TODO'
+      })
+    })
+
     nlons.handle('room/update/spectator', (_peer, corr) => {
       this.emit('spectator') // TODO
       corr.finish()
@@ -80,11 +98,6 @@ export class AppClient extends events.EventEmitter {
 
     nlons.handle('room/update/promote', (_peer, corr) => {
       this.emit('promote') // TODO
-      corr.finish()
-    })
-
-    nlons.handle('room/update/estimation', (_peer, corr) => {
-      this.emit('estimation') // TODO
       corr.finish()
     })
   }

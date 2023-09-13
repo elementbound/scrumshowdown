@@ -63,7 +63,7 @@ export default function handleJoin (server) {
     const user = roomService.joinRoom(room, profile)
 
     logger.info('Join successful')
-    corr.finish()
+    corr.finish(user)
 
     // Add event handlers
     peer.on('disconnect', () => {
