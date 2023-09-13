@@ -32,7 +32,11 @@ const config = {
 
   resolve: {
     fallback: {
-      events: require.resolve('events')
+      assert: require.resolve('assert-browserify'),
+      events: require.resolve('events'),
+      os: require.resolve('os-browserify'),
+      stream: require.resolve('stream-browserify'),
+      process: require.resolve('process')
     }
   }
 }
@@ -42,6 +46,10 @@ const plugins = [
   // which can be polyfilled
   new webpack.NormalModuleReplacementPlugin(/^node:/, resource => {
     resource.request = resource.request.replace(/^node:/, '')
+  }),
+
+  new webpack.ProvidePlugin({
+    process: 'process'
   })
 ]
 

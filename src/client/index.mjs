@@ -1,3 +1,4 @@
+import * as nlon from '@elementbound/nlon'
 import * as events from './events.mjs'
 import * as render from './render.mjs'
 import * as messages from '../domain/messages.mjs'
@@ -19,6 +20,8 @@ import { loadUserData } from './storage/user.data.mjs'
 import NiceProgress from './components/nice.progress.mjs'
 import { spectatorChangeHandler } from './handler/spectator.change.mjs'
 import { rootLogger } from '../logger.mjs'
+import { WebSocketStream } from '@elementbound/nlon-websocket'
+import { AppClient } from './app.client.mjs'
 
 const logger = rootLogger()
 
@@ -74,6 +77,8 @@ async function main () {
     return false
   }
 
+  const nlons = new nlon.Server()
+
   // Subjects:
   // room/update/spectator
   // room/update/topic
@@ -110,27 +115,10 @@ async function main () {
   user.name = userData.name
   user.color = userData.color
 
-  logger.info('Connecting to WS...')
   const protocol = location.protocol.startsWith('https') ? 'wss' : 'ws'
-  const webSocket = new WebSocket(`${protocol}://${window.location.host}/rooms/${room.id}`)
-  webSocket.onopen = () => {
-    logger.info('Socket open!')
-
-    user.websocket = webSocket
-
-    logger.info('Joining with user', user)
-
-    const rawSend = webSocket.send
-    webSocket.send = data => rawSend.apply(webSocket, [JSON.stringify(data)])
-    webSocket.send(messages.join(user, room.id))
-  }
-
-  webSocket.onmessage = event => {
-    const message = JSON.parse(event.data)
-    logger.info('Received message', message)
-
-    MessageSource.emit(message.type, message.data)
-  }
+  const hostAddress = `${protocol}://${window.location.host}/rooms/${room.id}`
+  const appClient = new AppClient()
+  appClient.connect(hostAddress)
 
   bindUI()
 }
