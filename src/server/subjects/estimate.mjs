@@ -10,6 +10,7 @@ import { roomService } from '../rooms/room.service.mjs'
 import { Message, MessageHeader } from '@elementbound/nlon'
 import { ajv } from '../ajv.mjs'
 import { EstimationMessageProvider, StateMessageProvider } from '../../domain/messages.mjs'
+import { getLogger } from '../../logger.mjs'
 
 /**
 * @param {nlon.Server} server

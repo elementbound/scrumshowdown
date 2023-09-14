@@ -19,21 +19,21 @@ export default function confirmJoinHandler (user) {
 
   document.querySelector('#users').add(user)
 
-  document.querySelector('.action.toggle-ready').onclick = () => {
+  const appClient = context.client
+
+  document.querySelector('.action.toggle-ready').addEventListener('click', () => {
     const { user } = context
 
     user.isReady = !user.isReady
-    sendStateChange(user)
-  }
+    appClient.updateState(user.ready, user.emote)
+  })
 
   document.querySelector('.action.thumbsup').onclick = sendEmote('thumbsUp')
   document.querySelector('.action.thumbsdown').onclick = sendEmote('thumbsDown')
 
   document.querySelector('.action.request-estimate').onclick = () => {
-    const { user } = context
-
     logger.info('Requesting estimates')
-    user.websocket.send(messages.estimateRequest())
+    appClient.requestEstimates()
   }
 
   document.querySelector('.action.toggle-logs').onclick = () => {

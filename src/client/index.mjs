@@ -114,6 +114,7 @@ async function main () {
   const hostAddress = `${protocol}://${window.location.host}/rooms/${room.id}`
   const appClient = new AppClient()
   await appClient.connect(hostAddress)
+  context.client = appClient
 
   // Bind events
   appClient.on('accept', confirmJoinHandler)

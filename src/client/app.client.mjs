@@ -10,6 +10,8 @@ export class AppClient extends events.EventEmitter {
   /** @type {nlon.Server} */
   #nlons = undefined
 
+  #auth = ''
+
   /**
   * Connect to ScrumShowdown API at address.
   * @param {string} address API host address
@@ -55,13 +57,15 @@ export class AppClient extends events.EventEmitter {
     const user = await corr.next()
     corr.finish()
 
+    this.#auth = user.id
     this.emit('accept', user)
   }
 
   updateState (ready, emote) {
     this.peer.send(new nlon.Message({
       header: new nlon.MessageHeader({
-        subject: 'room/state'
+        subject: 'room/state',
+        authorization: this.#auth
       }),
       body: {
         isReady: ready,
@@ -72,6 +76,15 @@ export class AppClient extends events.EventEmitter {
 
   emote (what) {
     // TODO
+  }
+
+  requestEstimates (userId) {
+    this.peer.send(new nlon.Message({
+      header: new nlon.MessageHeader({
+        subject: 'room/estimate',
+        authorization: this.#auth
+      })
+    })).finish()
   }
 
   /**
