@@ -20,7 +20,7 @@ export default function handleEstimate (server) {
     properties: {
       estimate: { type: 'string' }
     }
-  }, 'schema/room/estimate/gather/response')
+  }, 'schema/room/gather/estimation/response')
 
   server.handle('room/estimate', async (peer, corr) => {
     await corr.next(
@@ -58,13 +58,13 @@ export default function handleEstimate (server) {
     const responsePromises = votingUsers.map(async user => {
       const corr = user.peer.send(new Message({
         header: new MessageHeader({
-          subject: 'room/estimate/gather'
+          subject: 'room/gather/estimation'
         })
       })).finish()
 
       const response = await corr.next(
         requireBody(),
-        requireSchema('schema/room/estimate/gather/response')
+        requireSchema('schema/room/gather/estimation/response')
       )
 
       return [user.id, response.estimate]

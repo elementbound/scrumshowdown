@@ -100,12 +100,8 @@ async function main () {
   MessageSource.on(messages.Types.PromoteNotification, promoteNotificationHandler)
   MessageSource.on(messages.Types.SpectatorChange, spectatorChangeHandler)
 
-  const oldResize = window.onresize
-  window.onresize = () => {
-    oldResize && oldResize()
-    updateHands()
-  }
   updateHands()
+  window.addEventListener('resize', updateHands)
 
   const { room, user } = context
   room.id = document.querySelector('.data.room-id').innerHTML
@@ -123,6 +119,9 @@ async function main () {
   appClient.on('accept', confirmJoinHandler)
   appClient.on('join', addParticipantHandler)
   appClient.on('leave', removeParticipantHandler)
+
+  appClient.on('estimate', estimateRequestHandler)
+  appClient.on('estimation', estimateResultHandler)
 
   await appClient.join(context.room.id, context.user)
 

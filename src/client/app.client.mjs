@@ -58,6 +58,22 @@ export class AppClient extends events.EventEmitter {
     this.emit('accept', user)
   }
 
+  updateState (ready, emote) {
+    this.peer.send(new nlon.Message({
+      header: new nlon.MessageHeader({
+        subject: 'room/state'
+      }),
+      body: {
+        isReady: ready,
+        emote
+      }
+    }))
+  }
+
+  emote (what) {
+    // TODO
+  }
+
   /**
   * Configure nlon server with event handlers.
   * @param {nlon.Server} nlons nlon server
@@ -75,10 +91,25 @@ export class AppClient extends events.EventEmitter {
       corr.finish()
     })
 
-    nlons.handle('room/update/estimation', async (_peer, corr) => {
-      corr.error({
-        type: 'TODO'
+    nlons.handle('room/gather/estimation', async (_peer, corr) => {
+      let estimate
+      const supplier = v => estimate = v
+
+      this.emit('estimate', supplier)
+      if (estimate === undefined) {
+        throw Error('No estimate supplied!')
+      }
+
+      corr.finish({
+        estimate
       })
+    })
+
+    nlons.handle('room/update/estimation', async (_peer, corr) => {
+      const estimation = await corr.next()
+      corr.finish()
+
+      this.emit('estimation', estimation)
     })
 
     nlons.handle('room/update/spectator', (_peer, corr) => {

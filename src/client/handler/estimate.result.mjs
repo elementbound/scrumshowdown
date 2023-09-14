@@ -4,7 +4,7 @@ import { getLogger } from '../../logger.mjs'
 
 const logger = getLogger({ name: 'estimateResultHandler' })
 
-export function estimateResultHandler ({ estimation }) {
+export function estimateResultHandler (estimation) {
   logger.info('Received estimation %s', estimation)
   context.estimations.push(estimation)
 
