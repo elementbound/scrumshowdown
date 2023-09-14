@@ -1,3 +1,4 @@
+import assert from 'node:assert'
 import context from '../context.mjs'
 import * as render from '../render.mjs'
 import { updateHands } from '../actions.mjs'
@@ -18,6 +19,7 @@ export function removeParticipantHandler (user) {
   )
 
   user = context.findParticipant(id)
+  assert(user, `Trying to remove unknown user: ${user?.id}`)
   logger.info(
     { user },
     'Found user to remove'

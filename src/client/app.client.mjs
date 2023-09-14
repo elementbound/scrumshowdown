@@ -95,19 +95,31 @@ export class AppClient extends events.EventEmitter {
     })).finish()
   }
 
+  kick (target) {
+    this.peer.send(new nlon.Message({
+      header: new nlon.MessageHeader({
+        subject: 'room/kick',
+        authorization: this.#auth
+      }),
+      body: {
+        target
+      }
+    })).finish()
+  }
+
   /**
   * Configure nlon server with event handlers.
   * @param {nlon.Server} nlons nlon server
   */
   configure (nlons) {
     nlons.handle('room/update/join', async (_peer, corr) => {
-      const user = await corr.next()
+      const { user } = await corr.next()
       this.emit('join', user)
       corr.finish()
     })
 
     nlons.handle('room/update/leave', async (_peer, corr) => {
-      const user = await corr.next()
+      const { user } = await corr.next()
       this.emit('leave', user)
       corr.finish()
     })
@@ -146,6 +158,11 @@ export class AppClient extends events.EventEmitter {
       const { topic } = await corr.next()
       this.emit('topic', topic)
       corr.finish()
+    })
+
+    nlons.handle('room/update/kick', (_peer, corr) => {
+      corr.finish()
+      this.emit('kick')
     })
 
     nlons.handle('room/update/spectator', (_peer, corr) => {

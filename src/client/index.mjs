@@ -39,9 +39,9 @@ function bindUI () {
     }
   }
 
-  events.Source.on(events.Types.AdminKick, user =>
-    context.user.websocket.send(messages.kickRequest(user))
-  )
+  events.Source.on(events.Types.AdminKick, user => {
+    context.client.kick(user.id)
+  })
 
   events.Source.on(events.Types.AdminPromote, user =>
     context.user.websocket.send(messages.promoteRequest(user))
@@ -127,7 +127,10 @@ async function main () {
   appClient.on('state', stateChangeHandler)
   appClient.on('topic', updateTopicHandler)
 
-  await appClient.join(context.room.id, context.user)
+  appClient.on('kick', kickNotificationHandler)
+
+  console.log('Joining with user profile', user)
+  await appClient.join(room.id, user)
 
   bindUI()
 }
