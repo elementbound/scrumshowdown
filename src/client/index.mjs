@@ -124,6 +124,8 @@ async function main () {
   appClient.on('estimate', estimateRequestHandler)
   appClient.on('estimation', estimateResultHandler)
 
+  appClient.on('state', stateChangeHandler)
+
   await appClient.join(context.room.id, context.user)
 
   bindUI()

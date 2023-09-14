@@ -25,7 +25,7 @@ export default function confirmJoinHandler (user) {
     const { user } = context
 
     user.isReady = !user.isReady
-    appClient.updateState(user.ready, user.emote)
+    appClient.updateState(user.isReady, user.emote)
   })
 
   document.querySelector('.action.thumbsup').onclick = sendEmote('thumbsUp')

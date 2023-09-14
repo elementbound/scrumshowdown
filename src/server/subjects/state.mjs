@@ -46,7 +46,7 @@ export function handleState (server) {
     })
 
     // Update user
-    logger.info('User requesting to change state')
+    logger.info({ state: request }, 'User requesting to change state')
     user.isReady = isReady
     user.emote = emote
     corr.finish()

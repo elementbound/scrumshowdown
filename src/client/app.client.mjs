@@ -125,6 +125,14 @@ export class AppClient extends events.EventEmitter {
       this.emit('estimation', estimation)
     })
 
+    nlons.handle('room/update/state', async (_peer, corr) => {
+      // TODO: Response validation
+      const state = await corr.next()
+      console.log(state)
+      this.emit('state', state)
+      corr.finish()
+    })
+
     nlons.handle('room/update/spectator', (_peer, corr) => {
       this.emit('spectator') // TODO
       corr.finish()
@@ -132,11 +140,6 @@ export class AppClient extends events.EventEmitter {
 
     nlons.handle('room/update/topic', (_peer, corr) => {
       this.emit('topic') // TODO
-      corr.finish()
-    })
-
-    nlons.handle('room/update/state', (_peer, corr) => {
-      this.emit('state') // TODO
       corr.finish()
     })
 

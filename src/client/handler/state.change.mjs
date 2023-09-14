@@ -1,14 +1,15 @@
+import assert from 'node:assert'
 import context from '../context.mjs'
 import { getHandState } from '../actions.mjs'
 
 /**
  * Handle a State Change message.
- * @param {any} param0 Event data
- * @param {string} param0.id User id
- * @param {string} param0.state New state
+ * @param {object} state State
  */
-export function stateChangeHandler ({ id, isReady, emote }) {
-  const user = context.findParticipant(id)
+export function stateChangeHandler (state) {
+  const { target, isReady, emote } = state
+  const user = context.findParticipant(target)
+  assert(user, `Trying to update unknown user: ${target}`)
 
   user.isReady = isReady
   user.emote = emote
