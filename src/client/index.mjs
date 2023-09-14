@@ -125,6 +125,7 @@ async function main () {
   appClient.on('estimation', estimateResultHandler)
 
   appClient.on('state', stateChangeHandler)
+  appClient.on('topic', updateTopicHandler)
 
   await appClient.join(context.room.id, context.user)
 

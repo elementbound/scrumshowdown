@@ -51,14 +51,13 @@ export default function confirmJoinHandler (user) {
 
   topic.onfocus = () => { topic.isBeingEdited = true }
   topic.onblur = () => {
+    appClient.updateTopic(topic.innerText)
     topic.isBeingEdited = false
     updateTopic()
   }
 
   topic.onkeypress = event => {
     if (event.keyCode === 13) {
-      context.user.websocket.send(messages.updateTopic(topic.innerText))
-
       topic.blur()
     }
   }

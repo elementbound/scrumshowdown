@@ -74,6 +74,18 @@ export class AppClient extends events.EventEmitter {
     }))
   }
 
+  updateTopic (topic) {
+    this.peer.send(new nlon.Message({
+      header: new nlon.MessageHeader({
+        subject: 'room/topic',
+        authorization: this.#auth
+      }),
+      body: {
+        topic
+      }
+    })).finish()
+  }
+
   emote (what) {
     // TODO
   }
@@ -133,13 +145,15 @@ export class AppClient extends events.EventEmitter {
       corr.finish()
     })
 
-    nlons.handle('room/update/spectator', (_peer, corr) => {
-      this.emit('spectator') // TODO
+    nlons.handle('room/update/topic', async (_peer, corr) => {
+      // TODO: Response validation
+      const { topic } = await corr.next()
+      this.emit('topic', topic)
       corr.finish()
     })
 
-    nlons.handle('room/update/topic', (_peer, corr) => {
-      this.emit('topic') // TODO
+    nlons.handle('room/update/spectator', (_peer, corr) => {
+      this.emit('spectator') // TODO
       corr.finish()
     })
 
