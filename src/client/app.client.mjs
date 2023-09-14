@@ -86,11 +86,7 @@ export class AppClient extends events.EventEmitter {
     })).finish()
   }
 
-  emote (what) {
-    // TODO
-  }
-
-  requestEstimates (userId) {
+  requestEstimates () {
     this.peer.send(new nlon.Message({
       header: new nlon.MessageHeader({
         subject: 'room/estimate',

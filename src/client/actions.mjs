@@ -55,16 +55,15 @@ export function sendStateChange (user) {
 
 export function sendEmote (emote) {
   return function () {
-    const { user } = context
-    const { websocket } = user
+    const { user, client } = context
 
     user.emote = emote
-    websocket.send(messages.stateChangeRequest(user.isReady, user.emote))
+    client.updateState(user.isReady, user.emote)
 
     context.emoteTimeout && clearTimeout(context.emoteTimeout)
     context.emoteTimeout = setTimeout(() => {
       user.emote = ''
-      sendStateChange(user)
+      client.updateState(user.isReady, '')
     }, EMOTE_DURATION)
   }
 }
