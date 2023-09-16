@@ -44,7 +44,7 @@ function bindUI () {
   })
 
   events.Source.on(events.Types.AdminPromote, user =>
-    context.user.websocket.send(messages.promoteRequest(user))
+    context.client.promote(user.id)
   )
 
   events.Source.on(events.Types.AdminSpectatorToggle, user => {
@@ -128,8 +128,8 @@ async function main () {
   appClient.on('topic', updateTopicHandler)
 
   appClient.on('kick', kickNotificationHandler)
+  appClient.on('promote', promoteNotificationHandler)
 
-  console.log('Joining with user profile', user)
   await appClient.join(room.id, user)
 
   bindUI()

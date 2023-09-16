@@ -52,7 +52,7 @@ export function handlePromote (server) {
 
     assert(target, 'Trying to promote unknown user!')
     assert(user.isAdmin, 'User has no right to promote!')
-    assert(user.id === target.id, 'User is trying to promote self!')
+    assert(user.id !== target.id, 'User is trying to promote self!')
     assert(
       participationRepository.isUserInRoom(target.id, room.id),
       'Target is not in the room!'

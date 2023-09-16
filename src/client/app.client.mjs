@@ -107,6 +107,18 @@ export class AppClient extends events.EventEmitter {
     })).finish()
   }
 
+  promote (target) {
+    this.peer.send(new nlon.Message({
+      header: new nlon.MessageHeader({
+        subject: 'room/promote',
+        authorization: this.#auth
+      }),
+      body: {
+        target
+      }
+    })).finish()
+  }
+
   /**
   * Configure nlon server with event handlers.
   * @param {nlon.Server} nlons nlon server
@@ -165,13 +177,14 @@ export class AppClient extends events.EventEmitter {
       this.emit('kick')
     })
 
-    nlons.handle('room/update/spectator', (_peer, corr) => {
-      this.emit('spectator') // TODO
+    nlons.handle('room/update/promote', async (_peer, corr) => {
+      const { target } = await corr.next()
+      this.emit('promote', target)
       corr.finish()
     })
 
-    nlons.handle('room/update/promote', (_peer, corr) => {
-      this.emit('promote') // TODO
+    nlons.handle('room/update/spectator', (_peer, corr) => {
+      this.emit('spectator') // TODO
       corr.finish()
     })
   }
