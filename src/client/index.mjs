@@ -49,7 +49,7 @@ function bindUI () {
 
   events.Source.on(events.Types.AdminSpectatorToggle, user => {
     const isSpectator = !user.isSpectator
-    context.user.websocket.send(messages.spectatorRequest(user, isSpectator))
+    context.client.spectator(user.id, isSpectator)
   })
 }
 
@@ -129,6 +129,7 @@ async function main () {
 
   appClient.on('kick', kickNotificationHandler)
   appClient.on('promote', promoteNotificationHandler)
+  appClient.on('spectator', spectatorChangeHandler)
 
   await appClient.join(room.id, user)
 

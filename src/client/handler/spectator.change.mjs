@@ -1,10 +1,12 @@
+import assert from 'node:assert'
 import { getLogger } from '../../logger.mjs'
 import context from '../context.mjs'
 
 const logger = getLogger({ name: 'spectatorChangeHandler' })
 
-export function spectatorChangeHandler ({ id, isSpectator }) {
+export function spectatorChangeHandler (id, isSpectator) {
   const user = context.findParticipant(id)
+  assert(user, `Toggling spectator on unknown user: ${id}`)
 
   logger.info({ id, user, isSpectator }, 'Spectator change')
 

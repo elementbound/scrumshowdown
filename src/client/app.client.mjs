@@ -119,6 +119,19 @@ export class AppClient extends events.EventEmitter {
     })).finish()
   }
 
+  spectator (target, enabled) {
+    this.peer.send(new nlon.Message({
+      header: new nlon.MessageHeader({
+        subject: 'room/spectator',
+        authorization: this.#auth
+      }),
+      body: {
+        target,
+        isSpectator: enabled
+      }
+    })).finish()
+  }
+
   /**
   * Configure nlon server with event handlers.
   * @param {nlon.Server} nlons nlon server
@@ -183,8 +196,10 @@ export class AppClient extends events.EventEmitter {
       corr.finish()
     })
 
-    nlons.handle('room/update/spectator', (_peer, corr) => {
-      this.emit('spectator') // TODO
+    nlons.handle('room/update/spectator', async (_peer, corr) => {
+      const data = await corr.next()
+      const { target, isSpectator } = data
+      this.emit('spectator', target, isSpectator)
       corr.finish()
     })
   }
