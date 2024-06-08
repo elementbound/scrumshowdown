@@ -26,8 +26,6 @@ jobs:
       uses: docker/metadata-action@v5
       with:
         images: ghcr.io/${{ github.repository }}
-        tags:
-          type=semver,pattern={{version}}
     - name: Build and push ( if on main ) Docker image
       uses: docker/build-push-action@v5
       with:
