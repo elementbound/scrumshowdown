@@ -1,0 +1,11 @@
+.git
+.github
+.stash
+docs
+node_modules
+
+.env
+.env.example
+.gitignore
+
+build.log
